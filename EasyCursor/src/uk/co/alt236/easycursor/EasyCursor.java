@@ -89,6 +89,13 @@ public class EasyCursor extends CursorWrapper{
 		return getLong(getColumnIndexOrThrow(columnName));
 	}
 	
+	/**
+	 * Gets the {@link EasyQueryModel} which produced this cursor (if any).
+	 * If this cursor was not the produced via an {@link EasyQueryModel},
+	 * the result is null;
+	 *
+	 * @return the query model
+	 */
 	public EasyQueryModel getQueryModel() {
 		return mModel;
 	}
