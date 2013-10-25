@@ -30,6 +30,11 @@ public class EasyCursor extends CursorWrapper{
 		mModel = model;
 	}
 
+	protected boolean calcBoolean(int columnNumber){
+		final int value = getInt(columnNumber);
+		return (value == 1) ? true : false;
+	}
+
 	/**
 	 * Returns the value of the requested column as a byte array or throws 
 	 * IllegalArgumentException if the column doesn't exist. 
@@ -41,21 +46,25 @@ public class EasyCursor extends CursorWrapper{
 		return getBlob(getColumnIndexOrThrow(columnName));
 	}
 
+	
 	/**
 	 * Returns the value of the requested column as a boolean or throws 
 	 * IllegalArgumentException if the column doesn't exist. 
 	 *
-	 * The logic used to calculate the boolean is the following:
+	 * The default logic used to calculate the boolean is the following:
 	 * if (value_as_int == 1) ? true : false;
+	 * To change it, override {@link #calcBoolean(int)}
+	 * 
 	 *
 	 * @param columnName the column name
 	 * @return the value from cursor
 	 */
 	public boolean getBoolean(final String columnName) {
-		final int value =  getInt(getColumnIndexOrThrow(columnName));
-		return (value == 1) ? true : false;
+		final int columnNumber = getColumnIndexOrThrow(columnName);
+		return calcBoolean(columnNumber);
 	}
-
+	
+	
 	/**
 	 * Returns the value of the requested column as a double or throws 
 	 * IllegalArgumentException if the column doesn't exist. 
@@ -141,8 +150,9 @@ public class EasyCursor extends CursorWrapper{
 	 * Extracts the contents of a cursors Column as a Boolean.
 	 * If the column does not exist, it will return null;
 	 *
-	 * The logic used to calculate the boolean is the following:
+	 * The default logic used to calculate the boolean is the following:
 	 * if (value_as_int == 1) ? true : false;
+	 * To change it, override {@link #calcBoolean(int)}
 	 *
 	 * @param columnName the name of the cursor column that we want to get the value from
 	 * @return the value from cursor if the column exists, {@value #DEFAULT_BOOLEAN} otherwise
@@ -155,9 +165,10 @@ public class EasyCursor extends CursorWrapper{
 	 * Extracts the contents of a cursors Column as a Boolean.
 	 * If the column does not exist, it will return the fallback value;
 	 *
-	 * The logic used to calculate the boolean is the following:
+	 * The default logic used to calculate the boolean is the following:
 	 * if (value_as_int == 1) ? true : false;
-	 *
+	 * To change it, override {@link #calcBoolean(int)}
+	 * 
 	 * @param columnName the column name
 	 * @param fallback the value to return if the cursor does not exist
 	 * @return the value from cursor if the column exists, null otherwise
@@ -166,7 +177,7 @@ public class EasyCursor extends CursorWrapper{
 		final int columnNo = getColumnIndex(columnName);
 
 		if (isColumnPresent(columnName, columnNo)) {
-			return (getInt(columnNo) == 1) ? true : false;
+			return calcBoolean(columnNo);
 		} else {
 			return fallback;
 		}
@@ -178,8 +189,9 @@ public class EasyCursor extends CursorWrapper{
 	 * 
 	 * Use this if you want to know if the column did not exist.
 	 *
-	 * The logic used to calculate the boolean is the following:
+	 * The default logic used to calculate the boolean is the following:
 	 * if (value_as_int == 1) ? Boolean.TRUE : Boolean.FALSE;
+	 * To change it, override {@link #calcBoolean(int)}
 	 * 
 	 * @param columnName the column name
 	 * @return the value from cursor if the column exists, null otherwise
@@ -188,7 +200,7 @@ public class EasyCursor extends CursorWrapper{
 		final int columnNo = getColumnIndex(columnName);
 
 		if (isColumnPresent(columnName, columnNo)) {
-			return (getInt(columnNo) == 1) ? Boolean.TRUE : Boolean.FALSE;
+			return calcBoolean(columnNo) ? Boolean.TRUE : Boolean.FALSE;
 		} else {
 			return null;
 		}
@@ -200,6 +212,7 @@ public class EasyCursor extends CursorWrapper{
 	 * @param columnName the name of the cursor column that we want to get the value from
 	 * @return the value from cursor if the column exists, {@value #DEFAULT_DOUBLE} otherwise as per 
 	 * http://www.sqlite.org/c3ref/column_blob.html
+	 * 
 	 */
 	public double optDouble(final String columnName) {
 		return optDouble(columnName, DEFAULT_DOUBLE);
@@ -425,7 +438,8 @@ public class EasyCursor extends CursorWrapper{
 
 	@Override
 	public String toString() {
-		return "EasyCursor [mModel=" + mModel + ", isClosed()=" + isClosed()
+		return "EasyCursor [mModel=" + mModel + ", mDebugEnabled="
+				+ mDebugEnabled + ", isClosed()=" + isClosed()
 				+ ", getCount()=" + getCount() + ", getColumnCount()="
 				+ getColumnCount() + ", getColumnNames()="
 				+ Arrays.toString(getColumnNames()) + ", getPosition()="
