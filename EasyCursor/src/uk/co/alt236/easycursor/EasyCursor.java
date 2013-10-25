@@ -18,7 +18,7 @@ public class EasyCursor extends CursorWrapper{
 		super(cursor);
 		mModel = model;
 	}
-
+	
 	/**
 	 * Returns the value of the requested column as a byte array or throws 
 	 * IllegalArgumentException if the column doesn't exist. 
@@ -119,10 +119,10 @@ public class EasyCursor extends CursorWrapper{
 	 * if (value_as_int == 1) ? true : false;
 	 *
 	 * @param columnName the name of the cursor column that we want to get the value from
-	 * @return the value from cursor if the column exists, null otherwise
+	 * @return the value from cursor if the column exists, false otherwise
 	 */
-	public Boolean optBoolean(final String columnName) {
-		return optBoolean(columnName, null);
+	public boolean optBoolean(final String columnName) {
+		return optBoolean(columnName, false);
 	}
 
 	/**
@@ -136,13 +136,13 @@ public class EasyCursor extends CursorWrapper{
 	 * @param fallback the value to return if the cursor does not exist
 	 * @return the value from cursor if the column exists, null otherwise
 	 */
-	public Boolean optBoolean(final String columnName, Boolean fallback) {
+	public boolean optBoolean(final String columnName, boolean fallback) {
 		final int columnNo = getColumnIndex(columnName);
 		
 		if (columnNo == COLUMN_NOT_PRESENT) {
 			return fallback;
 		} else {
-			return (getInt(columnNo) == 1) ? Boolean.TRUE : Boolean.FALSE;
+			return (getInt(columnNo) == 1) ? true : false;
 		}
 	}
 	
@@ -151,10 +151,11 @@ public class EasyCursor extends CursorWrapper{
 	 * If the column does not exist, it will return null;
 	 *
 	 * @param columnName the name of the cursor column that we want to get the value from
-	 * @return the value from cursor if the column exists, null otherwise
+	 * @return the value from cursor if the column exists, 0.0 otherwise as per 
+	 * http://www.sqlite.org/c3ref/column_blob.html
 	 */
-	public Double optDouble(final String columnName) {
-		return optDouble(columnName, null);
+	public double optDouble(final String columnName) {
+		return optDouble(columnName, 0.0);
 	}
 	
 	/**
@@ -165,7 +166,7 @@ public class EasyCursor extends CursorWrapper{
 	 * @param fallback the value to return if the cursor does not exist
 	 * @return the value from cursor if the column exists, the fallback otherwise
 	 */
-	public Double optDouble(final String columnName, Double fallback) {
+	public double optDouble(final String columnName, double fallback) {
 		final int columnNo = getColumnIndex(columnName);
 
 		if (columnNo == COLUMN_NOT_PRESENT) {
@@ -180,10 +181,11 @@ public class EasyCursor extends CursorWrapper{
 	 * If the column does not exist, it will return null;
 	 *
 	 * @param columnName the name of the cursor column that we want to get the value from
-	 * @return the value from cursor if the column exists, null otherwise
+	 * @return the value from cursor if the column exists, 0.0 otherwise as per 
+	 * http://www.sqlite.org/c3ref/column_blob.html
 	 */
-	public Float optFloat(final String columnName) {
-		return optFloat(columnName, null);
+	public float optFloat(final String columnName) {
+		return optFloat(columnName, 0.0f);
 	}
 	
 	/**
@@ -194,7 +196,7 @@ public class EasyCursor extends CursorWrapper{
 	 * @param fallback the value to return if the cursor does not exist
 	 * @return the value from cursor if the column exists, the fallback otherwise
 	 */
-	public Float optFloat(final String columnName, Float fallback) {
+	public float optFloat(final String columnName, float fallback) {
 		final int columnNo = getColumnIndex(columnName);
 
 		if (columnNo == COLUMN_NOT_PRESENT) {
@@ -209,10 +211,11 @@ public class EasyCursor extends CursorWrapper{
 	 * If the column does not exist, it will return null;
 	 *
 	 * @param columnName the name of the cursor column that we want to get the value from
-	 * @return the value from cursor if the column exists, null otherwise
+	 * @return the value from cursor if the column exists, 0 otherwise as per 
+	 * http://www.sqlite.org/c3ref/column_blob.html
 	 */
-	public Integer optInteger(final String columnName) {
-		return optInteger(columnName, null);
+	public int optInteger(final String columnName) {
+		return optInteger(columnName, 0);
 	}
 	
 	
@@ -224,7 +227,7 @@ public class EasyCursor extends CursorWrapper{
 	 * @param fallback the value to return if the cursor does not exist
 	 * @return the value from cursor if the column exists, the fallback otherwise
 	 */
-	public Integer optInteger(final String columnName, Integer fallback) {
+	public int optInteger(final String columnName, int fallback) {
 		final int columnNo = getColumnIndex(columnName);
 
 		if (columnNo == COLUMN_NOT_PRESENT) {
@@ -239,10 +242,11 @@ public class EasyCursor extends CursorWrapper{
 	 * If the column does not exist, it will return null;
 	 *
 	 * @param columnName the name of the cursor column that we want to get the value from
-	 * @return the value from cursor if the column exists, null otherwise
+	 * @return the value from cursor if the column exists, 0 otherwise as per 
+	 * http://www.sqlite.org/c3ref/column_blob.html
 	 */
-	public Long optLong(final String columnName) {
-		return optLong(columnName, null);
+	public long optLong(final String columnName) {
+		return optLong(columnName, 0);
 	}
 
 	/**
@@ -253,7 +257,7 @@ public class EasyCursor extends CursorWrapper{
 	 * @param fallback the value to return if the cursor does not exist
 	 * @return the value from cursor if the column exists, the fallback otherwise
 	 */
-	public Long optLong(final String columnName, Long fallback) {
+	public long optLong(final String columnName, long fallback) {
 		final int columnNo = getColumnIndex(columnName);
 
 		if (columnNo == COLUMN_NOT_PRESENT) {
@@ -268,7 +272,8 @@ public class EasyCursor extends CursorWrapper{
 	 * If the column does not exist, it will return null;
 	 *
 	 * @param columnName the name of the cursor column that we want to get the value from
-	 * @return the value from cursor if the column exists, null otherwise
+	 * @return the value from cursor if the column exists, null otherwise as per 
+	 * http://www.sqlite.org/c3ref/column_blob.html
 	 */
 	public String optString(final String columnName) {
 		return optString(columnName, null);
@@ -285,7 +290,7 @@ public class EasyCursor extends CursorWrapper{
 	public String optString(final String columnName, String fallback) {
 		final int columnNo = getColumnIndex(columnName);
 
-		if (columnNo == -1) {
+		if (columnNo == COLUMN_NOT_PRESENT) {
 			return fallback;
 		} else {
 			return getString(columnNo);
