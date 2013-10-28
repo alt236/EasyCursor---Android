@@ -30,6 +30,15 @@ public class EasyCursor extends CursorWrapper{
 		mModel = model;
 	}
 
+	/**
+	 * Performs the necessary calculations to assess the value of a boolean
+	 * 
+	 * The default logic used to calculate the boolean is the following:
+	 * if (value_as_int == 1) ? true : false;
+	 * 
+	 * @param columnNumber the number of the column containing the value to assess
+	 * @return
+	 */
 	protected boolean calcBoolean(int columnNumber){
 		final int value = getInt(columnNumber);
 		return (value == 1) ? true : false;
@@ -51,11 +60,8 @@ public class EasyCursor extends CursorWrapper{
 	 * Returns the value of the requested column as a boolean or throws 
 	 * IllegalArgumentException if the column doesn't exist. 
 	 *
-	 * The default logic used to calculate the boolean is the following:
-	 * if (value_as_int == 1) ? true : false;
-	 * To change it, override {@link #calcBoolean(int)}
+	 * The logic is defined in {@link #calcBoolean(int)}
 	 * 
-	 *
 	 * @param columnName the column name
 	 * @return the value from cursor
 	 */
@@ -150,9 +156,7 @@ public class EasyCursor extends CursorWrapper{
 	 * Extracts the contents of a cursors Column as a Boolean.
 	 * If the column does not exist, it will return null;
 	 *
-	 * The default logic used to calculate the boolean is the following:
-	 * if (value_as_int == 1) ? true : false;
-	 * To change it, override {@link #calcBoolean(int)}
+	 * The logic is defined in {@link #calcBoolean(int)}
 	 *
 	 * @param columnName the name of the cursor column that we want to get the value from
 	 * @return the value from cursor if the column exists, {@value #DEFAULT_BOOLEAN} otherwise
@@ -165,9 +169,7 @@ public class EasyCursor extends CursorWrapper{
 	 * Extracts the contents of a cursors Column as a Boolean.
 	 * If the column does not exist, it will return the fallback value;
 	 *
-	 * The default logic used to calculate the boolean is the following:
-	 * if (value_as_int == 1) ? true : false;
-	 * To change it, override {@link #calcBoolean(int)}
+	 * The logic is defined in {@link #calcBoolean(int)}
 	 * 
 	 * @param columnName the column name
 	 * @param fallback the value to return if the cursor does not exist
@@ -189,9 +191,7 @@ public class EasyCursor extends CursorWrapper{
 	 * 
 	 * Use this if you want to know if the column did not exist.
 	 *
-	 * The default logic used to calculate the boolean is the following:
-	 * if (value_as_int == 1) ? Boolean.TRUE : Boolean.FALSE;
-	 * To change it, override {@link #calcBoolean(int)}
+	 * The logic is defined in {@link #calcBoolean(int)}
 	 * 
 	 * @param columnName the column name
 	 * @return the value from cursor if the column exists, null otherwise
@@ -259,8 +259,7 @@ public class EasyCursor extends CursorWrapper{
 	 * Extracts the contents of a cursors Column as a float.
 	 *
 	 * @param columnName the name of the cursor column that we want to get the value from
-	 * @return the value from cursor if the column exists, {@value #DEFAULT_FLOAT} otherwise as per 
-	 * http://www.sqlite.org/c3ref/column_blob.html
+	 * @return the value from cursor if the column exists, {@value #DEFAULT_FLOAT} otherwise.
 	 */
 	public float optFloat(final String columnName) {
 		return optFloat(columnName, DEFAULT_FLOAT);
@@ -307,8 +306,7 @@ public class EasyCursor extends CursorWrapper{
 	 * Extracts the contents of a cursors Column as an int.
 	 *
 	 * @param columnName the name of the cursor column that we want to get the value from
-	 * @return the value from cursor if the column exists, {@value #DEFAULT_INT} otherwise as per 
-	 * http://www.sqlite.org/c3ref/column_blob.html
+	 * @return the value from cursor if the column exists, {@value #DEFAULT_INT} otherwise.
 	 */
 	public int optInt(final String columnName) {
 		return optInt(columnName, DEFAULT_INT);
@@ -355,8 +353,7 @@ public class EasyCursor extends CursorWrapper{
 	 * Extracts the contents of a cursors Column as a long.
 	 *
 	 * @param columnName the name of the cursor column that we want to get the value from
-	 * @return the value from cursor if the column exists, {@value #DEFAULT_LONG} otherwise as per 
-	 * http://www.sqlite.org/c3ref/column_blob.html
+	 * @return the value from cursor if the column exists, {@value #DEFAULT_LONG} otherwise.
 	 */
 	public long optLong(final String columnName) {
 		return optLong(columnName, DEFAULT_LONG);
@@ -404,8 +401,7 @@ public class EasyCursor extends CursorWrapper{
 	 * If the column does not exist, it will return {@value #DEFAULT_STRING};
 	 *
 	 * @param columnName the name of the cursor column that we want to get the value from
-	 * @return the value from cursor if the column exists, {@value #DEFAULT_STRING} otherwise as per 
-	 * http://www.sqlite.org/c3ref/column_blob.html
+	 * @return the value from cursor if the column exists, {@value #DEFAULT_STRING} otherwise.
 	 */
 	public String optString(final String columnName) {
 		return optString(columnName, DEFAULT_STRING);
