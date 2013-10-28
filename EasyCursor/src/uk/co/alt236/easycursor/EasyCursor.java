@@ -25,6 +25,11 @@ public class EasyCursor extends CursorWrapper{
 		mModel = null;
 	}
 
+	public EasyCursor(final EasyCursor cursor){
+		super(cursor);
+		mModel = cursor.getQueryModel();
+	}
+	
 	public EasyCursor(final Cursor cursor, final EasyQueryModel model) {
 		super(cursor);
 		mModel = model;
