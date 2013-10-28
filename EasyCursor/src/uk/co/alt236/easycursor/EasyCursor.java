@@ -196,7 +196,7 @@ public class EasyCursor extends CursorWrapper{
 	 * @param columnName the column name
 	 * @return the value from cursor if the column exists, null otherwise
 	 */
-	public Boolean optBooleanNullable(final String columnName) {
+	public Boolean optBooleanAsWrapperType(final String columnName) {
 		final int columnNo = getColumnIndex(columnName);
 
 		if (isColumnPresent(columnName, columnNo)) {
@@ -245,7 +245,7 @@ public class EasyCursor extends CursorWrapper{
 	 * @param columnName the column name
 	 * @return the value from cursor if the column exists, null otherwise
 	 */
-	public Double optDoubleNullable(final String columnName) {
+	public Double optDoubleAsWrapperType(final String columnName) {
 		final int columnNo = getColumnIndex(columnName);
 
 		if (isColumnPresent(columnName, columnNo)) {
@@ -293,7 +293,7 @@ public class EasyCursor extends CursorWrapper{
 	 * @param columnName the column name
 	 * @return the value from cursor if the column exists, null otherwise
 	 */
-	public Float optFloatNullable(final String columnName) {
+	public Float optFloatAsWrapperType(final String columnName) {
 		final int columnNo = getColumnIndex(columnName);
 
 		if (isColumnPresent(columnName, columnNo)) {
@@ -341,7 +341,7 @@ public class EasyCursor extends CursorWrapper{
 	 * @param columnName the column name
 	 * @return the value from cursor if the column exists, null otherwise
 	 */
-	public Integer optIntegerNullable(final String columnName) {
+	public Integer optIntAsWrapperType(final String columnName) {
 		final int columnNo = getColumnIndex(columnName);
 
 		if (isColumnPresent(columnName, columnNo)) {
@@ -389,7 +389,7 @@ public class EasyCursor extends CursorWrapper{
 	 * @param columnName the column name
 	 * @return the value from cursor if the column exists, null otherwise
 	 */
-	public Long optLongNullable(final String columnName) {
+	public Long optLongAsWrapperType(final String columnName) {
 		final int columnNo = getColumnIndex(columnName);
 
 		if (isColumnPresent(columnName, columnNo)) {
