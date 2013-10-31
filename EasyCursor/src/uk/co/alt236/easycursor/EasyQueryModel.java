@@ -1,5 +1,6 @@
 package uk.co.alt236.easycursor;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 import org.json.JSONException;
@@ -11,9 +12,9 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.os.Build;
 
 public class EasyQueryModel {
-	public static final int TYPE_UNINITIALISED = 0;
-	public static final int TYPE_MANAGED = 1;
-	public static final int TYPE_RAW = 2;
+	public static final int QUERY_TYPE_UNINITIALISED = 0;
+	public static final int QUERY_TYPE_MANAGED = 1;
+	public static final int QUERY_TYPE_RAW = 2;
 
 	private static final String FIELD_DISTINCT = "distinct";
 	private static final String FIELD_GROUP_BY = "groupBy";
@@ -31,7 +32,7 @@ public class EasyQueryModel {
 	private static final String FIELD_STRICT = "strict";
 	private static final String FIELD_TABLES = "tables";
 
-	private int mQueryType = TYPE_UNINITIALISED;
+	private int mQueryType = QUERY_TYPE_UNINITIALISED;
 
 	//
 	// Metadata
@@ -50,7 +51,6 @@ public class EasyQueryModel {
 	//
 	private boolean mDistinct;
 	private boolean mStrict;
-
 	private String mTables;
 	private String[] mProjectionIn;
 	private String[] mSelectionArgs;
@@ -59,10 +59,6 @@ public class EasyQueryModel {
 	private String mHaving; 
 	private String mSortOrder;
 	private String mLimit;
-
-	// // //
-	// // //
-	// // //
 
 	protected EasyQueryModel(String json) throws JSONException{
 		final JSONObject payload = new JSONObject(json);
@@ -93,11 +89,40 @@ public class EasyQueryModel {
 	 * @return the {@link EasyCursor} containing the result of the query.
 	 */
 	public EasyCursor execute(final SQLiteDatabase db){
+		return new EasyCursor(executeQuery(db), this);
+	}
+
+	/**
+	 * Execute the query described by this model.
+	 * 
+	 * If the model is initialised, or if the query model is of an unsupported type, 
+	 * this method will throw an IllegalStateException.
+	 *
+	 * @param db the database to run the query against
+	 * @param easyCursorClass the Class of an EasyCursor implementation. Will use {@link EasyCursor} if null.
+	 * @return the {@link EasyCursor} containing the result of the query.
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException if an exception was thrown by the invoked constructor
+	 * @throws IllegalAccessException if this constructor is not accessible
+	 * @throws InstantiationException if the class cannot be instantiated
+	 * @throws IllegalArgumentException if an incorrect number of arguments are passed, or an argument could not be converted by a widening conversion
+	 */
+	public EasyCursor execute(final SQLiteDatabase db, Class<? extends EasyCursor> easyCursorClass) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException{
+		
+		final Cursor c = executeQuery(db);
+		if(easyCursorClass == null){
+			return new EasyCursor(c, this);
+		} else {
+			return easyCursorClass.getDeclaredConstructor(Cursor.class, EasyQueryModel.class).newInstance(c, this);
+		}
+	}
+	
+	private Cursor executeQuery(final SQLiteDatabase db){
 		final int queryType = mQueryType;
 		final Cursor cursor;
-
+		
 		switch (queryType) {
-		case TYPE_MANAGED:
+		case QUERY_TYPE_MANAGED:
 			final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 			builder.setTables(getTables());
 			builder.setDistinct(isDistinct());
@@ -108,19 +133,24 @@ public class EasyQueryModel {
 
 			cursor = builder.query(db, mProjectionIn, mSelection, mSelectionArgs, mGroupBy, mHaving, mSortOrder, mLimit);
 			break;
-		case TYPE_RAW:
+		case QUERY_TYPE_RAW:
 			cursor = db.rawQuery(mRawSql, mSelectionArgs);
 			break;
-		case TYPE_UNINITIALISED:
+		case QUERY_TYPE_UNINITIALISED:
 			throw new IllegalStateException("Attempted to execute an uninitialised query model");
 		default:
 			throw new IllegalStateException("Attempted to execute a query of an unknown query type: " + queryType);
 		}
 
 		cursor.moveToFirst();
-		return new EasyCursor(cursor, this);
+		return cursor;
 	}
-
+	
+	/**
+	 * Gets the user specified comment of this Model
+	 * 
+	 * @return the comment
+	 */
 	public String getComment() {
 		return mModelComment;
 	}
@@ -137,10 +167,21 @@ public class EasyQueryModel {
 		return mLimit;
 	}
 
+	/**
+	 * Gets the user specified tag of this Model
+	 * 
+	 * @return the tag
+	 */
 	public String getModelTag() {
 		return mModelTag;
 	}
 
+	/**
+	 * Gets the user specified version of this Model
+	 * The default value is 0
+	 * 
+	 * @return the tag
+	 */
 	public int getModelVersion() {
 		return mModelVersion;
 	}
@@ -149,6 +190,12 @@ public class EasyQueryModel {
 		return mProjectionIn;
 	}
 
+	/**
+	 * Gets the type of this query.
+	 * The supported types are provided as QUERY_TYPE_* constants in this class
+	 * 
+	 * @return
+	 */
 	public int getQueryType() {
 		return mQueryType;
 	}
@@ -206,11 +253,11 @@ public class EasyQueryModel {
 	 *     values will be bound as Strings.     
 	 */
 	public void setQueryParams(final String rawSql, final String[] selectionArgs) {
-		if(mQueryType != TYPE_UNINITIALISED){
+		if(mQueryType != QUERY_TYPE_UNINITIALISED){
 			throw new IllegalStateException("A Model file's query parameters can only be set once!");
 		}
 
-		mQueryType = TYPE_RAW;
+		mQueryType = QUERY_TYPE_RAW;
 		mSelectionArgs = selectionArgs;
 		mRawSql = rawSql;
 	}
@@ -303,11 +350,11 @@ public class EasyQueryModel {
 	 *   formatted as LIMIT clause. Passing null denotes no LIMIT clause.
 	 */
 	public void setQueryParams(String[] projectionIn, String selection, String[] selectionArgs, String groupBy, String having, String sortOrder, String limit) {
-		if(mQueryType != TYPE_UNINITIALISED){
+		if(mQueryType != QUERY_TYPE_UNINITIALISED){
 			throw new IllegalStateException("A Model file's query parameters can only be set once!");
 		}
 
-		mQueryType = TYPE_MANAGED;
+		mQueryType = QUERY_TYPE_MANAGED;
 
 		mProjectionIn = projectionIn;
 		mSelection = selection;
@@ -338,6 +385,7 @@ public class EasyQueryModel {
 	 * <li>Use one of the query overloads instead of getting the statement as a sql string</li>
 	 * </ul>
 	 * By default, this value is false.
+	 * This value is ignored if you are on a device running API < 14.
 	 */
 	public void setStrict(boolean value){
 		mStrict = value;

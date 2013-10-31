@@ -25,6 +25,11 @@ public class EasyCursor extends CursorWrapper{
 		mModel = null;
 	}
 
+	/**
+	 * Use this constructor to easily change EasyCursor implementations
+	 * 
+	 * @param cursor The EasyCursor
+	 */
 	public EasyCursor(final EasyCursor cursor){
 		super(cursor);
 		mModel = cursor.getQueryModel();
