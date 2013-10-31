@@ -12,9 +12,9 @@ public class EasyCursor extends CursorWrapper{
 	
 	public static final String DEFAULT_STRING = null;
 	public static final int DEFAULT_INT = 0;
-	public static final long DEFAULT_LONG = 0L;
-	public static final float DEFAULT_FLOAT = 0.0F;
-	public static final double DEFAULT_DOUBLE = 0.0D;
+	public static final long DEFAULT_LONG = 0l;
+	public static final float DEFAULT_FLOAT = 0.0f;
+	public static final double DEFAULT_DOUBLE = 0.0d;
 	public static final boolean DEFAULT_BOOLEAN = false;
 
 	private final EasyQueryModel mModel;
@@ -55,6 +55,7 @@ public class EasyCursor extends CursorWrapper{
 	 *
 	 * @param columnName the column name
 	 * @return the value from cursor
+	 * @throws IllegalArgumentException if the column doesn't exist
 	 */
 	public byte[] getBlob(final String columnName) {
 		return getBlob(getColumnIndexOrThrow(columnName));
@@ -69,6 +70,7 @@ public class EasyCursor extends CursorWrapper{
 	 * 
 	 * @param columnName the column name
 	 * @return the value from cursor
+	 * @throws IllegalArgumentException if the column doesn't exist
 	 */
 	public boolean getBoolean(final String columnName) {
 		final int columnNumber = getColumnIndexOrThrow(columnName);
@@ -82,6 +84,7 @@ public class EasyCursor extends CursorWrapper{
 	 *
 	 * @param columnName the column name
 	 * @return the value from cursor
+	 * @throws IllegalArgumentException if the column doesn't exist
 	 */
 	public double getDouble(final String columnName) {
 		return getDouble(getColumnIndexOrThrow(columnName));
@@ -93,6 +96,7 @@ public class EasyCursor extends CursorWrapper{
 	 *
 	 * @param columnName the column name
 	 * @return the value from cursor
+	 * @throws IllegalArgumentException if the column doesn't exist
 	 */
 	public float getFloat(final String columnName) {
 		return getFloat(getColumnIndexOrThrow(columnName));
@@ -104,6 +108,7 @@ public class EasyCursor extends CursorWrapper{
 	 *
 	 * @param columnName the column name
 	 * @return the value from cursor
+	 * @throws IllegalArgumentException if the column doesn't exist
 	 */
 	public int getInt(final String columnName) {
 		return getInt(getColumnIndexOrThrow(columnName));
@@ -115,6 +120,7 @@ public class EasyCursor extends CursorWrapper{
 	 *
 	 * @param columnName the column name
 	 * @return the value from cursor
+	 * @throws IllegalArgumentException if the column doesn't exist
 	 */
 	public long getLong(final String columnName) {
 		return getLong(getColumnIndexOrThrow(columnName));
@@ -137,6 +143,7 @@ public class EasyCursor extends CursorWrapper{
 	 *
 	 * @param columnName the column name
 	 * @return the value from cursor
+	 * @throws IllegalArgumentException if the column doesn't exist
 	 */
 	public String getString(final String columnName) {
 		return getString(getColumnIndexOrThrow(columnName));

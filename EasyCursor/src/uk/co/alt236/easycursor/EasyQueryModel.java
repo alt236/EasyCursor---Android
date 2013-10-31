@@ -2,76 +2,86 @@ package uk.co.alt236.easycursor;
 
 import java.util.Arrays;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.os.Build;
-
-import com.google.gson.Gson;
-import com.google.gson.annotations.SerializedName;
 
 public class EasyQueryModel {
 	public static final int TYPE_UNINITIALISED = 0;
 	public static final int TYPE_MANAGED = 1;
 	public static final int TYPE_RAW = 2;
 
-	@SerializedName("queryType")
+	private static final String FIELD_DISTINCT = "distinct";
+	private static final String FIELD_GROUP_BY = "groupBy";
+	private static final String FIELD_HAVING = "having";
+	private static final String FIELD_LIMIT = "limit";
+	private static final String FIELD_MODEL_COMMENT = "comment";
+	private static final String FIELD_MODEL_TAG = "tag";
+	private static final String FIELD_MODEL_VERSION = "version";
+	private static final String FIELD_PROJECTION_IN = "projectionIn";
+	private static final String FIELD_QUERY_TYPE = "queryType";
+	private static final String FIELD_RAW_SQL = "rawSql";
+	private static final String FIELD_SELECTION = "selection";
+	private static final String FIELD_SELECTION_ARGS = "selectionArgs";
+	private static final String FIELD_SORT_ORDER = "sortOrder";
+	private static final String FIELD_STRICT = "strict";
+	private static final String FIELD_TABLES = "tables";
+
 	private int mQueryType = TYPE_UNINITIALISED;
 
 	//
 	// Metadata
 	//
-	@SerializedName("version")
-	private int mVersion;
-
-	@SerializedName("tag")
-	private String mTag;
-
-	@SerializedName("comment")
-	private String mComment;
+	private int mModelVersion;
+	private String mModelTag;
+	private String mModelComment;
 
 	//
 	// Raw Query
 	//
-	@SerializedName("rawSql")
 	private String mRawSql;
 
 	//
 	// Managed Query
 	//
-	@SerializedName("distinct")
 	private boolean mDistinct;
-
-	@SerializedName("strict")
 	private boolean mStrict;
 
-	@SerializedName("tables")
 	private String mTables;
-
-	@SerializedName("projectionIn")
 	private String[] mProjectionIn;
-
-	@SerializedName("selectionArgs")
 	private String[] mSelectionArgs;
-
-	@SerializedName("selection")
 	private String mSelection;
-
-	@SerializedName("groupBy")
 	private String mGroupBy;
-
-	@SerializedName("having")
 	private String mHaving; 
-
-	@SerializedName("sortOrder")
 	private String mSortOrder;
-
-	@SerializedName("limit")
 	private String mLimit;
 
 	// // //
 	// // //
 	// // //
+
+	protected EasyQueryModel(String json) throws JSONException{
+		final JSONObject payload = new JSONObject(json);
+		mDistinct = JsonPayloadHelper.getBoolean(payload, FIELD_DISTINCT);
+		mGroupBy = JsonPayloadHelper.getString(payload, FIELD_GROUP_BY);
+		mHaving = JsonPayloadHelper.getString(payload, FIELD_HAVING);
+		mLimit = JsonPayloadHelper.getString(payload, FIELD_LIMIT);
+		mModelComment = JsonPayloadHelper.getString(payload, FIELD_MODEL_COMMENT);
+		mModelTag = JsonPayloadHelper.getString(payload, FIELD_MODEL_TAG);
+		mModelVersion = JsonPayloadHelper.getInt(payload, FIELD_MODEL_VERSION);
+		mProjectionIn = JsonPayloadHelper.getStringArray(payload, FIELD_PROJECTION_IN);
+		mRawSql = JsonPayloadHelper.getString(payload, mRawSql);
+		mSelection = JsonPayloadHelper.getString(payload, FIELD_SELECTION);
+		mSelectionArgs = JsonPayloadHelper.getStringArray(payload, FIELD_SELECTION_ARGS);
+		mSortOrder = JsonPayloadHelper.getString(payload, FIELD_SORT_ORDER);
+		mStrict = JsonPayloadHelper.getBoolean(payload, FIELD_STRICT);
+		mTables = JsonPayloadHelper.getString(payload, FIELD_TABLES);
+		mQueryType = JsonPayloadHelper.getInt(payload, FIELD_QUERY_TYPE);
+	}
 
 	/**
 	 * Execute the query described by this model.
@@ -111,6 +121,10 @@ public class EasyQueryModel {
 		return new EasyCursor(cursor, this);
 	}
 
+	public String getComment() {
+		return mModelComment;
+	}
+
 	public String getGroupBy() {
 		return mGroupBy;
 	}
@@ -123,16 +137,12 @@ public class EasyQueryModel {
 		return mLimit;
 	}
 
-	public String getComment() {
-		return mComment;
-	}
-
 	public String getModelTag() {
-		return mTag;
+		return mModelTag;
 	}
 
 	public int getModelVersion() {
-		return mVersion;
+		return mModelVersion;
 	}
 
 	public String[] getProjectionIn() {
@@ -171,6 +181,10 @@ public class EasyQueryModel {
 		return mStrict;
 	}
 
+	public void setComment(String modelComment) {
+		mModelComment = modelComment;
+	}
+
 	/**
 	 * Mark the query as DISTINCT.
 	 *
@@ -178,18 +192,6 @@ public class EasyQueryModel {
 	 */
 	public void setDistinct(boolean value){
 		mDistinct = value;
-	}
-
-	public void setComment(String modelComment) {
-		mComment = modelComment;
-	}
-
-	public void setTag(String modelTag) {
-		mTag = modelTag;
-	}
-
-	public void setVersion(int modelVersion) {
-		mVersion = modelVersion;
 	}
 
 	/**
@@ -237,7 +239,6 @@ public class EasyQueryModel {
 		setQueryParams(projectionIn, selection, selectionArgs, null, null, sortOrder, null);
 	}
 
-
 	/**
 	 * Sets the query parameters.
 	 *
@@ -269,6 +270,7 @@ public class EasyQueryModel {
 	public void setQueryParams(String[] projectionIn, String selection, String[] selectionArgs, String groupBy, String having, String sortOrder) {
 		setQueryParams(projectionIn, selection, selectionArgs, groupBy, having, sortOrder, null);
 	}
+
 
 	/**
 	 * Sets the query parameters.
@@ -353,22 +355,47 @@ public class EasyQueryModel {
 		mTables = inTables;
 	}
 
+	public void setTag(String modelTag) {
+		mModelTag = modelTag;
+	}
+
+	public void setVersion(int modelVersion) {
+		mModelVersion = modelVersion;
+	}
+
 	/**
 	 * Will return the JSON representation of this QueryModel.
 	 * It can be converted back into a QueryModel object using the
 	 * {@link #getInstance(String)} static method.
 	 *
-	 * @return the string
+	 * @return the resulting JSON String
+	 * @throws JSONException if there was an error creating the JSON
 	 */
-	public String toJson(){
-		final Gson gson = new Gson();
-		return gson.toJson(this, EasyQueryModel.class);
+	public String toJson() throws JSONException{
+		final JSONObject payload = new JSONObject();
+
+		JsonPayloadHelper.add(payload, FIELD_DISTINCT, mDistinct);
+		JsonPayloadHelper.add(payload, FIELD_GROUP_BY, mGroupBy);
+		JsonPayloadHelper.add(payload, FIELD_HAVING, mHaving);
+		JsonPayloadHelper.add(payload, FIELD_LIMIT, mLimit);
+		JsonPayloadHelper.add(payload, FIELD_MODEL_COMMENT, mModelComment);
+		JsonPayloadHelper.add(payload, FIELD_MODEL_TAG, mModelTag);
+		JsonPayloadHelper.add(payload, FIELD_MODEL_VERSION, mModelVersion);
+		JsonPayloadHelper.add(payload, FIELD_PROJECTION_IN, mProjectionIn);
+		JsonPayloadHelper.add(payload, FIELD_RAW_SQL, mRawSql);
+		JsonPayloadHelper.add(payload, FIELD_SELECTION, mSelection);
+		JsonPayloadHelper.add(payload, FIELD_SELECTION_ARGS, mSelectionArgs);
+		JsonPayloadHelper.add(payload, FIELD_SORT_ORDER, mSortOrder);
+		JsonPayloadHelper.add(payload, FIELD_STRICT, mStrict);
+		JsonPayloadHelper.add(payload, FIELD_TABLES, mTables);
+		JsonPayloadHelper.add(payload, FIELD_QUERY_TYPE, mQueryType);
+		return payload.toString();
 	}
 
 	@Override
 	public String toString() {
 		return "EasyQueryModel [mQueryType=" + mQueryType + ", mVersion="
-				+ mVersion + ", mTag=" + mTag + ", mComment=" + mComment
+				+ mModelVersion + ", mTag=" + mModelTag + ", mComment=" + mModelComment
 				+ ", mRawSql=" + mRawSql + ", mDistinct=" + mDistinct
 				+ ", mStrict=" + mStrict + ", mTables=" + mTables
 				+ ", mProjectionIn=" + Arrays.toString(mProjectionIn)
@@ -378,8 +405,7 @@ public class EasyQueryModel {
 				+ ", mLimit=" + mLimit + "]";
 	}
 
-	public static EasyQueryModel getInstance(String json){
-		final Gson gson = new Gson();
-		return gson.fromJson(json, EasyQueryModel.class);
+	public static EasyQueryModel getInstance(String json) throws JSONException{
+		return new EasyQueryModel(json);
 	}
 }
