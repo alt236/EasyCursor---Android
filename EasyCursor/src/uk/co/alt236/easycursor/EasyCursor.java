@@ -47,7 +47,7 @@ public class EasyCursor extends CursorWrapper{
 	 * if (value_as_int == 1) ? true : false;
 	 * 
 	 * @param columnNumber the number of the column containing the value to assess
-	 * @return
+	 * @return true if the value of the boolean is true, false otherwise
 	 */
 	protected boolean calcBoolean(int columnNumber){
 		final int value = getInt(columnNumber);

@@ -194,7 +194,7 @@ public class EasyQueryModel {
 	 * Gets the type of this query.
 	 * The supported types are provided as QUERY_TYPE_* constants in this class
 	 * 
-	 * @return
+	 * @return the type of the query
 	 */
 	public int getQueryType() {
 		return mQueryType;
@@ -235,10 +235,10 @@ public class EasyQueryModel {
 	/**
 	 * Mark the query as DISTINCT.
 	 *
-	 * @param distinct if true the query is DISTINCT, otherwise it isn't
+	 * @param distinct true if true the query is DISTINCT, otherwise it isn't
 	 */
-	public void setDistinct(boolean value){
-		mDistinct = value;
+	public void setDistinct(boolean distinct){
+		mDistinct = distinct;
 	}
 
 	/**
@@ -247,7 +247,7 @@ public class EasyQueryModel {
 	 * Will throw an IllegalStateExcetion if one tries to set
 	 * the parameters more than once.
 	 *
-	 * @param sql the SQL query. The SQL string must not be ; terminated
+	 * @param rawSql the SQL query. The SQL string must not be ; terminated
 	 * @param selectionArgs You may include ?s in where clause in the query,
 	 *     which will be replaced by the values from selectionArgs. The
 	 *     values will be bound as Strings.     
