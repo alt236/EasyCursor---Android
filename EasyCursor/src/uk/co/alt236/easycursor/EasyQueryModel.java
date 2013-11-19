@@ -60,6 +60,8 @@ public class EasyQueryModel {
 	private String mSortOrder;
 	private String mLimit;
 
+	public EasyQueryModel(){}
+	
 	protected EasyQueryModel(String json) throws JSONException{
 		final JSONObject payload = new JSONObject(json);
 		mDistinct = JsonPayloadHelper.getBoolean(payload, FIELD_DISTINCT);
