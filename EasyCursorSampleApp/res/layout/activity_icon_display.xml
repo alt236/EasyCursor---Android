@@ -6,21 +6,20 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical" >
 
-        <Button
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onRandomiseClick"
-            android:text="@string/button_randomise"
-            android:layout_weight="0.5"/>
+            android:paddingRight="5dp"
+            android:text="@string/label_query_type" />
 
-        <Button
-            android:layout_width="wrap_content"
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:onClick="onColoriseClick"
-            android:text="@string/button_colorise"
-            android:layout_weight="0.5"/>
+            android:entries="@array/query_types" />
     </LinearLayout>
 
     <ListView

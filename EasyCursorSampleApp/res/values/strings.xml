@@ -1,8 +1,15 @@
 <resources>
 
-    <string name="app_name">Reflective Drawable Loader Sample App</string>
+    <string name="app_name">EasyCursor Sample App</string>
 
-    <string name="button_randomise">Randomise!</string>
-    <string name="button_colorise">Colorise!</string>
-
+    <string name="label_query_type">Query Type:</string>
+    
+    <string-array name="query_types">
+        <item >Standard</item>
+        <item >EasyCursor - Standard</item>
+        <item >EasyCursor - Builder</item>
+        <item >EasyCursor - Raw</item>
+        <item >EasyCursor - Saved</item>
+    </string-array>
+    
 </resources>
