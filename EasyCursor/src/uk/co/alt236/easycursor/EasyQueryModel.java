@@ -62,6 +62,24 @@ public class EasyQueryModel {
 
 	public EasyQueryModel(){}
 	
+	public EasyQueryModel(EasySelectQueryBuilder builder) {
+		mDistinct = builder.isDistinct();
+		mGroupBy = builder.getGroupBy();
+		mHaving = null;
+		mLimit = builder.getLimit();
+		mModelComment = null;
+		mModelTag = null;
+		mModelVersion = 0;
+		mProjectionIn = builder.getSelect();
+		mRawSql = null;
+		mSelection = builder.getWhere();
+		mSelectionArgs = builder.getWhereArgs();
+		mSortOrder = builder.getOrderBy();
+		mStrict = builder.isStrict();
+		mTables = builder.getTables();
+		mQueryType = QUERY_TYPE_MANAGED;
+	}
+
 	protected EasyQueryModel(String json) throws JSONException{
 		final JSONObject payload = new JSONObject(json);
 		mDistinct = JsonPayloadHelper.getBoolean(payload, FIELD_DISTINCT);
