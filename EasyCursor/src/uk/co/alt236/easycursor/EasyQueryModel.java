@@ -6,6 +6,8 @@ import java.util.Arrays;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import uk.co.alt236.easycursor.querybuilders.interfaces.RawQueryBuilder;
+import uk.co.alt236.easycursor.querybuilders.interfaces.SelectBuilder;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
@@ -56,16 +58,34 @@ public class EasyQueryModel {
 	private String[] mSelectionArgs;
 	private String mSelection;
 	private String mGroupBy;
-	private String mHaving; 
+	private String mHaving;
 	private String mSortOrder;
 	private String mLimit;
 
 	public EasyQueryModel(){}
-	
-	public EasyQueryModel(EasySelectQueryBuilder builder) {
+
+	public EasyQueryModel(RawQueryBuilder builder) {
+		mDistinct = false;
+		mGroupBy = null;
+		mHaving = null;
+		mLimit = null;
+		mModelComment = null;
+		mModelTag = null;
+		mModelVersion = 0;
+		mProjectionIn = null;
+		mRawSql = builder.getRawSql();
+		mSelection = null;
+		mSelectionArgs = builder.getWhereArgs();
+		mSortOrder = null;
+		mStrict = false;
+		mTables = null;
+		mQueryType = QUERY_TYPE_RAW;
+	}
+
+	public EasyQueryModel(SelectBuilder builder) {
 		mDistinct = builder.isDistinct();
 		mGroupBy = builder.getGroupBy();
-		mHaving = null;
+		mHaving = builder.getHaving();
 		mLimit = builder.getLimit();
 		mModelComment = null;
 		mModelTag = null;
@@ -101,8 +121,8 @@ public class EasyQueryModel {
 
 	/**
 	 * Execute the query described by this model.
-	 * 
-	 * If the model is initialised, or if the query model is of an unsupported type, 
+	 *
+	 * If the model is initialised, or if the query model is of an unsupported type,
 	 * this method will throw an IllegalStateException.
 	 *
 	 * @param db the database to run the query against
@@ -114,21 +134,21 @@ public class EasyQueryModel {
 
 	/**
 	 * Execute the query described by this model.
-	 * 
-	 * If the model is initialised, or if the query model is of an unsupported type, 
+	 *
+	 * If the model is initialised, or if the query model is of an unsupported type,
 	 * this method will throw an IllegalStateException.
 	 *
 	 * @param db the database to run the query against
 	 * @param easyCursorClass the Class of an EasyCursor implementation. Will use {@link EasyCursor} if null.
 	 * @return the {@link EasyCursor} containing the result of the query.
-	 * @throws NoSuchMethodException 
+	 * @throws NoSuchMethodException
 	 * @throws InvocationTargetException if an exception was thrown by the invoked constructor
 	 * @throws IllegalAccessException if this constructor is not accessible
 	 * @throws InstantiationException if the class cannot be instantiated
 	 * @throws IllegalArgumentException if an incorrect number of arguments are passed, or an argument could not be converted by a widening conversion
 	 */
 	public EasyCursor execute(final SQLiteDatabase db, Class<? extends EasyCursor> easyCursorClass) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException{
-		
+
 		final Cursor c = executeQuery(db);
 		if(easyCursorClass == null){
 			return new EasyCursor(c, this);
@@ -136,11 +156,11 @@ public class EasyQueryModel {
 			return easyCursorClass.getDeclaredConstructor(Cursor.class, EasyQueryModel.class).newInstance(c, this);
 		}
 	}
-	
+
 	private Cursor executeQuery(final SQLiteDatabase db){
 		final int queryType = mQueryType;
 		final Cursor cursor;
-		
+
 		switch (queryType) {
 		case QUERY_TYPE_MANAGED:
 			final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
@@ -165,10 +185,10 @@ public class EasyQueryModel {
 		cursor.moveToFirst();
 		return cursor;
 	}
-	
+
 	/**
 	 * Gets the user specified comment of this Model
-	 * 
+	 *
 	 * @return the comment
 	 */
 	public String getComment() {
@@ -189,7 +209,7 @@ public class EasyQueryModel {
 
 	/**
 	 * Gets the user specified tag of this Model
-	 * 
+	 *
 	 * @return the tag
 	 */
 	public String getModelTag() {
@@ -199,7 +219,7 @@ public class EasyQueryModel {
 	/**
 	 * Gets the user specified version of this Model
 	 * The default value is 0
-	 * 
+	 *
 	 * @return the tag
 	 */
 	public int getModelVersion() {
@@ -213,7 +233,7 @@ public class EasyQueryModel {
 	/**
 	 * Gets the type of this query.
 	 * The supported types are provided as QUERY_TYPE_* constants in this class
-	 * 
+	 *
 	 * @return the type of the query
 	 */
 	public int getQueryType() {
@@ -270,7 +290,7 @@ public class EasyQueryModel {
 	 * @param rawSql the SQL query. The SQL string must not be ; terminated
 	 * @param selectionArgs You may include ?s in where clause in the query,
 	 *     which will be replaced by the values from selectionArgs. The
-	 *     values will be bound as Strings.     
+	 *     values will be bound as Strings.
 	 */
 	public void setQueryParams(final String rawSql, final String[] selectionArgs) {
 		if(mQueryType != QUERY_TYPE_UNINITIALISED){
@@ -287,7 +307,7 @@ public class EasyQueryModel {
 	 *
 	 * Will throw an IllegalStateExcetion if one tries to set
 	 * the parameters more than once.
-	 * 
+	 *
 	 * @param projectionIn A list of which columns to return. Passing
 	 *   null will return all columns, which is discouraged to prevent
 	 *   reading data from storage that isn't going to be used.
