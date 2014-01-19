@@ -1,15 +1,16 @@
 <resources>
 
     <string name="app_name">EasyCursor Sample App</string>
-
     <string name="label_query_type">Query Type:</string>
-    
+    <string name="label_execute">Execute</string>
+    <string name="label_save">Save</string>
+
     <string-array name="query_types">
-        <item >Standard</item>
-        <item >EasyCursor - Standard</item>
-        <item >EasyCursor - Builder</item>
-        <item >EasyCursor - Raw</item>
-        <item >EasyCursor - Saved</item>
+        <item>Android - Default</item>
+        <item>EasyCursor - Default</item>
+        <item>EasyCursor - Builder</item>
+        <item>EasyCursor - Raw</item>
+        <item>EasyCursor - Saved</item>
     </string-array>
-    
+
 </resources>

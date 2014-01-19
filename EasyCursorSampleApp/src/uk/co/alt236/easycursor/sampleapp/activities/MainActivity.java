@@ -15,16 +15,115 @@
  ******************************************************************************/
 package uk.co.alt236.easycursor.sampleapp.activities;
 
+import org.json.JSONException;
+
+import uk.co.alt236.easycursor.EasyCursor;
 import uk.co.alt236.easycursor.sampleapp.R;
-import android.app.ListActivity;
+import uk.co.alt236.easycursor.sampleapp.database.loaders.DatabaseLoader;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.widget.ListAdapter;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.SimpleCursorAdapter;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.Toast;
 
-public class MainActivity extends ListActivity{
-	ListAdapter mAdapter;
-
+public class MainActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+	private final static String EXTRA_QUERY_TYPE = "EXTRA_QUERY_TYPE";
+	private final int LOADER_ID = 1;
+	
+	private SimpleCursorAdapter mAdapter;
+	private Button mSaveQueryButton;
+	private DatabaseLoader mLoader=null;
+	private ListView mListView;
+	private Spinner mSpinner;
+	
+	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_icon_display);
+		setContentView(R.layout.activity_main);
+		mListView = (ListView) findViewById(android.R.id.list);
+		mListView.setEmptyView(findViewById(android.R.id.empty));
+		mSaveQueryButton = (Button) findViewById(R.id.buttonSave);
+		mSpinner = (Spinner) findViewById(R.id.spinner);
+	}
+	
+	@Override
+	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
+		mLoader = new DatabaseLoader(this, arg1.getInt(EXTRA_QUERY_TYPE, -2));
+		return mLoader;
+	}
+	
+	public void onExecuteClick(View v){
+		final Bundle bundle = generateLoaderBundle();
+		
+		if(bundle == null ){
+			 Toast.makeText(this, "Could not decide what query to run...", Toast.LENGTH_SHORT).show();
+		} else {
+			getSupportLoaderManager().restartLoader(
+					LOADER_ID,
+					bundle,
+					this);
+		}
+	}
+
+	private Bundle generateLoaderBundle(){
+		final Bundle bundle;
+		final String[] array = getResources().getStringArray(R.array.query_types);
+		final String selectedQuery = mSpinner.getSelectedItem().toString();
+		int res = -1;
+		
+		for(int i = 0; i < array.length; i++){
+			if(selectedQuery.equals(array[i])){
+				res = i;
+				break;
+			}
+		}
+
+		if(res == -1){
+			bundle = null;
+		} else {
+			bundle = new Bundle();
+			bundle.putInt(EXTRA_QUERY_TYPE, res);
+		}
+		
+		return bundle;
+	}
+	
+	
+	@Override
+	public void onLoaderReset(Loader<Cursor> arg0) {
+		mAdapter.changeCursor(null);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> arg0, Cursor cursor) {
+		if(cursor != null && cursor.getCount() != 0 && cursor instanceof EasyCursor){
+			final EasyCursor eCursor = (EasyCursor) cursor;
+			if(eCursor.getQueryModel() != null){
+				mSaveQueryButton.setVisibility(View.VISIBLE);
+			} else {
+				mSaveQueryButton.setVisibility(View.INVISIBLE);
+			}
+		} else {
+			mSaveQueryButton.setVisibility(View.INVISIBLE);
+		}
+
+		mAdapter.changeCursor(cursor);
+	}
+
+	public void onSaveQueryClick(View v){
+		if(mAdapter.getCursor() instanceof EasyCursor){
+			final EasyCursor cursor = (EasyCursor) mAdapter.getCursor();
+			try {
+				final String json = cursor.getQueryModel().toJson();
+			} catch (JSONException e) {
+				 Toast.makeText(this, "Error Converting QueryModel to JSON...", Toast.LENGTH_SHORT).show();
+			}
+		}
 	}
 }
