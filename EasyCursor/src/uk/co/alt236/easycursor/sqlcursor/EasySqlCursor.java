@@ -88,7 +88,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor{
 		if(mColumnIndexCache.containsKey(columnName)){
 			return mColumnIndexCache.get(columnName).intValue();
 		} else {
-			final int columnNo = getColumnIndex(columnName);
+			final int columnNo = super.getColumnIndex(columnName);
 			mColumnIndexCache.put(columnName, columnNo);
 			return columnNo;
 		}
@@ -108,7 +108,6 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor{
 			// Let the super implementation handle the exception...
 			return super.getColumnIndexOrThrow(columnName);
 		} else {
-			mColumnIndexCache.put(columnName, columnNo);
 			return columnNo;
 		}
 	}
