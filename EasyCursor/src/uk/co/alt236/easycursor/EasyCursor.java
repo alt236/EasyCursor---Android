@@ -1,6 +1,8 @@
 package uk.co.alt236.easycursor;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;
@@ -8,8 +10,8 @@ import android.util.Log;
 
 public class EasyCursor extends CursorWrapper{
 	private static final String TAG = "EasyCursor";
-	private final static int COLUMN_NOT_PRESENT = -1;
 	
+	private final static int COLUMN_NOT_PRESENT = -1;
 	public static final String DEFAULT_STRING = null;
 	public static final int DEFAULT_INT = 0;
 	public static final long DEFAULT_LONG = 0l;
@@ -17,27 +19,32 @@ public class EasyCursor extends CursorWrapper{
 	public static final double DEFAULT_DOUBLE = 0.0d;
 	public static final boolean DEFAULT_BOOLEAN = false;
 
+	private final Map<String, Integer> mColumnIndexCache;
 	private final EasyQueryModel mModel;
 	private boolean mDebugEnabled;
-
-	public EasyCursor(final Cursor cursor){
+	
+	public EasyCursor(final Cursor cursor, final EasyQueryModel model) {
 		super(cursor);
-		mModel = null;
+		mColumnIndexCache = new HashMap<String, Integer>();
+		mModel = model;
 	}
 
+	/**
+	 * Use this constructor to easily convert any other Cursor to an EasyCursor
+	 * 
+	 * @param cursor The EasyCursor
+	 */
+	public EasyCursor(final Cursor cursor){
+		this(cursor, null);
+	}
+	
 	/**
 	 * Use this constructor to easily change EasyCursor implementations
 	 * 
 	 * @param cursor The EasyCursor
 	 */
 	public EasyCursor(final EasyCursor cursor){
-		super(cursor);
-		mModel = cursor.getQueryModel();
-	}
-	
-	public EasyCursor(final Cursor cursor, final EasyQueryModel model) {
-		super(cursor);
-		mModel = model;
+		this(cursor, cursor.getQueryModel());
 	}
 
 	/**
@@ -83,6 +90,36 @@ public class EasyCursor extends CursorWrapper{
 	}
 	
 	
+	@Override
+	public int getColumnIndex(String columnName){
+		if(mColumnIndexCache.containsKey(columnName)){
+			return mColumnIndexCache.get(columnName).intValue();
+		} else {
+			final int columnNo = getColumnIndex(columnName);
+			mColumnIndexCache.put(columnName, columnNo);
+			return columnNo;
+		}
+	}
+
+	
+	@Override
+	public int getColumnIndexOrThrow(String columnName){
+		final int columnNo;
+		if(mColumnIndexCache.containsKey(columnName)){
+			columnNo = mColumnIndexCache.get(columnName).intValue();	
+		} else {
+			columnNo = getColumnIndex(columnName);
+		}
+		
+		if( columnNo == COLUMN_NOT_PRESENT){
+			// Let the super implementation handle the exception...
+			return super.getColumnIndexOrThrow(columnName);
+		} else {
+			mColumnIndexCache.put(columnName, columnNo);
+			return columnNo;
+		}
+	}
+	
 	/**
 	 * Returns the value of the requested column as a double or throws 
 	 * IllegalArgumentException if the column doesn't exist. 
@@ -94,7 +131,7 @@ public class EasyCursor extends CursorWrapper{
 	public double getDouble(final String columnName) {
 		return getDouble(getColumnIndexOrThrow(columnName));
 	}
-
+	
 	/**
 	 * Returns the value of the requested column as a float or throws 
 	 * IllegalArgumentException if the column doesn't exist. 
