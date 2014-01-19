@@ -1,4 +1,4 @@
-package uk.co.alt236.easycursor.querybuilders.interfaces;
+package uk.co.alt236.easycursor.sqlcursor.querybuilders.interfaces;
 
 public interface RawQueryBuilder {
 

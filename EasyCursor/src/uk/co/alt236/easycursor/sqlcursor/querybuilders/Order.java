@@ -1,4 +1,4 @@
-package uk.co.alt236.easycursor.querybuilders;
+package uk.co.alt236.easycursor.sqlcursor.querybuilders;
 public enum Order{
 	ASC("ASC"),
 	DESC("DESC");

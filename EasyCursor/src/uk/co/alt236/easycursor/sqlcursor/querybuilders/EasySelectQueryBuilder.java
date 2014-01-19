@@ -1,11 +1,11 @@
-package uk.co.alt236.easycursor.querybuilders;
+package uk.co.alt236.easycursor.sqlcursor.querybuilders;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-import uk.co.alt236.easycursor.EasyQueryModel;
-import uk.co.alt236.easycursor.querybuilders.interfaces.SelectBuilder;
+import uk.co.alt236.easycursor.sqlcursor.EasySqlQueryModel;
+import uk.co.alt236.easycursor.sqlcursor.querybuilders.interfaces.SelectBuilder;
 
 public class EasySelectQueryBuilder implements SelectBuilder {
 	private static final String LEFT_OUTER_JOIN = "LEFT OUTER JOIN";
@@ -167,8 +167,8 @@ public class EasySelectQueryBuilder implements SelectBuilder {
 		return this;
 	}
 
-	public EasyQueryModel build(){
-		return new EasyQueryModel(this);
+	public EasySqlQueryModel build(){
+		return new EasySqlQueryModel(this);
 	}
 
 	public void clear(){

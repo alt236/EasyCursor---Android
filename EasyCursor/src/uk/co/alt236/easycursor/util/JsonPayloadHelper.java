@@ -1,10 +1,10 @@
-package uk.co.alt236.easycursor;
+package uk.co.alt236.easycursor.util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-class JsonPayloadHelper {
+public class JsonPayloadHelper {
 
 	public static void add(final JSONObject object, final String key, final Boolean value) throws JSONException{
 		if(value != null){
