@@ -19,9 +19,13 @@ import org.json.JSONException;
 
 import uk.co.alt236.easycursor.EasyCursor;
 import uk.co.alt236.easycursor.sampleapp.R;
+import uk.co.alt236.easycursor.sampleapp.adapters.ExampleAdapter;
 import uk.co.alt236.easycursor.sampleapp.database.loaders.DatabaseLoader;
+import uk.co.alt236.easycursor.sampleapp.util.Constants;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -35,13 +39,13 @@ import android.widget.Toast;
 public class MainActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 	private final static String EXTRA_QUERY_TYPE = "EXTRA_QUERY_TYPE";
 	private final int LOADER_ID = 1;
-	
+
 	private SimpleCursorAdapter mAdapter;
 	private Button mSaveQueryButton;
 	private DatabaseLoader mLoader=null;
 	private ListView mListView;
 	private Spinner mSpinner;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
@@ -50,19 +54,27 @@ public class MainActivity extends FragmentActivity implements LoaderManager.Load
 		mListView.setEmptyView(findViewById(android.R.id.empty));
 		mSaveQueryButton = (Button) findViewById(R.id.buttonSave);
 		mSpinner = (Spinner) findViewById(R.id.spinner);
+
+
+		final String[] from = new String[]{"artist", "album"};
+		final int[] to = new int[]{R.id.artist, R.id.album};
+
+		mAdapter = new ExampleAdapter(this, R.layout.list_item, (EasyCursor) null, from, to);
+		mListView.setAdapter(mAdapter);
+		mListView.setFastScrollEnabled(true);
 	}
-	
+
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
 		mLoader = new DatabaseLoader(this, arg1.getInt(EXTRA_QUERY_TYPE, -2));
 		return mLoader;
 	}
-	
+
 	public void onExecuteClick(View v){
 		final Bundle bundle = generateLoaderBundle();
-		
+
 		if(bundle == null ){
-			 Toast.makeText(this, "Could not decide what query to run...", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Could not decide what query to run...", Toast.LENGTH_SHORT).show();
 		} else {
 			getSupportLoaderManager().restartLoader(
 					LOADER_ID,
@@ -76,7 +88,7 @@ public class MainActivity extends FragmentActivity implements LoaderManager.Load
 		final String[] array = getResources().getStringArray(R.array.query_types);
 		final String selectedQuery = mSpinner.getSelectedItem().toString();
 		int res = -1;
-		
+
 		for(int i = 0; i < array.length; i++){
 			if(selectedQuery.equals(array[i])){
 				res = i;
@@ -90,11 +102,11 @@ public class MainActivity extends FragmentActivity implements LoaderManager.Load
 			bundle = new Bundle();
 			bundle.putInt(EXTRA_QUERY_TYPE, res);
 		}
-		
+
 		return bundle;
 	}
-	
-	
+
+
 	@Override
 	public void onLoaderReset(Loader<Cursor> arg0) {
 		mAdapter.changeCursor(null);
@@ -121,8 +133,15 @@ public class MainActivity extends FragmentActivity implements LoaderManager.Load
 			final EasyCursor cursor = (EasyCursor) mAdapter.getCursor();
 			try {
 				final String json = cursor.getQueryModel().toJson();
+				final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+				final SharedPreferences.Editor editor = settings.edit();
+				editor.putString(Constants.PREFS_SAVED_QUERY, json);
+
+				// Commit the edits!
+				editor.apply();
+				Toast.makeText(this, "Query Saved Succesfully (size= "+json.length()+")!", Toast.LENGTH_SHORT).show();
 			} catch (JSONException e) {
-				 Toast.makeText(this, "Error Converting QueryModel to JSON...", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "Error Converting QueryModel to JSON...", Toast.LENGTH_SHORT).show();
 			}
 		}
 	}
