@@ -1,6 +1,10 @@
 package uk.co.alt236.easycursor.sqlcursor.querybuilders.interfaces;
 
-public interface SelectBuilder {
+import uk.co.alt236.easycursor.EasyQueryModel;
+
+public interface SqlSelectBuilder {
+
+	public abstract EasyQueryModel build();
 
 	public abstract String getGroupBy();
 
@@ -21,5 +25,4 @@ public interface SelectBuilder {
 	public abstract boolean isDistinct();
 
 	public abstract boolean isStrict();
-
 }

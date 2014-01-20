@@ -1,9 +1,12 @@
 package uk.co.alt236.easycursor.sqlcursor.querybuilders.interfaces;
 
-public interface RawQueryBuilder {
+import uk.co.alt236.easycursor.EasyQueryModel;
+
+public interface SqlRawQueryBuilder {
+
+	public abstract EasyQueryModel build();
 
 	public abstract String getRawSql();
 
 	public abstract String[] getWhereArgs();
-
 }

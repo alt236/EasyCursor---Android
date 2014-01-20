@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import uk.co.alt236.easycursor.EasyCursor;
-
 import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.util.Log;

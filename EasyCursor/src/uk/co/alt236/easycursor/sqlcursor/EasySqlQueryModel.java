@@ -8,8 +8,8 @@ import org.json.JSONObject;
 
 import uk.co.alt236.easycursor.EasyCursor;
 import uk.co.alt236.easycursor.EasyQueryModel;
-import uk.co.alt236.easycursor.sqlcursor.querybuilders.interfaces.RawQueryBuilder;
-import uk.co.alt236.easycursor.sqlcursor.querybuilders.interfaces.SelectBuilder;
+import uk.co.alt236.easycursor.sqlcursor.querybuilders.interfaces.SqlRawQueryBuilder;
+import uk.co.alt236.easycursor.sqlcursor.querybuilders.interfaces.SqlSelectBuilder;
 import uk.co.alt236.easycursor.util.JsonPayloadHelper;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -67,7 +67,7 @@ public class EasySqlQueryModel implements EasyQueryModel{
 
 	public EasySqlQueryModel(){}
 
-	public EasySqlQueryModel(RawQueryBuilder builder) {
+	public EasySqlQueryModel(SqlRawQueryBuilder builder) {
 		mDistinct = false;
 		mGroupBy = null;
 		mHaving = null;
@@ -85,7 +85,7 @@ public class EasySqlQueryModel implements EasyQueryModel{
 		mQueryType = QUERY_TYPE_RAW;
 	}
 
-	public EasySqlQueryModel(SelectBuilder builder) {
+	public EasySqlQueryModel(SqlSelectBuilder builder) {
 		mDistinct = builder.isDistinct();
 		mGroupBy = builder.getGroupBy();
 		mHaving = builder.getHaving();

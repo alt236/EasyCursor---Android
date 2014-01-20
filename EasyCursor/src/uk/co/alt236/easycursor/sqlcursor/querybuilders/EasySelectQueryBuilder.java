@@ -5,9 +5,9 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import uk.co.alt236.easycursor.sqlcursor.EasySqlQueryModel;
-import uk.co.alt236.easycursor.sqlcursor.querybuilders.interfaces.SelectBuilder;
+import uk.co.alt236.easycursor.sqlcursor.querybuilders.interfaces.SqlSelectBuilder;
 
-public class EasySelectQueryBuilder implements SelectBuilder {
+public class EasySelectQueryBuilder implements SqlSelectBuilder {
 	private static final String LEFT_OUTER_JOIN = "LEFT OUTER JOIN";
 	private static final String COLLATE = "COLLATE";
 
