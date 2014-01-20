@@ -103,7 +103,7 @@ public class EasySqlQueryModel implements EasyQueryModel{
 		mQueryType = QUERY_TYPE_MANAGED;
 	}
 
-	private EasySqlQueryModel(String json) throws JSONException{
+	public EasySqlQueryModel(String json) throws JSONException{
 		final JSONObject payload = new JSONObject(json);
 		mDistinct = JsonPayloadHelper.getBoolean(payload, FIELD_DISTINCT);
 		mGroupBy = JsonPayloadHelper.getString(payload, FIELD_GROUP_BY);
@@ -190,7 +190,7 @@ public class EasySqlQueryModel implements EasyQueryModel{
 	}
 
 	@Override
-	public String getComment() {
+	public String getModelComment() {
 		return mModelComment;
 	}
 
@@ -259,7 +259,7 @@ public class EasySqlQueryModel implements EasyQueryModel{
 	}
 
 	@Override
-	public void setComment(String modelComment) {
+	public void setModelComment(String modelComment) {
 		mModelComment = modelComment;
 	}
 
@@ -435,12 +435,12 @@ public class EasySqlQueryModel implements EasyQueryModel{
 	}
 
 	@Override
-	public void setTag(String modelTag) {
+	public void setModelTag(String modelTag) {
 		mModelTag = modelTag;
 	}
 
 	@Override
-	public void setVersion(int modelVersion) {
+	public void setModelVersion(int modelVersion) {
 		mModelVersion = modelVersion;
 	}
 
@@ -485,9 +485,5 @@ public class EasySqlQueryModel implements EasyQueryModel{
 				+ ", mSelection=" + mSelection + ", mGroupBy=" + mGroupBy
 				+ ", mHaving=" + mHaving + ", mSortOrder=" + mSortOrder
 				+ ", mLimit=" + mLimit + "]";
-	}
-
-	public static EasySqlQueryModel getInstance(String json) throws JSONException{
-		return new EasySqlQueryModel(json);
 	}
 }

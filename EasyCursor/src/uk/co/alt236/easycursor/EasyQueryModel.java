@@ -9,7 +9,7 @@ public interface EasyQueryModel {
 	 *
 	 * @return the comment
 	 */
-	public String getComment();
+	public String getModelComment();
 	
 	/**
 	 * Gets the user specified tag of this Model
@@ -26,11 +26,11 @@ public interface EasyQueryModel {
 	 */
 	public int getModelVersion();
 	
-	public void setComment(String modelComment);
+	public void setModelComment(String modelComment);
 	
-	public void setTag(String modelTag);
+	public void setModelTag(String modelTag);
 	
-	public void setVersion(int modelVersion);
+	public void setModelVersion(int modelVersion);
 	
 	/**
 	 * Will return the JSON representation of this QueryModel.
