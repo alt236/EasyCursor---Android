@@ -1,71 +1,51 @@
-Reflective Drawable Loader
+EasyCursor
 -----------
-Were you ever in a situation where you had to access Drawables based on their names (for example if the Drawable names are stored in a DB) and you had to write long lookup tables converting the names into R.drawable.ids? And maintaining them?
+For those who find statements like `cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME))` a little bit too verbose.
 
-This library is offering a way around it by using reflection to access the Drawable directly by name. You only need to include them as normal into your Res folder tree. It has been benchmarked at up to 5x faster than the platform's `Resources.getIdentifier()` method.
+This library provides an different way to run queries and use the resulting cursor.
 
-It is using LRU caching to mitigate the reflection time overhead.
+It offers:
+1) A number of code simplification functions such as `cursor.getString(COLUMN_NAME)` to reduce verbosity
+2) A way of accessing optional columns such os `cursor.optLong(COLUMN_NAME)` and `cursor.optLONG(COLUMN_NAME, FALLBACK_VALUE)`
+3) The SqlCursor's implementation of EasyCursor improves the performance of `getColumnIndex()` and `getColumnIndexOrThrow()` using a built-in cache.
+4) A way to automatically get a JSON representation of a query for persistance.
+5) A way to easily convert any existing Cursor into an EasyCursor - but you will lose the JSON representation :)
+6) A way to access booleans directly (i.e. cursor.getBoolean()/cursor.optBoolean(). The default implementation of EasySqlCursor assumes that `true==1` and `false!=1` where 1 is a number, but it can be overriden by subclassing.
 
-It also includes a few convenience functions to help change Drawable colour based on a hex colour value. 
+The way this happens via an Interface, EasyCursor, which extends the bog standard Cursor.
 
-Basic Usage
+At the moment the only implementation of EasyCursor is EasySqlCursor.
+
+Installation
 -----------
-To use:
+To install:
 
-1. Download a copy of the ReflectiveDrawableLoader library and reference it in your project.
-2. Get an Instance of the ReflectiveDrawableLoader by calling `ReflectiveDrawableLoader.getInstance(Context);`
-3. Start getting your Drawable ids by calling  any of the getDrawable functions.
- 
-<b>Drawable families</b>
+Download a copy of the EasyCursor library and reference it in your project. 
+Alternatively you can produce a JAR file and use that.
 
-The library is using a concept of icon families to distinguish between different variations of similar icons.
-For example, icons in Android can come in a Holo Light and Holo Dark variant.
-
-So, if you call `getDrawableId("submarine", "yellow", R.drawable.ic_list_fallback)` then the library will try to look for an icon called `yellow_submarine` and return its Id if it exists, or `R.drawable.ic_list_fallback` otherwise.
-
-Similarly, if you call `getDrawableId("submarine", null, R.drawable.ic_list_fallback)` or  `getDrawableId("submarine", R.drawable.ic_list_fallback)` then the library will try to look for an icon called `submarine` and return its Id if it exists, or `R.drawable.ic_list_fallback` otherwise. 
-
-Of course, nothing stops you from calling  `getDrawableId("yellow_submarine", null, R.drawable.ic_list_fallback)` to get the `yellow_submarine` icon as well.
-
-<b>Convenience Functions and Drawable naming conventions</b>
-
-The convenience functions in the library assume that Drawables are named using the convention described here [Icon Design Guidelines](http://developer.android.com/guide/practices/ui_guidelines/icon_design.html).
-
-So for example,
-
-If you call `getListDrawableId("submarine", "yellow", R.drawable.ic_list_fallback);` then the library will try to look for an icon called `ic_list_yellow_submarine` and return its Id if it exists, or `R.drawable.ic_list_fallback` otherwise.
-
-Colorising Drawables
+Generating an EasyCursor for SQL
 -----------
+<b>1. The Easy way</b>
 
-If you ask for a Colorised Icon by calling `getColorisedListDrawable("table", "furniture", "#c0c0c0", R.drawable.ic_list_fallback);` instead of an Id you will get a DrawableResourceContainer object which will contain the Id of the Drawable to use, the colour to use as and Integer and a couple convenience functions to use to colourise the Drawable. If there was an error parsing the colour, the Integer will be null.
+You can convert an existing Cursor to an EasyCursor by wrapping like this:
+`EasyCursor eCursor = new EasySqlCursor(boringOldCursor);`
 
-For sample code on how this works and the different between the two convenience color filtering functions have a look at ColorisedDrawableArrayAdapter.java in the Sample App project.
+<b>2. Using an EasyQueryModel</b>
 
-Also, the convenience functions do not apply the colorFilter to the Drawable directly, but to the ImageView holding it.
+This is the "native" way of using EasyCursor.
+*TODO*
 
-Feel free to expand the DrawableResourceContainer to add other colour filters or behaviours.
+<b>3. Using an QueryBuilder Interface</b>
+*TODO*
 
 Jarification
 -----------
 Type `ant jar` at the root of the Library Project to produce a Jar file.
 
-ProGuard
---------
-
-ProGuard users must ensure that the R class, its inner drawable class and all fields are not obfuscated for the runtime reflection to work. Add the following to your your proguard-project.txt file:
-
-    -keepattributes InnerClasses
-    
-    -keep class **.R
-    -keep class **.R$* {
-        <fields>;
-    }
 
 Changelog
 -----------
-* v0.0.1 First public release
-* v0.0.2 Bugfixes, added caching of the resource classes in ReflectionUtils.
+* v0.1.0 First public release
 
 Permission Explanation
 -----------
@@ -73,8 +53,7 @@ Permission Explanation
 	
 Sample App Screenshots
 -----------
-![screenshot1](https://github.com/alt236/Reflective-Drawable-Loader---Android/raw/master/screenshots/screenshot_1.png)
-![screenshot2](https://github.com/alt236/Reflective-Drawable-Loader---Android/raw/master/screenshots/screenshot_2.png)
+*TODO*
 
 Links
 -----------
@@ -84,12 +63,7 @@ Credits
 -----------
 Author: [Alexandros Schillings](https://github.com/alt236).
 
-Based on code by [Jeff Gilfelt](https://github.com/jgilfelt), who showed me that contrary to my academic reservations, reflectively loading icons is not that bad :)
-
-All logos are the property of their respective owners.
-
-The icons used for the example app were downloaded from here: [Android Design](http://developer.android.com/design/downloads/index.htm)
-
 The code in this project is licensed under the Apache Software License 2.0.
 
 Copyright (c) 2013 Alexandros Schillings.
+
