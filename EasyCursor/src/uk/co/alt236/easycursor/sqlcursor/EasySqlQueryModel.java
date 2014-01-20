@@ -113,7 +113,7 @@ public class EasySqlQueryModel implements EasyQueryModel{
 		mModelTag = JsonPayloadHelper.getString(payload, FIELD_MODEL_TAG);
 		mModelVersion = JsonPayloadHelper.getInt(payload, FIELD_MODEL_VERSION);
 		mProjectionIn = JsonPayloadHelper.getStringArray(payload, FIELD_PROJECTION_IN);
-		mRawSql = JsonPayloadHelper.getString(payload, mRawSql);
+		mRawSql = JsonPayloadHelper.getString(payload, FIELD_RAW_SQL);
 		mSelection = JsonPayloadHelper.getString(payload, FIELD_SELECTION);
 		mSelectionArgs = JsonPayloadHelper.getStringArray(payload, FIELD_SELECTION_ARGS);
 		mSortOrder = JsonPayloadHelper.getString(payload, FIELD_SORT_ORDER);
