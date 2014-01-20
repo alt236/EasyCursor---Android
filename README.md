@@ -78,6 +78,7 @@ Not all functions are available for all datatypes though, as some are meaningles
 
 ##Booleans
 In addition you get the following functions for booleans, which work the same as the ones above:
+
 * `easycursor.getBoolean(String columnName)`
 * `easycursor.optBoolean(String columnName)`
 * `easycursor.optBoolean(String columnName, boolean fallback)`
