@@ -54,7 +54,7 @@ public class ExampleDatabase extends SQLiteAssetHelper {
 				QueryConstants.DEFAULT_WHERE,
 				QueryConstants.RAW_SQL_PARAMS,
 				QueryConstants.DEFAULT_ORDER_BY);
-		model.setComment("Default easy query");
+		model.setModelComment("Default easy query");
 		return model.execute(getReadableDatabase());
 	}
 
@@ -66,14 +66,14 @@ public class ExampleDatabase extends SQLiteAssetHelper {
 				.setWhereArgs(QueryConstants.RAW_SQL_PARAMS)
 				.setOrderBy(QueryConstants.DEFAULT_ORDER_BY)
 				.build();
-		model.setComment("Builder query");
+		model.setModelComment("Builder query");
 		return model.execute(getReadableDatabase());
 	}
 
 	public EasyCursor doRawQuery() {
 		final EasySqlQueryModel model = new EasySqlQueryModel();
 		model.setQueryParams(QueryConstants.RAW_QUERY, QueryConstants.RAW_SQL_PARAMS);
-		model.setComment("Raw query");
+		model.setModelComment("Raw query");
 		return model.execute(getReadableDatabase());
 	}
 
@@ -86,7 +86,7 @@ public class ExampleDatabase extends SQLiteAssetHelper {
 			result = null;
 		} else {
 			try {
-				final EasySqlQueryModel model = EasySqlQueryModel.getInstance(json);
+				final EasySqlQueryModel model = new EasySqlQueryModel(json);
 				result = model.execute(getReadableDatabase());
 			} catch (JSONException e) {
 				e.printStackTrace();
