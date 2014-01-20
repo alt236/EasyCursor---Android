@@ -194,14 +194,32 @@ public class EasySqlQueryModel implements EasyQueryModel{
 		return mModelComment;
 	}
 
+	/**
+	 * Returns the GroupBy clause of this model.
+	 * If no such clause is set, it return null.
+	 * 
+	 * @return the GroupBy clause
+	 */
 	public String getGroupBy() {
 		return mGroupBy;
 	}
 
+	/**
+	 * Returns the Having clause of this model.
+	 * If no such clause is set, it return null.
+	 * 
+	 * @return the Having clause
+	 */
 	public String getHaving() {
 		return mHaving;
 	}
 
+	/**
+	 * Returns the Limit clause of this model.
+	 * If no such clause is set, it return null.
+	 * 
+	 * @return the Limit clause
+	 */
 	public String getLimit() {
 		return mLimit;
 	}
@@ -216,6 +234,12 @@ public class EasySqlQueryModel implements EasyQueryModel{
 		return mModelVersion;
 	}
 
+	/**
+	 * Returns the Projection clause of this model.
+	 * If no such clause is set, it return null.
+	 * 
+	 * @return the Projection clause
+	 */
 	public String[] getProjectionIn() {
 		return mProjectionIn;
 	}
@@ -234,26 +258,61 @@ public class EasySqlQueryModel implements EasyQueryModel{
 		return mRawSql;
 	}
 
+	/**
+	 * Returns the Selection clause of this model.
+	 * If no such clause is set, it return null.
+	 * 
+	 * @return the Selection clause
+	 */
 	public String getSelection() {
 		return mSelection;
 	}
 
+	/**
+	 * Returns the Selection arguments of this model.
+	 * If no such arguments are set, it return null.
+	 * 
+	 * @return the Selection clause
+	 */
 	public String[] getSelectionArgs() {
 		return mSelectionArgs;
 	}
 
+	/**
+	 * Returns the Sort Order clause of this model.
+	 * If no such clause is set, it return null.
+	 * 
+	 * @return the Sort Order clause
+	 */
 	public String getSortOrder() {
 		return mSortOrder;
 	}
 
+	/**
+	 * Returns the Tables this model is set to run against.
+	 * If no such clause is set, it return null.
+	 * 
+	 * @return the Tables clause
+	 */
 	public String getTables(){
 		return mTables;
 	}
 
+	/**
+	 * Returns whether or not this query is set to be Distinct.
+	 * 
+	 * @return the Distinct setting
+	 */
 	public boolean isDistinct() {
 		return mDistinct;
 	}
 
+	/**
+	 * Returns whether or not this query is set to be Strict.
+	 * This value is ignored if you are on a device running API < 14.
+	 * 
+	 * @return the Strict setting
+	 */
 	public boolean isStrict() {
 		return mStrict;
 	}

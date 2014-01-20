@@ -26,11 +26,26 @@ public interface EasyQueryModel {
 	 */
 	public int getModelVersion();
 	
-	public void setModelComment(String modelComment);
+	/**
+	 * Sets a comment on the model
+	 *
+	 * @param comment the comment to save
+	 */
+	public void setModelComment(String comment);
 	
-	public void setModelTag(String modelTag);
+	/**
+	 * Sets a tag on the model
+	 *
+	 * @param tag the tag to save
+	 */
+	public void setModelTag(String tag);
 	
-	public void setModelVersion(int modelVersion);
+	/**
+	 * Sets the model version
+	 *
+	 * @param version the version to save
+	 */
+	public void setModelVersion(int version);
 	
 	/**
 	 * Will return the JSON representation of this QueryModel.
