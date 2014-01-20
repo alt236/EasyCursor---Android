@@ -8,7 +8,7 @@ import android.util.Log;
 
 import com.commonsware.cwac.loaderex.acl.AbstractCursorLoader;
 
-public class DatabaseLoader extends AbstractCursorLoader {	
+public class DatabaseLoader extends AbstractCursorLoader {
 	public final static int QUERY_TYPE_ANDROID_DEFAULT = 0;
 	public final static int QUERY_TYPE_EASYCURSOR_DEFAULT = 1;
 	public final static int QUERY_TYPE_EASYCURSOR_BUILDER = 2;
@@ -32,13 +32,13 @@ public class DatabaseLoader extends AbstractCursorLoader {
 
 		switch(mType){
 		case QUERY_TYPE_ANDROID_DEFAULT:
-			result = null;
+			result = db.doAndroidDefaultQuery();
 			break;
 		case QUERY_TYPE_EASYCURSOR_DEFAULT:
-			result = null;
+			result = db.doEasyCursorDefaultQuery();
 			break;
 		case QUERY_TYPE_EASYCURSOR_BUILDER:
-			result = null;
+			result = db.doBuilderQuery();
 			break;
 		case QUERY_TYPE_EASYCURSOR_RAW:
 			result = db.doRawQuery();
