@@ -20,29 +20,20 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor{
 	public static final double DEFAULT_DOUBLE = 0.0d;
 	public static final boolean DEFAULT_BOOLEAN = false;
 	private final Map<String, Integer> mColumnIndexCache;
-	
+
 	private final EasySqlQueryModel mModel;
 
 	private boolean mDebugEnabled;
-	
+
 	/**
 	 * Use this constructor to easily convert any other Cursor to an EasyCursor
-	 * 
+	 *
 	 * @param cursor The EasyCursor
 	 */
 	public EasySqlCursor(final Cursor cursor){
 		this(cursor, null);
 	}
-	
-	/**
-	 * Use this constructor to easily change EasyCursor implementations
-	 * 
-	 * @param cursor The EasyCursor
-	 */
-	public EasySqlCursor(final EasySqlCursor cursor){
-		this(cursor.getWrappedCursor(), cursor.getQueryModel());
-	}
-	
+
 	protected EasySqlCursor(final Cursor cursor, final EasySqlQueryModel model) {
 		super(cursor);
 		mColumnIndexCache = new HashMap<String, Integer>();
@@ -50,11 +41,23 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor{
 	}
 
 	/**
+	 * Use this constructor to easily change EasyCursor implementations
+	 *
+	 * @param cursor The EasyCursor
+	 */
+	public EasySqlCursor(final EasySqlCursor cursor){
+		//
+		// Sadly getWrappedCursor is only available in API 11
+		//
+		this(cursor, cursor.getQueryModel());
+	}
+
+	/**
 	 * Performs the necessary calculations to assess the value of a boolean
-	 * 
+	 *
 	 * The default logic used to calculate the boolean is the following:
 	 * if (value_as_int == 1) ? true : false;
-	 * 
+	 *
 	 * @param columnNumber the number of the column containing the value to assess
 	 * @return true if the value of the boolean is true, false otherwise
 	 */
@@ -71,7 +74,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor{
 		return getBlob(getColumnIndexOrThrow(columnName));
 	}
 
-	
+
 	/* (non-Javadoc)
 	 * @see uk.co.alt236.easycursor.EasyCursor#getBoolean(java.lang.String)
 	 */
@@ -80,8 +83,8 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor{
 		final int columnNumber = getColumnIndexOrThrow(columnName);
 		return calcBoolean(columnNumber);
 	}
-	
-	
+
+
 	@Override
 	public int getColumnIndex(String columnName){
 		if(mColumnIndexCache.containsKey(columnName)){
@@ -93,16 +96,16 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor{
 		}
 	}
 
-	
+
 	@Override
 	public int getColumnIndexOrThrow(String columnName){
 		final int columnNo;
 		if(mColumnIndexCache.containsKey(columnName)){
-			columnNo = mColumnIndexCache.get(columnName).intValue();	
+			columnNo = mColumnIndexCache.get(columnName).intValue();
 		} else {
 			columnNo = getColumnIndex(columnName);
 		}
-		
+
 		if( columnNo == COLUMN_NOT_PRESENT){
 			// Let the super implementation handle the exception...
 			return super.getColumnIndexOrThrow(columnName);
@@ -110,7 +113,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor{
 			return columnNo;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see uk.co.alt236.easycursor.EasyCursor#getDouble(java.lang.String)
 	 */
@@ -118,7 +121,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor{
 	public double getDouble(final String columnName) {
 		return getDouble(getColumnIndexOrThrow(columnName));
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see uk.co.alt236.easycursor.EasyCursor#getFloat(java.lang.String)
 	 */
@@ -213,7 +216,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor{
 			return null;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see uk.co.alt236.easycursor.EasyCursor#optDouble(java.lang.String)
 	 */
@@ -249,7 +252,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor{
 			return null;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see uk.co.alt236.easycursor.EasyCursor#optFloat(java.lang.String)
 	 */
@@ -285,7 +288,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor{
 			return null;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see uk.co.alt236.easycursor.EasyCursor#optInt(java.lang.String)
 	 */
@@ -321,7 +324,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor{
 			return null;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see uk.co.alt236.easycursor.EasyCursor#optLong(java.lang.String)
 	 */
@@ -357,7 +360,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor{
 			return null;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see uk.co.alt236.easycursor.EasyCursor#optString(java.lang.String)
 	 */
