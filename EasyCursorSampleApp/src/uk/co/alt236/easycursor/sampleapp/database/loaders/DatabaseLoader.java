@@ -10,10 +10,11 @@ import com.commonsware.cwac.loaderex.acl.AbstractCursorLoader;
 
 public class DatabaseLoader extends AbstractCursorLoader {
 	public final static int QUERY_TYPE_ANDROID_DEFAULT = 0;
-	public final static int QUERY_TYPE_EASYCURSOR_DEFAULT = 1;
-	public final static int QUERY_TYPE_EASYCURSOR_BUILDER = 2;
-	public final static int QUERY_TYPE_EASYCURSOR_RAW = 3;
-	public final static int QUERY_TYPE_EASYCURSOR_SAVED = 4;
+	public final static int QUERY_TYPE_EASYCURSOR_DEFAULT_SELECT = 1;
+	public final static int QUERY_TYPE_EASYCURSOR_DEFAULT_RAW = 2;
+	public final static int QUERY_TYPE_EASYCURSOR_CUSTOM_BUILDER = 3;
+	public final static int QUERY_TYPE_EASYCURSOR_COMPATIBILITY = 4;
+	public final static int QUERY_TYPE_EASYCURSOR_SAVED = 5;
 
 	private final int mType;
 
@@ -34,14 +35,17 @@ public class DatabaseLoader extends AbstractCursorLoader {
 		case QUERY_TYPE_ANDROID_DEFAULT:
 			result = db.doAndroidDefaultQuery();
 			break;
-		case QUERY_TYPE_EASYCURSOR_DEFAULT:
-			result = db.doEasyCursorDefaultQuery();
+		case QUERY_TYPE_EASYCURSOR_DEFAULT_SELECT:
+			result = db.doEasySelectQuery();
 			break;
-		case QUERY_TYPE_EASYCURSOR_BUILDER:
-			result = db.doBuilderQuery();
+		case QUERY_TYPE_EASYCURSOR_DEFAULT_RAW:
+			result = db.doEasyRawQuery();
 			break;
-		case QUERY_TYPE_EASYCURSOR_RAW:
-			result = db.doRawQuery();
+		case QUERY_TYPE_EASYCURSOR_CUSTOM_BUILDER:
+			result = db.doEasyCustomBuilderQuery();
+			break;
+		case QUERY_TYPE_EASYCURSOR_COMPATIBILITY:
+			result = db.doEasyCursorCompatQuery();
 			break;
 		case QUERY_TYPE_EASYCURSOR_SAVED:
 			result = db.doSavedQuery(getContext());

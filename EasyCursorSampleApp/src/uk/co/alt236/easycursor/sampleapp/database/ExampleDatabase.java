@@ -7,6 +7,7 @@ import uk.co.alt236.easycursor.sampleapp.database.builders.LousyQueryBuilder;
 import uk.co.alt236.easycursor.sampleapp.util.Constants;
 import uk.co.alt236.easycursor.sqlcursor.EasySqlCursor;
 import uk.co.alt236.easycursor.sqlcursor.EasySqlQueryModel;
+import uk.co.alt236.easycursor.sqlcursor.querybuilders.EasyCompatSqlModelBuilder;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -42,38 +43,53 @@ public class ExampleDatabase extends SQLiteAssetHelper {
 		return new EasySqlCursor(cursor);
 	}
 
-	public EasyCursor doEasyCursorDefaultQuery(){
-		// Things to note:
-		// The EasySqlQueryModel automatically moves the cursor to the first item.
-
-		final EasySqlQueryModel model = new EasySqlQueryModel();
-		model.setTables(QueryConstants.DEFAULT_TABLES);
-		model.setDistinct(true);
-		model.setQueryParams(
+	public EasyCursor doEasyCursorCompatQuery(){
+		final EasyCompatSqlModelBuilder builder = new EasyCompatSqlModelBuilder();
+		builder.setTables(QueryConstants.DEFAULT_TABLES);
+		builder.setDistinct(true);
+		builder.setQueryParams(
 				QueryConstants.DEFAULT_SELECT,
 				QueryConstants.DEFAULT_WHERE,
 				QueryConstants.RAW_SQL_PARAMS,
 				QueryConstants.DEFAULT_ORDER_BY);
-		model.setModelComment("Default easy query");
+
+		final EasySqlQueryModel model = builder.build();
+		model.setModelComment("Default compat query");
 		return model.execute(getReadableDatabase());
 	}
 
-
-	public EasyCursor doBuilderQuery(){
+	public EasyCursor doEasyCustomBuilderQuery(){
 		final LousyQueryBuilder builder = new LousyQueryBuilder();
 		final EasySqlQueryModel model = builder.setSelect(QueryConstants.DEFAULT_SELECT)
 				.setWhere(QueryConstants.DEFAULT_WHERE)
 				.setWhereArgs(QueryConstants.RAW_SQL_PARAMS)
 				.setOrderBy(QueryConstants.DEFAULT_ORDER_BY)
 				.build();
-		model.setModelComment("Builder query");
+		model.setModelComment("Custom Builder query");
 		return model.execute(getReadableDatabase());
 	}
 
-	public EasyCursor doRawQuery() {
-		final EasySqlQueryModel model = new EasySqlQueryModel();
-		model.setQueryParams(QueryConstants.RAW_QUERY, QueryConstants.RAW_SQL_PARAMS);
-		model.setModelComment("Raw query");
+	public EasyCursor doEasyRawQuery() {
+		final EasySqlQueryModel model = new EasySqlQueryModel.RawQueryBuilder()
+		.setRawSql(QueryConstants.RAW_QUERY)
+		.setSelectionArgs(QueryConstants.RAW_SQL_PARAMS)
+		.setModelComment("Raw query")
+		.build();
+
+		return model.execute(getReadableDatabase());
+	}
+
+	public EasyCursor doEasySelectQuery(){
+		final EasySqlQueryModel model = new EasySqlQueryModel.SelectQueryBuilder()
+		.setTables(QueryConstants.DEFAULT_TABLES)
+		.setDistict(true)
+		.setProjectionIn(QueryConstants.DEFAULT_SELECT)
+		.setSelection(QueryConstants.DEFAULT_WHERE)
+		.setSelectionArgs(QueryConstants.RAW_SQL_PARAMS)
+		.setSortOrder(QueryConstants.DEFAULT_ORDER_BY)
+		.setModelComment("Default easy query")
+		.build();
+
 		return model.execute(getReadableDatabase());
 	}
 

@@ -7,9 +7,10 @@
 
     <string-array name="query_types">
         <item>Android - Default</item>
-        <item>EasyCursor - Default</item>
-        <item>EasyCursor - Builder</item>
-        <item>EasyCursor - Raw</item>
+        <item>EasyCursor - Default Select</item>
+        <item>EasyCursor - Default Raw</item>
+        <item>EasyCursor - Custom Builder</item>
+        <item>EasyCursor - Compatibility</item>
         <item>EasyCursor - Saved</item>
     </string-array>
 
