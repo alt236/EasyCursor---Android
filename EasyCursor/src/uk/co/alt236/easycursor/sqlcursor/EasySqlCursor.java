@@ -1,8 +1,6 @@
 package uk.co.alt236.easycursor.sqlcursor;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 import uk.co.alt236.easycursor.EasyCursor;
 import android.database.Cursor;
@@ -19,7 +17,6 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor{
 
 	public static final double DEFAULT_DOUBLE = 0.0d;
 	public static final boolean DEFAULT_BOOLEAN = false;
-	private final Map<String, Integer> mColumnIndexCache;
 
 	private final EasySqlQueryModel mModel;
 
@@ -36,7 +33,6 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor{
 
 	protected EasySqlCursor(final Cursor cursor, final EasySqlQueryModel model) {
 		super(cursor);
-		mColumnIndexCache = new HashMap<String, Integer>();
 		mModel = model;
 	}
 
@@ -82,36 +78,6 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor{
 	public boolean getBoolean(final String columnName) {
 		final int columnNumber = getColumnIndexOrThrow(columnName);
 		return calcBoolean(columnNumber);
-	}
-
-
-	@Override
-	public int getColumnIndex(String columnName){
-		if(mColumnIndexCache.containsKey(columnName)){
-			return mColumnIndexCache.get(columnName).intValue();
-		} else {
-			final int columnNo = super.getColumnIndex(columnName);
-			mColumnIndexCache.put(columnName, columnNo);
-			return columnNo;
-		}
-	}
-
-
-	@Override
-	public int getColumnIndexOrThrow(String columnName){
-		final int columnNo;
-		if(mColumnIndexCache.containsKey(columnName)){
-			columnNo = mColumnIndexCache.get(columnName).intValue();
-		} else {
-			columnNo = getColumnIndex(columnName);
-		}
-
-		if( columnNo == COLUMN_NOT_PRESENT){
-			// Let the super implementation handle the exception...
-			return super.getColumnIndexOrThrow(columnName);
-		} else {
-			return columnNo;
-		}
 	}
 
 	/* (non-Javadoc)
