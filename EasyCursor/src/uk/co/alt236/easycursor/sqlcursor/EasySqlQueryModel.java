@@ -25,9 +25,9 @@ public class EasySqlQueryModel implements EasyQueryModel{
 	private static final String FIELD_GROUP_BY = "groupBy";
 	private static final String FIELD_HAVING = "having";
 	private static final String FIELD_LIMIT = "limit";
-	private static final String FIELD_MODEL_COMMENT = "comment";
-	private static final String FIELD_MODEL_TAG = "tag";
-	private static final String FIELD_MODEL_VERSION = "version";
+	private static final String FIELD_MODEL_COMMENT = "modelComment";
+	private static final String FIELD_MODEL_TAG = "modelTag";
+	private static final String FIELD_MODEL_VERSION = "modelVersion";
 	private static final String FIELD_PROJECTION_IN = "projectionIn";
 	private static final String FIELD_QUERY_TYPE = "queryType";
 	private static final String FIELD_RAW_SQL = "rawSql";
@@ -197,7 +197,7 @@ public class EasySqlQueryModel implements EasyQueryModel{
 	/**
 	 * Returns the GroupBy clause of this model.
 	 * If no such clause is set, it return null.
-	 * 
+	 *
 	 * @return the GroupBy clause
 	 */
 	public String getGroupBy() {
@@ -207,7 +207,7 @@ public class EasySqlQueryModel implements EasyQueryModel{
 	/**
 	 * Returns the Having clause of this model.
 	 * If no such clause is set, it return null.
-	 * 
+	 *
 	 * @return the Having clause
 	 */
 	public String getHaving() {
@@ -217,7 +217,7 @@ public class EasySqlQueryModel implements EasyQueryModel{
 	/**
 	 * Returns the Limit clause of this model.
 	 * If no such clause is set, it return null.
-	 * 
+	 *
 	 * @return the Limit clause
 	 */
 	public String getLimit() {
@@ -237,7 +237,7 @@ public class EasySqlQueryModel implements EasyQueryModel{
 	/**
 	 * Returns the Projection clause of this model.
 	 * If no such clause is set, it return null.
-	 * 
+	 *
 	 * @return the Projection clause
 	 */
 	public String[] getProjectionIn() {
@@ -261,7 +261,7 @@ public class EasySqlQueryModel implements EasyQueryModel{
 	/**
 	 * Returns the Selection clause of this model.
 	 * If no such clause is set, it return null.
-	 * 
+	 *
 	 * @return the Selection clause
 	 */
 	public String getSelection() {
@@ -271,7 +271,7 @@ public class EasySqlQueryModel implements EasyQueryModel{
 	/**
 	 * Returns the Selection arguments of this model.
 	 * If no such arguments are set, it return null.
-	 * 
+	 *
 	 * @return the Selection clause
 	 */
 	public String[] getSelectionArgs() {
@@ -281,7 +281,7 @@ public class EasySqlQueryModel implements EasyQueryModel{
 	/**
 	 * Returns the Sort Order clause of this model.
 	 * If no such clause is set, it return null.
-	 * 
+	 *
 	 * @return the Sort Order clause
 	 */
 	public String getSortOrder() {
@@ -291,7 +291,7 @@ public class EasySqlQueryModel implements EasyQueryModel{
 	/**
 	 * Returns the Tables this model is set to run against.
 	 * If no such clause is set, it return null.
-	 * 
+	 *
 	 * @return the Tables clause
 	 */
 	public String getTables(){
@@ -300,7 +300,7 @@ public class EasySqlQueryModel implements EasyQueryModel{
 
 	/**
 	 * Returns whether or not this query is set to be Distinct.
-	 * 
+	 *
 	 * @return the Distinct setting
 	 */
 	public boolean isDistinct() {
@@ -310,7 +310,7 @@ public class EasySqlQueryModel implements EasyQueryModel{
 	/**
 	 * Returns whether or not this query is set to be Strict.
 	 * This value is ignored if you are on a device running API < 14.
-	 * 
+	 *
 	 * @return the Strict setting
 	 */
 	public boolean isStrict() {
@@ -412,9 +412,8 @@ public class EasySqlQueryModel implements EasyQueryModel{
 	/**
 	 * Sets the query parameters.
 	 *
-	 * Will throw an IllegalStateExcetion if one tries to set
-	 * the parameters more than once.
-	 *
+	 * @throws IllegalStateExcetion if one tries to set
+	 *   the parameters more than once.
 	 * @param projectionIn A list of which columns to return. Passing
 	 *   null will return all columns, which is discouraged to prevent
 	 *   reading data from storage that isn't going to be used.
@@ -508,6 +507,8 @@ public class EasySqlQueryModel implements EasyQueryModel{
 	 * It can be converted back into a QueryModel object using the
 	 * {@link #getInstance(String)} static method.
 	 *
+	 * @throws IllegalStateExcetion if one tries to create
+	 *   a JSON representation when the model is uninitialised.
 	 * @return the resulting JSON String
 	 * @throws JSONException if there was an error creating the JSON
 	 */
@@ -515,21 +516,35 @@ public class EasySqlQueryModel implements EasyQueryModel{
 	public String toJson() throws JSONException{
 		final JSONObject payload = new JSONObject();
 
-		JsonPayloadHelper.add(payload, FIELD_DISTINCT, mDistinct);
-		JsonPayloadHelper.add(payload, FIELD_GROUP_BY, mGroupBy);
-		JsonPayloadHelper.add(payload, FIELD_HAVING, mHaving);
-		JsonPayloadHelper.add(payload, FIELD_LIMIT, mLimit);
+		switch(mQueryType){
+		case QUERY_TYPE_MANAGED:
+			JsonPayloadHelper.add(payload, FIELD_DISTINCT, mDistinct);
+			JsonPayloadHelper.add(payload, FIELD_GROUP_BY, mGroupBy);
+			JsonPayloadHelper.add(payload, FIELD_HAVING, mHaving);
+			JsonPayloadHelper.add(payload, FIELD_LIMIT, mLimit);
+			JsonPayloadHelper.add(payload, FIELD_PROJECTION_IN, mProjectionIn);
+			JsonPayloadHelper.add(payload, FIELD_SELECTION, mSelection);
+			JsonPayloadHelper.add(payload, FIELD_SELECTION_ARGS, mSelectionArgs);
+			JsonPayloadHelper.add(payload, FIELD_SORT_ORDER, mSortOrder);
+			JsonPayloadHelper.add(payload, FIELD_STRICT, mStrict);
+			JsonPayloadHelper.add(payload, FIELD_TABLES, mTables);
+			break;
+		case QUERY_TYPE_RAW:
+			JsonPayloadHelper.add(payload, FIELD_RAW_SQL, mRawSql);
+			JsonPayloadHelper.add(payload, FIELD_SELECTION_ARGS, mSelectionArgs);
+			break;
+		case QUERY_TYPE_UNINITIALISED:
+			throw new IllegalStateException("Cannot produce the JSON representation of a uninitialised model file!");
+		default:
+			throw new IllegalStateException("Attempted to create JSON representation of an unknown query type: " + mQueryType);
+		}
+
+		// Common Fields
 		JsonPayloadHelper.add(payload, FIELD_MODEL_COMMENT, mModelComment);
 		JsonPayloadHelper.add(payload, FIELD_MODEL_TAG, mModelTag);
 		JsonPayloadHelper.add(payload, FIELD_MODEL_VERSION, mModelVersion);
-		JsonPayloadHelper.add(payload, FIELD_PROJECTION_IN, mProjectionIn);
-		JsonPayloadHelper.add(payload, FIELD_RAW_SQL, mRawSql);
-		JsonPayloadHelper.add(payload, FIELD_SELECTION, mSelection);
-		JsonPayloadHelper.add(payload, FIELD_SELECTION_ARGS, mSelectionArgs);
-		JsonPayloadHelper.add(payload, FIELD_SORT_ORDER, mSortOrder);
-		JsonPayloadHelper.add(payload, FIELD_STRICT, mStrict);
-		JsonPayloadHelper.add(payload, FIELD_TABLES, mTables);
 		JsonPayloadHelper.add(payload, FIELD_QUERY_TYPE, mQueryType);
+
 		return payload.toString();
 	}
 
