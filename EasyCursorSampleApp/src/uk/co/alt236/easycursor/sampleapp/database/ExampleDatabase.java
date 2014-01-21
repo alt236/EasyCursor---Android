@@ -51,6 +51,8 @@ public class ExampleDatabase extends SQLiteAssetHelper {
 				QueryConstants.DEFAULT_SELECT,
 				QueryConstants.DEFAULT_WHERE,
 				QueryConstants.RAW_SQL_PARAMS,
+				null,
+				null,
 				QueryConstants.DEFAULT_ORDER_BY);
 
 		final EasySqlQueryModel model = builder.build();
