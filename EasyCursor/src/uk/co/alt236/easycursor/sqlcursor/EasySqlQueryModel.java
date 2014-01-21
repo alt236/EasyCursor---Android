@@ -8,9 +8,11 @@ import org.json.JSONObject;
 
 import uk.co.alt236.easycursor.EasyCursor;
 import uk.co.alt236.easycursor.EasyQueryModel;
+import uk.co.alt236.easycursor.sqlcursor.querybuilders.EasyCompatSqlModelBuilder;
 import uk.co.alt236.easycursor.sqlcursor.querybuilders.interfaces.SqlRawQueryBuilder;
 import uk.co.alt236.easycursor.sqlcursor.querybuilders.interfaces.SqlSelectBuilder;
 import uk.co.alt236.easycursor.util.JsonPayloadHelper;
+import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
@@ -37,7 +39,7 @@ public class EasySqlQueryModel implements EasyQueryModel{
 	private static final String FIELD_STRICT = "strict";
 	private static final String FIELD_TABLES = "tables";
 
-	private int mQueryType = QUERY_TYPE_UNINITIALISED;
+	private final int mQueryType;
 
 	//
 	// Metadata
@@ -49,23 +51,75 @@ public class EasySqlQueryModel implements EasyQueryModel{
 	//
 	// Raw Query
 	//
-	private String mRawSql;
+	final private String mRawSql;
 
 	//
 	// Managed Query
 	//
-	private boolean mDistinct;
-	private boolean mStrict;
-	private String mTables;
-	private String[] mProjectionIn;
-	private String[] mSelectionArgs;
-	private String mSelection;
-	private String mGroupBy;
-	private String mHaving;
-	private String mSortOrder;
-	private String mLimit;
+	final private boolean mDistinct;
+	final private boolean mStrict;
+	final private String mTables;
+	final private String[] mProjectionIn;
+	final private String[] mSelectionArgs;
+	final private String mSelection;
+	final private String mGroupBy;
+	final private String mHaving;
+	final private String mSortOrder;
+	final private String mLimit;
 
-	public EasySqlQueryModel(){}
+	public EasySqlQueryModel (EasyCompatSqlModelBuilder builder){
+		mDistinct = builder.isDistinct();
+		mGroupBy = builder.getGroupBy();
+		mHaving = builder.getHaving();
+		mLimit = builder.getLimit();
+		mModelComment = null;
+		mModelTag = null;
+		mModelVersion = 0;
+		mProjectionIn = builder.getProjectionIn();
+		mRawSql = builder.getRawSql();
+		mSelection = builder.getSelection();
+		mSelectionArgs = builder.getSelectionArgs();
+		mSortOrder = builder.getSortOrder();
+		mStrict = builder.isStrict();
+		mTables = builder.getTables();
+		mQueryType = builder.getQueryType();
+	}
+
+	private EasySqlQueryModel(RawQueryBuilder builder) {
+		mDistinct = false;
+		mGroupBy = null;
+		mHaving = null;
+		mLimit = null;
+		mModelComment = builder.modelComment;
+		mModelTag = builder.modelTag;
+		mModelVersion = builder.modelVersion;
+		mProjectionIn = null;
+		mRawSql = builder.rawSql;
+		mSelection = null;
+		mSelectionArgs = builder.selectionArgs;
+		mSortOrder = null;
+		mStrict = false;
+		mTables = null;
+		mQueryType = builder.queryType;
+	}
+
+	private EasySqlQueryModel(SelectQueryBuilder builder) {
+		mDistinct = builder.distinct;
+		mGroupBy = builder.groupBy;
+		mHaving = builder.having;
+		mLimit = builder.limit;
+		mModelComment = builder.modelComment;
+		mModelTag = builder.modelTag;
+		mModelVersion = builder.modelVersion;
+		mProjectionIn = builder.projectionIn;
+		mRawSql = null;
+		mSelection = builder.selection;
+		mSelectionArgs = builder.selectionArgs;
+		mSortOrder = builder.sortOrder;
+		mStrict = builder.strict;
+		mTables = builder.tables;
+		mQueryType = builder.queryType;
+	}
 
 	public EasySqlQueryModel(SqlRawQueryBuilder builder) {
 		mDistinct = false;
@@ -160,6 +214,7 @@ public class EasySqlQueryModel implements EasyQueryModel{
 		}
 	}
 
+	@SuppressLint("NewApi")
 	private Cursor executeQuery(final SQLiteDatabase db){
 		final int queryType = mQueryType;
 		final Cursor cursor;
@@ -187,11 +242,6 @@ public class EasySqlQueryModel implements EasyQueryModel{
 
 		cursor.moveToFirst();
 		return cursor;
-	}
-
-	@Override
-	public String getModelComment() {
-		return mModelComment;
 	}
 
 	/**
@@ -222,6 +272,11 @@ public class EasySqlQueryModel implements EasyQueryModel{
 	 */
 	public String getLimit() {
 		return mLimit;
+	}
+
+	@Override
+	public String getModelComment() {
+		return mModelComment;
 	}
 
 	@Override
@@ -322,176 +377,6 @@ public class EasySqlQueryModel implements EasyQueryModel{
 		mModelComment = modelComment;
 	}
 
-	/**
-	 * Mark the query as DISTINCT.
-	 *
-	 * @param distinct true if true the query is DISTINCT, otherwise it isn't
-	 */
-	public void setDistinct(boolean distinct){
-		mDistinct = distinct;
-	}
-
-	/**
-	 * Sets the query parameters.
-	 *
-	 * Will throw an IllegalStateExcetion if one tries to set
-	 * the parameters more than once.
-	 *
-	 * @param rawSql the SQL query. The SQL string must not be ; terminated
-	 * @param selectionArgs You may include ?s in where clause in the query,
-	 *     which will be replaced by the values from selectionArgs. The
-	 *     values will be bound as Strings.
-	 */
-	public void setQueryParams(final String rawSql, final String[] selectionArgs) {
-		if(mQueryType != QUERY_TYPE_UNINITIALISED){
-			throw new IllegalStateException("A Model file's query parameters can only be set once!");
-		}
-
-		mQueryType = QUERY_TYPE_RAW;
-		mSelectionArgs = selectionArgs;
-		mRawSql = rawSql;
-	}
-
-	/**
-	 * Sets the query parameters.
-	 *
-	 * Will throw an IllegalStateExcetion if one tries to set
-	 * the parameters more than once.
-	 *
-	 * @param projectionIn A list of which columns to return. Passing
-	 *   null will return all columns, which is discouraged to prevent
-	 *   reading data from storage that isn't going to be used.
-	 * @param selection A filter declaring which rows to return,
-	 *   formatted as an SQL WHERE clause (excluding the WHERE
-	 *   itself). Passing null will return all rows for the given URL.
-	 * @param selectionArgs You may include ?s in selection, which
-	 *   will be replaced by the values from selectionArgs, in order
-	 *   that they appear in the selection. The values will be bound
-	 *   as Strings.
-	 * @param sortOrder How to order the rows, formatted as an SQL
-	 *   ORDER BY clause (excluding the ORDER BY itself). Passing null
-	 *   will use the default sort order, which may be unordered.
-	 */
-	public void setQueryParams(String[] projectionIn, String selection, String[] selectionArgs, String sortOrder) {
-		setQueryParams(projectionIn, selection, selectionArgs, null, null, sortOrder, null);
-	}
-
-	/**
-	 * Sets the query parameters.
-	 *
-	 * Will throw an IllegalStateExcetion if one tries to set
-	 * the parameters more than once.
-	 *
-	 * @param projectionIn A list of which columns to return. Passing
-	 *   null will return all columns, which is discouraged to prevent
-	 *   reading data from storage that isn't going to be used.
-	 * @param selection A filter declaring which rows to return,
-	 *   formatted as an SQL WHERE clause (excluding the WHERE
-	 *   itself). Passing null will return all rows for the given URL.
-	 * @param selectionArgs You may include ?s in selection, which
-	 *   will be replaced by the values from selectionArgs, in order
-	 *   that they appear in the selection. The values will be bound
-	 *   as Strings.
-	 * @param groupBy A filter declaring how to group rows, formatted
-	 *   as an SQL GROUP BY clause (excluding the GROUP BY
-	 *   itself). Passing null will cause the rows to not be grouped.
-	 * @param having A filter declare which row groups to include in
-	 *   the cursor, if row grouping is being used, formatted as an
-	 *   SQL HAVING clause (excluding the HAVING itself).  Passing
-	 *   null will cause all row groups to be included, and is
-	 *   required when row grouping is not being used.
-	 * @param sortOrder How to order the rows, formatted as an SQL
-	 *   ORDER BY clause (excluding the ORDER BY itself). Passing null
-	 *   will use the default sort order, which may be unordered.
-	 */
-	public void setQueryParams(String[] projectionIn, String selection, String[] selectionArgs, String groupBy, String having, String sortOrder) {
-		setQueryParams(projectionIn, selection, selectionArgs, groupBy, having, sortOrder, null);
-	}
-
-
-	/**
-	 * Sets the query parameters.
-	 *
-	 * @throws IllegalStateExcetion if one tries to set
-	 *   the parameters more than once.
-	 * @param projectionIn A list of which columns to return. Passing
-	 *   null will return all columns, which is discouraged to prevent
-	 *   reading data from storage that isn't going to be used.
-	 * @param selection A filter declaring which rows to return,
-	 *   formatted as an SQL WHERE clause (excluding the WHERE
-	 *   itself). Passing null will return all rows for the given URL.
-	 * @param selectionArgs You may include ?s in selection, which
-	 *   will be replaced by the values from selectionArgs, in order
-	 *   that they appear in the selection. The values will be bound
-	 *   as Strings.
-	 * @param groupBy A filter declaring how to group rows, formatted
-	 *   as an SQL GROUP BY clause (excluding the GROUP BY
-	 *   itself). Passing null will cause the rows to not be grouped.
-	 * @param having A filter declare which row groups to include in
-	 *   the cursor, if row grouping is being used, formatted as an
-	 *   SQL HAVING clause (excluding the HAVING itself).  Passing
-	 *   null will cause all row groups to be included, and is
-	 *   required when row grouping is not being used.
-	 * @param sortOrder How to order the rows, formatted as an SQL
-	 *   ORDER BY clause (excluding the ORDER BY itself). Passing null
-	 *   will use the default sort order, which may be unordered.
-	 * @param limit Limits the number of rows returned by the query,
-	 *   formatted as LIMIT clause. Passing null denotes no LIMIT clause.
-	 */
-	public void setQueryParams(String[] projectionIn, String selection, String[] selectionArgs, String groupBy, String having, String sortOrder, String limit) {
-		if(mQueryType != QUERY_TYPE_UNINITIALISED){
-			throw new IllegalStateException("A Model file's query parameters can only be set once!");
-		}
-
-		mQueryType = QUERY_TYPE_MANAGED;
-
-		mProjectionIn = projectionIn;
-		mSelection = selection;
-		mSelectionArgs = selectionArgs;
-		mGroupBy = groupBy;
-		mHaving = having;
-		mSortOrder = sortOrder;
-		mLimit = limit;
-	}
-
-	/**
-	 * When set, the selection is verified against malicious arguments.
-	 * When using this class to create a statement using
-	 * {@link #buildQueryString(boolean, String, String[], String, String, String, String, String)},
-	 * non-numeric limits will raise an exception. If a projection map is specified, fields
-	 * not in that map will be ignored.
-	 * If this class is used to execute the statement directly using
-	 * {@link #query(SQLiteDatabase, String[], String, String[], String, String, String)}
-	 * or
-	 * {@link #query(SQLiteDatabase, String[], String, String[], String, String, String, String)},
-	 * additionally also parenthesis escaping selection are caught.
-	 *
-	 * To summarize: To get maximum protection against malicious third party apps (for example
-	 * content provider consumers), make sure to do the following:
-	 * <ul>
-	 * <li>Set this value to true</li>
-	 * <li>Use a projection map</li>
-	 * <li>Use one of the query overloads instead of getting the statement as a sql string</li>
-	 * </ul>
-	 * By default, this value is false.
-	 * This value is ignored if you are on a device running API < 14.
-	 */
-	public void setStrict(boolean value){
-		mStrict = value;
-	}
-
-	/**
-	 * Sets the list of tables to query. Multiple tables can be specified to perform a join.
-	 * For example:
-	 *   setTables("foo, bar")
-	 *   setTables("foo LEFT OUTER JOIN bar ON (foo.id = bar.foo_id)")
-	 *
-	 * @param inTables the list of tables to query on
-	 */
-	public void setTables(String inTables){
-		mTables = inTables;
-	}
-
 	@Override
 	public void setModelTag(String modelTag) {
 		mModelTag = modelTag;
@@ -559,5 +444,148 @@ public class EasySqlQueryModel implements EasyQueryModel{
 				+ ", mSelection=" + mSelection + ", mGroupBy=" + mGroupBy
 				+ ", mHaving=" + mHaving + ", mSortOrder=" + mSortOrder
 				+ ", mLimit=" + mLimit + "]";
+	}
+
+
+
+	public static class RawQueryBuilder{
+		private final int queryType = QUERY_TYPE_RAW;
+
+		//
+		// Metadata
+		//
+		private int modelVersion;
+		private String modelTag;
+		private String modelComment;
+
+		//
+		// Raw Query
+		//
+		private String rawSql;
+		private String[] selectionArgs;
+
+		public EasySqlQueryModel build(){
+			return new EasySqlQueryModel(this);
+		}
+
+		public RawQueryBuilder setModelComment(String comment){
+			this.modelComment = comment;
+			return this;
+		}
+
+		public RawQueryBuilder setModelTag(String tag){
+			this.modelTag = tag;
+			return this;
+		}
+
+		public RawQueryBuilder setModelVersion(int version){
+			this.modelVersion = version;
+			return this;
+		}
+
+		public RawQueryBuilder setRawSql(String sql){
+			this.rawSql = sql;
+			return this;
+		}
+
+		public RawQueryBuilder setSelectionArgs(String args[]){
+			this.selectionArgs = args;
+			return this;
+		}
+	}
+
+
+
+	public static class SelectQueryBuilder{
+		private final int queryType = QUERY_TYPE_MANAGED;
+		//
+		// Metadata
+		//
+		private int modelVersion;
+		private String modelTag;
+		private String modelComment;
+
+		//
+		// Select Query
+		//
+		private boolean distinct;
+		private boolean strict;
+		private String tables;
+		private String[] projectionIn;
+		private String[] selectionArgs;
+		private String selection;
+		private String groupBy;
+		private String having;
+		private String sortOrder;
+		private String limit;
+
+		public EasySqlQueryModel build(){
+			return new EasySqlQueryModel(this);
+		}
+
+		public SelectQueryBuilder setDistict(boolean distinct){
+			this.distinct = distinct;
+			return this;
+		}
+
+		public SelectQueryBuilder setGroupBy(String groupBy){
+			this.groupBy = groupBy;
+			return this;
+		}
+
+		public SelectQueryBuilder setHaving(String having){
+			this.having = having;
+			return this;
+		}
+
+		public SelectQueryBuilder setLimit(String limit){
+			this.limit = limit;
+			return this;
+		}
+
+		public SelectQueryBuilder setModelComment(String comment){
+			this.modelComment = comment;
+			return this;
+		}
+
+		public SelectQueryBuilder setModelTag(String tag){
+			this.modelTag = tag;
+			return this;
+		}
+
+		public SelectQueryBuilder setModelVersion(int version){
+			this.modelVersion = version;
+			return this;
+		}
+
+		public SelectQueryBuilder setProjectionIn(String[] projectionIn){
+			this.projectionIn = projectionIn;
+			return this;
+		}
+
+		public SelectQueryBuilder setSelection(String selection){
+			this.selection = selection;
+			return this;
+		}
+
+		public SelectQueryBuilder setSelectionArgs(String args[]){
+			this.selectionArgs = args;
+			return this;
+		}
+
+		public SelectQueryBuilder setSortOrder(String sortOrder){
+			this.sortOrder = sortOrder;
+			return this;
+		}
+
+		public SelectQueryBuilder setStrict(boolean strict){
+			this.strict = strict;
+			return this;
+		}
+
+		public SelectQueryBuilder setTables(String tables){
+			this.tables = tables;
+			return this;
+		}
 	}
 }
