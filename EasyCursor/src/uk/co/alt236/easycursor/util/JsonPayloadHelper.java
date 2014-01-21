@@ -5,51 +5,38 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class JsonPayloadHelper {
+	private static final String NULL = "null";
 
 	public static void add(final JSONObject object, final String key, final Boolean value) throws JSONException{
-		if(value != null){
 			object.put(key, value);
-		}
 	}
 
 	public static void add(final JSONObject object, final String key, final Double value) throws JSONException{
-		if(value != null){
 			object.put(key, value);
-		}
 	}
 
 	public static void add(final JSONObject object, final String key, final Integer value) throws JSONException{
-		if(value != null){
 			object.put(key, value);
-		}
 	}
 
 	public static void add(final JSONObject object, final String key, final Long value) throws JSONException{
-		if(value != null){
 			object.put(key, value);
-		}
 	}
 
 	public static void add(final JSONObject object, final String key, final Object value) throws JSONException{
-		if(value != null){
 			object.put(key, value);
-		}
 	}
 
 	public static void add(final JSONObject object, final String key, final String value) throws JSONException{
-		if(value != null){
 			object.put(key, value);
-		}
 	}
 
 	public static void add(final JSONObject object, final String key, final String[] value) throws JSONException{
-		if(value != null && value.length > 0){
 			final JSONArray arr = new JSONArray();
 			for(String str : value){
 				arr.put(str);
 			}
 			object.put(key, arr);
-		}
 	}
 
 
@@ -63,7 +50,7 @@ public class JsonPayloadHelper {
 
 	public static String getString(final JSONObject object, final String key){
 		final String res = object.optString(key, null);
-		if(key != null && key.equalsIgnoreCase("null")){
+		if(key != null && key.equalsIgnoreCase(NULL)){
 			return null;
 		} else {
 			return res;
@@ -82,7 +69,7 @@ public class JsonPayloadHelper {
 				res[i] = arr.optString(i);
 			}
 		} else {
-			res = new String[0];
+			res = null;
 		}
 
 		return res;
