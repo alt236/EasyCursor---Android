@@ -45,7 +45,7 @@ For a normal Select Query:
     final EasyCursor eCursor = model.execute(getReadableDatabase());
 ```
 
-For a RAW sql query:
+For a raw SQL query:
 ```
     final EasySqlQueryModel model = new EasySqlQueryModel.RawQueryBuilder()
     .setRawSql(QueryConstants.RAW_QUERY)
@@ -62,12 +62,15 @@ This way you can write, or re-use, your own builders.
 
 ```
     final LousyQueryBuilder builder = new LousyQueryBuilder();
+    
     final EasySqlQueryModel model = builder.setSelect(QueryConstants.DEFAULT_SELECT)
     		.setWhere(QueryConstants.DEFAULT_WHERE)
     		.setWhereArgs(QueryConstants.DEFAULT_PARAMS)
     		.setOrderBy(QueryConstants.DEFAULT_ORDER_BY)
     		.build();
+    		
     model.setComment("Builder query");
+    
     final EasyCursor eCursor = model.execute(getReadableDatabase());
 ```
 ###3. The Backwards Compatible way
@@ -76,8 +79,10 @@ You can convert an existing Cursor to an EasyCursor by wrapping it like this:
 
 ```
     final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+    
     builder.setTables(QueryConstants.DEFAULT_TABLES);
     builder.setDistinct(true);
+    
     final Cursor cursor = builder.query(
     		getReadableDatabase(),
     		QueryConstants.DEFAULT_SELECT,
@@ -86,7 +91,9 @@ You can convert an existing Cursor to an EasyCursor by wrapping it like this:
     		null,
     		null,
     		QueryConstants.DEFAULT_ORDER_BY);
+    
     cursor.moveToFirst();
+    
     final EasyCursor eCursor = new EasySqlCursor(cursor);
 ```
 
@@ -97,6 +104,7 @@ By compatibility I mean that the API is similar to a SQLiteQueryBuilder.
 
 ```
 		final EasyCompatSqlModelBuilder builder = new EasyCompatSqlModelBuilder();
+		
 		builder.setTables(QueryConstants.DEFAULT_TABLES);
 		builder.setDistinct(true);
 		builder.setQueryParams(
@@ -108,7 +116,9 @@ By compatibility I mean that the API is similar to a SQLiteQueryBuilder.
 				QueryConstants.DEFAULT_ORDER_BY);
 
 		final EasySqlQueryModel model = builder.build();
+		
 		model.setModelComment("Default compat query");
+		
 		final EasyCursor eCursor = model.execute(getReadableDatabase());
 ```
 
@@ -136,17 +146,38 @@ In addition you get the following functions for booleans, which work the same as
 
 The logic behind a boolean is as follows: `true==1` and `false!=1` where 1 is a number.
 
-##Accessing an EasyCursor's EasyQueryModel
-If the cursor has been generated via an EasyQueryModel, then you can access the model like this: `easycursor.getQueryModel()`.
+##Accessing an EasyCursor's EasyQueryModel and re-querying
+If the cursor has been generated via an EasyQueryModel, then you can access the model like this: 
+
+```
+    final EasyQueryModel model = easycursor.getQueryModel()`
+```
 
 The model can then be converted to a JSON string via its `model.toJson()` function.
 
-To re-execute the query, you can do the following:
+To re-create the model, you can do the following:
 ```
     final EasySqlQueryModel model = new EasySqlQueryModel(json);
-    final EasyCursor cursor = model.execute(getReadableDatabase());
 ```
 
+The following snippet will get the Model JSON of a cursor, save it in local prefs, read it back and re-query:
+```
+    // Get the JSON of a cursor model
+	final String jsonOut = oldCursor.getQueryModel().toJson();
+	
+	// Store it in local prefs
+	final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+	final SharedPreferences.Editor editor = settings.edit();
+	editor.putString(Constants.PREFS_SAVED_QUERY, jsonOut);
+	editor.commit();
+	
+	// Read it back
+	final String jsonIn = settings.getString(Constants.PREFS_SAVED_QUERY, null);
+	
+	// Recreate the model and execute the query
+	final EasySqlQueryModel model = new EasySqlQueryModel(json);
+	final EasyCursor eCursor = model.execute(getReadableDatabase());
+```  		
 ##Keeping track of an EasyQueryModel
 In order to keep track of an EasyQueryModel file and help in maintaining compatibility of the model to the underlying DB (if your schema can change), you can use the following functions.
 
