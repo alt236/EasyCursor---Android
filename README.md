@@ -11,7 +11,6 @@ It offers:
 3. A way to automatically get a JSON representation of a query for persistence.
 4. A way to easily convert any existing Cursor into an EasyCursor - but you will not get the JSON representation :).
 5. A way to access booleans directly (i.e. `cursor.getBoolean()`/`cursor.optBoolean()`. The default implementation of EasySqlCursor assumes that `true==1` and `false!=1` where 1 is a number, but it can be overridden by subclassing.
-6. The SqlCursor's implementation of EasyCursor improves the performance of `getColumnIndex()` and `getColumnIndexOrThrow()` using a built-in cache.
 
 The way this happens via an Interface, EasyCursor, which extends the bog standard Cursor.
 
@@ -27,42 +26,93 @@ Alternatively you can produce a JAR file and use that (see Jarification below).
 Type `ant jar` at the root of the Library Project to produce a Jar file.
 
 ##Generating an EasyCursor for SQL
-###1. Using an EasyQueryModel
+###1. Using one of the inlcuded Builders EasyQueryModel
 
 This is the "native" way of using EasyCursor.
 
+For a normal Select Query:
 ```
-final EasySqlQueryModel model = new EasySqlQueryModel();
-model.setTables(QueryConstants.DEFAULT_TABLES);
-model.setDistinct(true);
-model.setQueryParams(
-    	QueryConstants.DEFAULT_SELECT,
-		QueryConstants.DEFAULT_WHERE,
-		QueryConstants.DEFAULT_PARAMS,
-		QueryConstants.DEFAULT_ORDER_BY);
-model.setComment("Default easy query");
-return model.execute(getReadableDatabase());
+    final EasySqlQueryModel model = new EasySqlQueryModel.SelectQueryBuilder()
+    .setTables(QueryConstants.DEFAULT_TABLES)
+    .setDistict(true)
+    .setProjectionIn(QueryConstants.DEFAULT_SELECT)
+    .setSelection(QueryConstants.DEFAULT_WHERE)
+    .setSelectionArgs(QueryConstants.RAW_SQL_PARAMS)
+    .setSortOrder(QueryConstants.DEFAULT_ORDER_BY)
+    .setModelComment("Default easy query")
+    .build();
+    
+    final EasyCursor eCursor = model.execute(getReadableDatabase());
+```
+
+For a RAW sql query:
+```
+    final EasySqlQueryModel model = new EasySqlQueryModel.RawQueryBuilder()
+    .setRawSql(QueryConstants.RAW_QUERY)
+    .setSelectionArgs(QueryConstants.RAW_SQL_PARAMS)
+    .setModelComment("Raw query")
+    .build();
+    
+    final EasyCursor eCursor = model.execute(getReadableDatabase());
 ```
 ###2. Using an QueryBuilder Interface
-Define a class implementing either the `SqlSelectBuilder` or `SqlRawQueryBuilder` interfaces and do the following:
+
+You can define a class implementing either the `SqlSelectBuilder` or `SqlRawQueryBuilder` interfaces and do the following:
+This way you can write, or re-use, your own builders.
 
 ```
-final LousyQueryBuilder builder = new LousyQueryBuilder();
-final EasySqlQueryModel model = builder.setSelect(QueryConstants.DEFAULT_SELECT)
-		.setWhere(QueryConstants.DEFAULT_WHERE)
-		.setWhereArgs(QueryConstants.DEFAULT_PARAMS)
-		.setOrderBy(QueryConstants.DEFAULT_ORDER_BY)
-		.build();
-model.setComment("Builder query");
-return model.execute(getReadableDatabase());
+    final LousyQueryBuilder builder = new LousyQueryBuilder();
+    final EasySqlQueryModel model = builder.setSelect(QueryConstants.DEFAULT_SELECT)
+    		.setWhere(QueryConstants.DEFAULT_WHERE)
+    		.setWhereArgs(QueryConstants.DEFAULT_PARAMS)
+    		.setOrderBy(QueryConstants.DEFAULT_ORDER_BY)
+    		.build();
+    model.setComment("Builder query");
+    final EasyCursor eCursor = model.execute(getReadableDatabase());
 ```
 ###3. The Backwards Compatible way
 
 You can convert an existing Cursor to an EasyCursor by wrapping it like this:
 
-`final EasyCursor eCursor = new EasySqlCursor(boringOldCursor);`
+```
+    final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+    builder.setTables(QueryConstants.DEFAULT_TABLES);
+    builder.setDistinct(true);
+    final Cursor cursor = builder.query(
+    		getReadableDatabase(),
+    		QueryConstants.DEFAULT_SELECT,
+    		QueryConstants.DEFAULT_WHERE,
+    		QueryConstants.RAW_SQL_PARAMS,
+    		null,
+    		null,
+    		QueryConstants.DEFAULT_ORDER_BY);
+    cursor.moveToFirst();
+    final EasyCursor eCursor = new EasySqlCursor(cursor);
+```
 
 But, as you did not use an SqlQueryModel, you will not be able to access the JSON representation of the query.
+
+###4. The "Compatibility" way
+By compatibility I mean that the API is similar to a SQLiteQueryBuilder.
+
+```
+		final EasyCompatSqlModelBuilder builder = new EasyCompatSqlModelBuilder();
+		builder.setTables(QueryConstants.DEFAULT_TABLES);
+		builder.setDistinct(true);
+		builder.setQueryParams(
+				QueryConstants.DEFAULT_SELECT,
+				QueryConstants.DEFAULT_WHERE,
+				QueryConstants.RAW_SQL_PARAMS,
+				null,
+				null,
+				QueryConstants.DEFAULT_ORDER_BY);
+
+		final EasySqlQueryModel model = builder.build();
+		model.setModelComment("Default compat query");
+		final EasyCursor eCursor = model.execute(getReadableDatabase());
+```
+
+The `setQueryParams()` method has an identical signature to `SQLiteQueryBuilder.query()` minus the database instance parameter.
 
 ##Things you can do with an EasyCursor
 An EasyCursor offers (apart from the usual Cursor methods) the following:
@@ -93,8 +143,8 @@ The model can then be converted to a JSON string via its `model.toJson()` functi
 
 To re-execute the query, you can do the following:
 ```
-final EasySqlQueryModel model = new EasySqlQueryModel(json);
-final EasyCursor cursor = model.execute(getReadableDatabase());
+    final EasySqlQueryModel model = new EasySqlQueryModel(json);
+    final EasyCursor cursor = model.execute(getReadableDatabase());
 ```
 
 ##Keeping track of an EasyQueryModel
@@ -108,8 +158,9 @@ There is no business logic behind these functions -- it is up to each user to ke
 
 ##Extending the implementation of EasySqlCursor
 If you need to extend the base implementation of EasySqlCursor, for example because you treat booleans differently, you can use the following syntax:
+
 ```
-final EasyCursor cursor = model.execute(getReadableDatabase(), MyExtendedEasyCursor.class);
+    final EasyCursor cursor = model.execute(getReadableDatabase(), MyExtendedEasyCursor.class);
 ```
 
 ##Changelog
