@@ -63,6 +63,7 @@ public class ExampleDatabase extends SQLiteAssetHelper {
 	public EasyCursor doEasyCustomBuilderQuery(){
 		final LousyQueryBuilder builder = new LousyQueryBuilder();
 		final EasySqlQueryModel model = builder.setSelect(QueryConstants.DEFAULT_SELECT)
+				.setTables(QueryConstants.DEFAULT_TABLES)
 				.setWhere(QueryConstants.DEFAULT_WHERE)
 				.setWhereArgs(QueryConstants.RAW_SQL_PARAMS)
 				.setOrderBy(QueryConstants.DEFAULT_ORDER_BY)
