@@ -51,21 +51,21 @@ public class EasySqlQueryModel implements EasyQueryModel{
 	//
 	// Raw Query
 	//
-	final private String mRawSql;
+	private final String mRawSql;
 
 	//
 	// Managed Query
 	//
-	final private boolean mDistinct;
-	final private boolean mStrict;
-	final private String mTables;
-	final private String[] mProjectionIn;
-	final private String[] mSelectionArgs;
-	final private String mSelection;
-	final private String mGroupBy;
-	final private String mHaving;
-	final private String mSortOrder;
-	final private String mLimit;
+	private final boolean mDistinct;
+	private final boolean mStrict;
+	private final String mTables;
+	private final String[] mProjectionIn;
+	private final String[] mSelectionArgs;
+	private final String mSelection;
+	private final String mGroupBy;
+	private final String mHaving;
+	private final String mSortOrder;
+	private final String mLimit;
 
 	public EasySqlQueryModel (EasyCompatSqlModelBuilder builder){
 		mDistinct = builder.isDistinct();
@@ -174,6 +174,75 @@ public class EasySqlQueryModel implements EasyQueryModel{
 		mStrict = JsonPayloadHelper.getBoolean(payload, FIELD_STRICT);
 		mTables = JsonPayloadHelper.getString(payload, FIELD_TABLES);
 		mQueryType = JsonPayloadHelper.getInt(payload, FIELD_QUERY_TYPE);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		EasySqlQueryModel other = (EasySqlQueryModel) obj;
+		if (mDistinct != other.mDistinct)
+			return false;
+		if (mGroupBy == null) {
+			if (other.mGroupBy != null)
+				return false;
+		} else if (!mGroupBy.equals(other.mGroupBy))
+			return false;
+		if (mHaving == null) {
+			if (other.mHaving != null)
+				return false;
+		} else if (!mHaving.equals(other.mHaving))
+			return false;
+		if (mLimit == null) {
+			if (other.mLimit != null)
+				return false;
+		} else if (!mLimit.equals(other.mLimit))
+			return false;
+		if (mModelComment == null) {
+			if (other.mModelComment != null)
+				return false;
+		} else if (!mModelComment.equals(other.mModelComment))
+			return false;
+		if (mModelTag == null) {
+			if (other.mModelTag != null)
+				return false;
+		} else if (!mModelTag.equals(other.mModelTag))
+			return false;
+		if (mModelVersion != other.mModelVersion)
+			return false;
+		if (!Arrays.equals(mProjectionIn, other.mProjectionIn))
+			return false;
+		if (mQueryType != other.mQueryType)
+			return false;
+		if (mRawSql == null) {
+			if (other.mRawSql != null)
+				return false;
+		} else if (!mRawSql.equals(other.mRawSql))
+			return false;
+		if (mSelection == null) {
+			if (other.mSelection != null)
+				return false;
+		} else if (!mSelection.equals(other.mSelection))
+			return false;
+		if (!Arrays.equals(mSelectionArgs, other.mSelectionArgs))
+			return false;
+		if (mSortOrder == null) {
+			if (other.mSortOrder != null)
+				return false;
+		} else if (!mSortOrder.equals(other.mSortOrder))
+			return false;
+		if (mStrict != other.mStrict)
+			return false;
+		if (mTables == null) {
+			if (other.mTables != null)
+				return false;
+		} else if (!mTables.equals(other.mTables))
+			return false;
+		return true;
 	}
 
 	/**
@@ -353,6 +422,33 @@ public class EasySqlQueryModel implements EasyQueryModel{
 		return mTables;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (mDistinct ? 1231 : 1237);
+		result = prime * result
+				+ ((mGroupBy == null) ? 0 : mGroupBy.hashCode());
+		result = prime * result + ((mHaving == null) ? 0 : mHaving.hashCode());
+		result = prime * result + ((mLimit == null) ? 0 : mLimit.hashCode());
+		result = prime * result
+				+ ((mModelComment == null) ? 0 : mModelComment.hashCode());
+		result = prime * result
+				+ ((mModelTag == null) ? 0 : mModelTag.hashCode());
+		result = prime * result + mModelVersion;
+		result = prime * result + Arrays.hashCode(mProjectionIn);
+		result = prime * result + mQueryType;
+		result = prime * result + ((mRawSql == null) ? 0 : mRawSql.hashCode());
+		result = prime * result
+				+ ((mSelection == null) ? 0 : mSelection.hashCode());
+		result = prime * result + Arrays.hashCode(mSelectionArgs);
+		result = prime * result
+				+ ((mSortOrder == null) ? 0 : mSortOrder.hashCode());
+		result = prime * result + (mStrict ? 1231 : 1237);
+		result = prime * result + ((mTables == null) ? 0 : mTables.hashCode());
+		return result;
+	}
+
 	/**
 	 * Returns whether or not this query is set to be Distinct.
 	 *
@@ -468,16 +564,32 @@ public class EasySqlQueryModel implements EasyQueryModel{
 			return new EasySqlQueryModel(this);
 		}
 
+		/**
+		 * Gets the user specified comment of this Model
+		 *
+		 * @return the comment
+		 */
 		public RawQueryBuilder setModelComment(String comment){
 			this.modelComment = comment;
 			return this;
 		}
 
+		/**
+		 * Gets the user specified tag of this Model
+		 *
+		 * @return the tag
+		 */
 		public RawQueryBuilder setModelTag(String tag){
 			this.modelTag = tag;
 			return this;
 		}
 
+		/**
+		 * Gets the user specified version of this Model
+		 * The default value is 0
+		 *
+		 * @return the version of this model
+		 */
 		public RawQueryBuilder setModelVersion(int version){
 			this.modelVersion = version;
 			return this;
@@ -523,6 +635,11 @@ public class EasySqlQueryModel implements EasyQueryModel{
 			return new EasySqlQueryModel(this);
 		}
 
+		/**
+		 * Mark the query as DISTINCT.
+		 *
+		 * @param distinct true if true the query is DISTINCT, otherwise it isn't
+		 */
 		public SelectQueryBuilder setDistict(boolean distinct){
 			this.distinct = distinct;
 			return this;
@@ -543,16 +660,32 @@ public class EasySqlQueryModel implements EasyQueryModel{
 			return this;
 		}
 
+		/**
+		 * Gets the user specified comment of this Model
+		 *
+		 * @return the comment
+		 */
 		public SelectQueryBuilder setModelComment(String comment){
 			this.modelComment = comment;
 			return this;
 		}
 
+		/**
+		 * Gets the user specified tag of this Model
+		 *
+		 * @return the tag
+		 */
 		public SelectQueryBuilder setModelTag(String tag){
 			this.modelTag = tag;
 			return this;
 		}
 
+		/**
+		 * Gets the user specified version of this Model
+		 * The default value is 0
+		 *
+		 * @return the version of this model
+		 */
 		public SelectQueryBuilder setModelVersion(int version){
 			this.modelVersion = version;
 			return this;
@@ -578,11 +711,42 @@ public class EasySqlQueryModel implements EasyQueryModel{
 			return this;
 		}
 
+		/**
+		 * When set, the selection is verified against malicious arguments.
+		 * When using this class to create a statement using
+		 * {@link #buildQueryString(boolean, String, String[], String, String, String, String, String)},
+		 * non-numeric limits will raise an exception. If a projection map is specified, fields
+		 * not in that map will be ignored.
+		 * If this class is used to execute the statement directly using
+		 * {@link #query(SQLiteDatabase, String[], String, String[], String, String, String)}
+		 * or
+		 * {@link #query(SQLiteDatabase, String[], String, String[], String, String, String, String)},
+		 * additionally also parenthesis escaping selection are caught.
+		 *
+		 * To summarize: To get maximum protection against malicious third party apps (for example
+		 * content provider consumers), make sure to do the following:
+		 * <ul>
+		 * <li>Set this value to true</li>
+		 * <li>Use a projection map</li>
+		 * <li>Use one of the query overloads instead of getting the statement as a sql string</li>
+		 * </ul>
+		 * By default, this value is false.
+		 *
+		 * This value is ignored if you are on a device running API < 14.
+		 */
 		public SelectQueryBuilder setStrict(boolean strict){
 			this.strict = strict;
 			return this;
 		}
 
+		/**
+		 * Sets the list of tables to query. Multiple tables can be specified to perform a join.
+		 * For example:
+		 *   setTables("foo, bar")
+		 *   setTables("foo LEFT OUTER JOIN bar ON (foo.id = bar.foo_id)")
+		 *
+		 * @param inTables the list of tables to query on
+		 */
 		public SelectQueryBuilder setTables(String tables){
 			this.tables = tables;
 			return this;
