@@ -1,6 +1,10 @@
 package uk.co.alt236.easycursor.sampleapp.database;
 
 class QueryConstants {
+
+	//
+	// RAW QUERY
+	//
 	static final String RAW_QUERY = "SELECT track.trackId AS _id, artist.name AS artist, album.title AS album, track.name AS track, mediatype.name AS media, track.composer AS composer, (ifnull(track.composer, 0)>0) AS hascomposer"
 			+ " FROM track"
 			+ " LEFT OUTER JOIN album ON track.albumId = album.albumid"
@@ -10,6 +14,9 @@ class QueryConstants {
 			+ " ORDER BY artist, album, track, composer;";
 	static final String[] RAW_SQL_PARAMS = { "MPEG audio file" };
 
+	//
+	// SELECT QUERY
+	//
 	static final String[] DEFAULT_SELECT = {
 		"track.trackId AS _id",
 		"artist.name AS artist",
@@ -20,6 +27,7 @@ class QueryConstants {
 		"(ifnull(track.composer, 0)>0) AS hascomposer"
 	};
 
+	static final String[] DEFAULT_SELECT_WHERE_PARAMS = { "MPEG audio file" };
 	static final String DEFAULT_ORDER_BY = "artist, album, track, composer";
 	static final String DEFAULT_WHERE = "media=?";
 	static final String DEFAULT_TABLES = "track"

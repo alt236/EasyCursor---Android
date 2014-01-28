@@ -35,7 +35,7 @@ public class ExampleDatabase extends SQLiteAssetHelper {
 				getReadableDatabase(),
 				QueryConstants.DEFAULT_SELECT,
 				QueryConstants.DEFAULT_WHERE,
-				QueryConstants.RAW_SQL_PARAMS,
+				QueryConstants.DEFAULT_SELECT_WHERE_PARAMS,
 				null,
 				null,
 				QueryConstants.DEFAULT_ORDER_BY);
@@ -50,7 +50,7 @@ public class ExampleDatabase extends SQLiteAssetHelper {
 		builder.setQueryParams(
 				QueryConstants.DEFAULT_SELECT,
 				QueryConstants.DEFAULT_WHERE,
-				QueryConstants.RAW_SQL_PARAMS,
+				QueryConstants.DEFAULT_SELECT_WHERE_PARAMS,
 				null,
 				null,
 				QueryConstants.DEFAULT_ORDER_BY);
@@ -65,7 +65,7 @@ public class ExampleDatabase extends SQLiteAssetHelper {
 		final EasySqlQueryModel model = builder.setSelect(QueryConstants.DEFAULT_SELECT)
 				.setTables(QueryConstants.DEFAULT_TABLES)
 				.setWhere(QueryConstants.DEFAULT_WHERE)
-				.setWhereArgs(QueryConstants.RAW_SQL_PARAMS)
+				.setWhereArgs(QueryConstants.DEFAULT_SELECT_WHERE_PARAMS)
 				.setOrderBy(QueryConstants.DEFAULT_ORDER_BY)
 				.build();
 		model.setModelComment("Custom Builder query");
@@ -88,7 +88,7 @@ public class ExampleDatabase extends SQLiteAssetHelper {
 		.setDistict(true)
 		.setProjectionIn(QueryConstants.DEFAULT_SELECT)
 		.setSelection(QueryConstants.DEFAULT_WHERE)
-		.setSelectionArgs(QueryConstants.RAW_SQL_PARAMS)
+		.setSelectionArgs(QueryConstants.DEFAULT_SELECT_WHERE_PARAMS)
 		.setSortOrder(QueryConstants.DEFAULT_ORDER_BY)
 		.setModelComment("Default easy query")
 		.build();
