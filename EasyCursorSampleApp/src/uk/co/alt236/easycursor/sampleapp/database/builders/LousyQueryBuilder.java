@@ -4,50 +4,35 @@ import uk.co.alt236.easycursor.sqlcursor.EasySqlQueryModel;
 import uk.co.alt236.easycursor.sqlcursor.querybuilders.interfaces.SqlSelectBuilder;
 
 public class LousyQueryBuilder implements SqlSelectBuilder{
-	private String[] mSelect;
+	private String mGroupBy;
+	private String mHaving;
+	private String mLimit;
 	private String mOrderBy;
-	private String mWhere;
-	private String[] mWhereArgs;
 	private String mTables;
+	private String mWhere;
+	private String[] mSelect;
+	private String[] mWhereArgs;
+	private boolean mDistinct;
+	private boolean mStrict;
 
-	public LousyQueryBuilder setSelect(String[] select) {
-		mSelect = select;
-		return this;
-	}
-
-	public LousyQueryBuilder setOrderBy(String orderBy) {
-		mOrderBy = orderBy;
-		return this;
-	}
-
-	public LousyQueryBuilder setWhere(String where) {
-		mWhere = where;
-		return this;
-	}
-
-	public LousyQueryBuilder setWhereArgs(String[] whereArgs) {
-		mWhereArgs = whereArgs;
-		return this;
-	}
-
-	public LousyQueryBuilder setTables(String tables) {
-		mTables = tables;
-		return this;
+	@Override
+	public EasySqlQueryModel build(){
+		return new EasySqlQueryModel(this);
 	}
 
 	@Override
 	public String getGroupBy() {
-		return null;
+		return mGroupBy;
 	}
 
 	@Override
 	public String getHaving() {
-		return null;
+		return mHaving;
 	}
 
 	@Override
 	public String getLimit() {
-		return null;
+		return mLimit;
 	}
 
 	@Override
@@ -77,16 +62,61 @@ public class LousyQueryBuilder implements SqlSelectBuilder{
 
 	@Override
 	public boolean isDistinct() {
-		return false;
+		return mDistinct;
 	}
 
 	@Override
 	public boolean isStrict() {
-		return false;
+		return mStrict;
 	}
 
-	@Override
-	public EasySqlQueryModel build(){
-		return new EasySqlQueryModel(this);
+	public LousyQueryBuilder setDistinct(boolean value) {
+		mDistinct = value;
+		return this;
+	}
+
+	public LousyQueryBuilder setGroupBy(String groupBy) {
+		mGroupBy = groupBy;
+		return this;
+	}
+
+	public LousyQueryBuilder setHaving(String having) {
+		mHaving = having;
+		return this;
+	}
+
+	public LousyQueryBuilder setLimit(String limit) {
+		mLimit = limit;
+		return this;
+	}
+
+	public LousyQueryBuilder setOrderBy(String orderBy) {
+		mOrderBy = orderBy;
+		return this;
+	}
+
+	public LousyQueryBuilder setSelect(String[] select) {
+		mSelect = select;
+		return this;
+	}
+
+	public LousyQueryBuilder setStrict(boolean strict){
+		mStrict = strict;
+		return this;
+	}
+
+	public LousyQueryBuilder setFrom(String tables) {
+		mTables = tables;
+		return this;
+	}
+
+	public LousyQueryBuilder setWhere(String where) {
+		mWhere = where;
+		return this;
+	}
+
+	public LousyQueryBuilder setWhereArgs(String[] whereArgs) {
+		mWhereArgs = whereArgs;
+		return this;
 	}
 }
