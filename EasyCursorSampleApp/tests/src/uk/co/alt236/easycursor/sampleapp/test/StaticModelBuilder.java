@@ -44,12 +44,12 @@ public class StaticModelBuilder {
 
 	public static EasySqlQueryModel getDefaultSelectModel(){
 		final EasySqlQueryModel model = new EasySqlQueryModel.SelectQueryBuilder()
-		.setTables(QueryConstants.DEFAULT_TABLES)
 		.setDistict(true)
 		.setStrict(true)
-		.setProjectionIn(QueryConstants.DEFAULT_SELECT)
-		.setSelection(QueryConstants.DEFAULT_WHERE)
-		.setSelectionArgs(QueryConstants.DEFAULT_SELECT_WHERE_PARAMS)
+		.setSelect(QueryConstants.DEFAULT_SELECT)
+		.setFrom(QueryConstants.DEFAULT_TABLES)
+		.setWhere(QueryConstants.DEFAULT_WHERE)
+		.setWhereArgs(QueryConstants.DEFAULT_SELECT_WHERE_PARAMS)
 		.setGroupBy(QueryConstants.DEFAULT_SELECT_GROUP_BY)
 		.setHaving(QueryConstants.DEFAULT_SELECT_HAVING)
 		.setSortOrder(QueryConstants.DEFAULT_ORDER_BY)

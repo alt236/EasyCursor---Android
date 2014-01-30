@@ -84,11 +84,11 @@ public class ExampleDatabase extends SQLiteAssetHelper {
 
 	public EasyCursor doEasySelectQuery(){
 		final EasySqlQueryModel model = new EasySqlQueryModel.SelectQueryBuilder()
-		.setTables(QueryConstants.DEFAULT_TABLES)
+		.setFrom(QueryConstants.DEFAULT_TABLES)
 		.setDistict(true)
-		.setProjectionIn(QueryConstants.DEFAULT_SELECT)
-		.setSelection(QueryConstants.DEFAULT_WHERE)
-		.setSelectionArgs(QueryConstants.DEFAULT_SELECT_WHERE_PARAMS)
+		.setSelect(QueryConstants.DEFAULT_SELECT)
+		.setWhere(QueryConstants.DEFAULT_WHERE)
+		.setWhereArgs(QueryConstants.DEFAULT_SELECT_WHERE_PARAMS)
 		.setSortOrder(QueryConstants.DEFAULT_ORDER_BY)
 		.setModelComment("Default easy query")
 		.build();
