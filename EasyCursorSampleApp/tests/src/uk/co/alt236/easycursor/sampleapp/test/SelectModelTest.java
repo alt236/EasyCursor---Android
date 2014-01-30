@@ -111,18 +111,41 @@ public class SelectModelTest extends android.test.AndroidTestCase {
 		final String EXISTANT_COL = "meaninglessDiv";
 		final double EXPECTED_VALUE = 720845.345345345;
 		final double FALLBACK = -9.99;
+		final double DELTA = 0.0100;
+
+		for(int i = 0; i < mQueryModelList.size(); i++){
+			Log.v(TAG, "testDoubleFieldParsing: " + i);
+			final EasySqlCursor cursor = (EasySqlCursor) mQueryModelList.get(i).execute(mDb.getReadableDatabase());
+
+			Assert.assertEquals(cursor.getDouble(EXISTANT_COL), EXPECTED_VALUE, DELTA);
+			Assert.assertEquals((double) cursor.optDoubleAsWrapperType(EXISTANT_COL), EXPECTED_VALUE, DELTA);
+
+			Assert.assertEquals(cursor.optDouble(NON_EXISTANT_COL), EasySqlCursor.DEFAULT_DOUBLE, DELTA);
+			Assert.assertEquals(cursor.optDouble(NON_EXISTANT_COL, FALLBACK), FALLBACK, DELTA);
+
+			Assert.assertNull(cursor.optDoubleAsWrapperType(NON_EXISTANT_COL));
+
+			cursor.close();
+		}
+	}
+
+	public void testFloatFieldParsing(){
+		final String NON_EXISTANT_COL = "THIS_COLUMN_DOES_NOT_EXIST";
+		final String EXISTANT_COL = "meaninglessDiv";
+		final float EXPECTED_VALUE = 720845.345345345f;
+		final float FALLBACK = -9.99f;
 
 		for(int i = 0; i < mQueryModelList.size(); i++){
 			Log.v(TAG, "testLongFieldParsing: " + i);
 			final EasySqlCursor cursor = (EasySqlCursor) mQueryModelList.get(i).execute(mDb.getReadableDatabase());
 
-			Assert.assertEquals(cursor.getDouble(EXISTANT_COL), EXPECTED_VALUE);
-			Assert.assertEquals((double) cursor.optDoubleAsWrapperType(EXISTANT_COL), EXPECTED_VALUE);
+			Assert.assertEquals(cursor.getFloat(EXISTANT_COL), EXPECTED_VALUE);
+			Assert.assertEquals((float) cursor.optFloatAsWrapperType(EXISTANT_COL), EXPECTED_VALUE);
 
-			Assert.assertEquals(cursor.optDouble(NON_EXISTANT_COL), EasySqlCursor.DEFAULT_DOUBLE);
-			Assert.assertEquals(cursor.optDouble(NON_EXISTANT_COL, FALLBACK), FALLBACK);
+			Assert.assertEquals(cursor.optFloat(NON_EXISTANT_COL), EasySqlCursor.DEFAULT_FLOAT);
+			Assert.assertEquals(cursor.optFloat(NON_EXISTANT_COL, FALLBACK), FALLBACK);
 
-			Assert.assertNull(cursor.optDoubleAsWrapperType(NON_EXISTANT_COL));
+			Assert.assertNull(cursor.optFloatAsWrapperType(NON_EXISTANT_COL));
 
 			cursor.close();
 		}
