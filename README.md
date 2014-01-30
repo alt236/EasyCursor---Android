@@ -33,12 +33,16 @@ This is the "native" way of using EasyCursor.
 For a normal Select Query:
 ```
     final EasySqlQueryModel model = new EasySqlQueryModel.SelectQueryBuilder()
-    .setTables(QueryConstants.DEFAULT_TABLES)
-    .setDistict(true)
-    .setProjectionIn(QueryConstants.DEFAULT_SELECT)
-    .setSelection(QueryConstants.DEFAULT_WHERE)
-    .setSelectionArgs(QueryConstants.RAW_SQL_PARAMS)
-    .setSortOrder(QueryConstants.DEFAULT_ORDER_BY)
+		.setDistict(true)
+		.setStrict(true)
+		.setSelect(QueryConstants.DEFAULT_SELECT)
+		.setFrom(QueryConstants.DEFAULT_TABLES)
+		.setWhere(QueryConstants.DEFAULT_WHERE)
+		.setWhereArgs(QueryConstants.DEFAULT_SELECT_WHERE_PARAMS)
+		.setGroupBy(QueryConstants.DEFAULT_SELECT_GROUP_BY)
+		.setHaving(QueryConstants.DEFAULT_SELECT_HAVING)
+		.setSortOrder(QueryConstants.DEFAULT_ORDER_BY)
+		.setLimit(QueryConstants.DEFAULT_SELECT_LIMIT)
     .setModelComment("Default easy query")
     .build();
     
@@ -110,10 +114,11 @@ By compatibility I mean that the API is similar to a SQLiteQueryBuilder.
 		builder.setQueryParams(
 				QueryConstants.DEFAULT_SELECT,
 				QueryConstants.DEFAULT_WHERE,
-				QueryConstants.RAW_SQL_PARAMS,
-				null,
-				null,
-				QueryConstants.DEFAULT_ORDER_BY);
+				QueryConstants.DEFAULT_SELECT_WHERE_PARAMS,
+				QueryConstants.DEFAULT_SELECT_GROUP_BY,
+				QueryConstants.DEFAULT_SELECT_HAVING,
+				QueryConstants.DEFAULT_ORDER_BY,
+				QueryConstants.DEFAULT_SELECT_LIMIT);
 
 		final EasySqlQueryModel model = builder.build();
 		
