@@ -23,7 +23,7 @@ Download a copy of the EasyCursor library and reference it in your project.
 Alternatively you can produce a JAR file and use that (see Jarification below).
 
 ##Jarification
-Type `ant jar` at the root of the Library Project to produce a Jar file.
+Type `ant` at the root of the Library Project to produce a Jar file. This will also produce the Javadoc Jar.
 
 ##Generating an EasyCursor for SQL
 ###1. Using one of the inlcuded Builders EasyQueryModel
@@ -33,16 +33,16 @@ This is the "native" way of using EasyCursor.
 For a normal Select Query:
 ```
     final EasySqlQueryModel model = new EasySqlQueryModel.SelectQueryBuilder()
-		.setDistict(true)
-		.setStrict(true)
-		.setSelect(QueryConstants.DEFAULT_SELECT)
-		.setFrom(QueryConstants.DEFAULT_TABLES)
-		.setWhere(QueryConstants.DEFAULT_WHERE)
-		.setWhereArgs(QueryConstants.DEFAULT_SELECT_WHERE_PARAMS)
-		.setGroupBy(QueryConstants.DEFAULT_SELECT_GROUP_BY)
-		.setHaving(QueryConstants.DEFAULT_SELECT_HAVING)
-		.setSortOrder(QueryConstants.DEFAULT_ORDER_BY)
-		.setLimit(QueryConstants.DEFAULT_SELECT_LIMIT)
+	.setDistict(true)
+	.setStrict(true)
+	.setSelect(QueryConstants.DEFAULT_SELECT)
+	.setFrom(QueryConstants.DEFAULT_TABLES)
+	.setWhere(QueryConstants.DEFAULT_WHERE)
+	.setWhereArgs(QueryConstants.DEFAULT_SELECT_WHERE_PARAMS)
+	.setGroupBy(QueryConstants.DEFAULT_SELECT_GROUP_BY)
+	.setHaving(QueryConstants.DEFAULT_SELECT_HAVING)
+	.setSortOrder(QueryConstants.DEFAULT_ORDER_BY)
+	.setLimit(QueryConstants.DEFAULT_SELECT_LIMIT)
     .setModelComment("Default easy query")
     .build();
     
@@ -151,7 +151,7 @@ In addition you get the following functions for booleans, which work the same as
 
 The logic behind a boolean is as follows: `true==1` and `false!=1` where 1 is a number.
 
-##Accessing an EasyCursor's EasyQueryModel and re-querying
+##Accessing an EasyCursor's EasyQueryModel, saving it and replaying
 If the cursor has been generated via an EasyQueryModel, then you can access the model like this: 
 
 ```
@@ -198,6 +198,11 @@ If you need to extend the base implementation of EasySqlCursor, for example beca
 ```
     final EasyCursor cursor = model.execute(getReadableDatabase(), MyExtendedEasyCursor.class);
 ```
+
+##Things to remember
+1. An EasyCursor directly extends the default Cursor interface.
+2. When using an EasySqlQueryModel, the resulting Cursor is automatically moved to the first position.
+3. When you call execute() on an EasySqlQueryModel it still internally uses a standard Android SQLiteQueryBuilder, which will throw any usual exceptions. 
 
 ##Changelog
 * v0.1.0 First public release
