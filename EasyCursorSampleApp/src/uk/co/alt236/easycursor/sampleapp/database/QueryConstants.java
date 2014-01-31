@@ -5,13 +5,17 @@ public class QueryConstants {
 	//
 	// RAW QUERY
 	//
-	public static final String RAW_QUERY = "SELECT track.trackId AS _id, artist.name AS artist, album.title AS album, track.name AS track, mediatype.name AS media, track.composer AS composer, (ifnull(track.composer, 0)>0) AS hascomposer"
+	public static final String RAW_QUERY =
+			"SELECT track.trackId AS _id, artist.name AS artist, album.title AS album, track.name AS track, mediatype.name AS media, track.composer AS composer, (ifnull(track.composer, 0)>0) AS hascomposer, SUM(track.Milliseconds) AS meaninglessSum, SUM(track.Milliseconds)/3.33 AS meaninglessDiv"
 			+ " FROM track"
 			+ " LEFT OUTER JOIN album ON track.albumId = album.albumid"
-			+ " LEFT OUTER JOIN artist ON artist.artistId = album.artistid "
-			+ " LEFT OUTER JOIN mediatype ON track.mediatypeid = mediatype.mediatypeid "
+			+ " LEFT OUTER JOIN artist ON artist.artistId = album.artistid"
+			+ " LEFT OUTER JOIN mediatype ON track.mediatypeid = mediatype.mediatypeid"
 			+ " WHERE media=?"
-			+ " ORDER BY artist, album, track, composer;";
+			+ " GROUP BY album"
+			+ " HAVING SUM(track.Milliseconds) > 1000"
+			+ " ORDER BY artist, album, track, composer"
+			+ " LIMIT 10000";
 	public static final String[] RAW_SQL_PARAMS = { "MPEG audio file" };
 
 	//

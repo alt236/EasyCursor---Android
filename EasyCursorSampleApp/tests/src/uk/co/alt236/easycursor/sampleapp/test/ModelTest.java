@@ -10,45 +10,64 @@ import uk.co.alt236.easycursor.sqlcursor.EasySqlCursor;
 import uk.co.alt236.easycursor.sqlcursor.EasySqlQueryModel;
 import android.util.Log;
 
-public class SelectModelTest extends android.test.AndroidTestCase {
+public class ModelTest extends android.test.AndroidTestCase {
 	private final String TAG = getClass().getName();
 
-	private List<EasySqlQueryModel> mQueryModelList;
+	private List<EasySqlQueryModel> mSelectQueryModelList;
+	private List<EasySqlQueryModel> mRawQueryModelList;
+	private List<EasySqlQueryModel> mCombinedList;
+
 	private ExampleDatabase mDb;
 
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		mQueryModelList = new ArrayList<EasySqlQueryModel>();
+		mSelectQueryModelList = new ArrayList<EasySqlQueryModel>();
+		mRawQueryModelList = new ArrayList<EasySqlQueryModel>();
+		mCombinedList = new ArrayList<EasySqlQueryModel>();
 		mDb = DbSingleton.getInstance(getContext());
 
-		final List<EasySqlQueryModel> tempList = new ArrayList<EasySqlQueryModel>();
+		final List<EasySqlQueryModel> tempSelectList = new ArrayList<EasySqlQueryModel>();
 
-		tempList.add(StaticModelBuilder.getCompatQueryModel());
-		tempList.add(StaticModelBuilder.getCustomBuilderModel());
-		tempList.add(StaticModelBuilder.getDefaultSelectModel());
+		tempSelectList.add(StaticModelBuilder.getCompatQueryModel());
+		tempSelectList.add(StaticModelBuilder.getCustomBuilderModel());
+		tempSelectList.add(StaticModelBuilder.getDefaultSelectModel());
 
-		mQueryModelList.addAll(tempList);
-		for(final EasySqlQueryModel model : tempList){
+		mSelectQueryModelList.addAll(tempSelectList);
+		for(final EasySqlQueryModel model : tempSelectList){
 			final String json = model.toJson();
-			mQueryModelList.add(new EasySqlQueryModel(json));
+			mSelectQueryModelList.add(new EasySqlQueryModel(json));
 		}
+
+		final List<EasySqlQueryModel> tempRawList = new ArrayList<EasySqlQueryModel>();
+		tempRawList.add(StaticModelBuilder.getRawQueryModel());
+
+		mRawQueryModelList.addAll(tempRawList);
+		for(final EasySqlQueryModel model : tempRawList){
+			final String json = model.toJson();
+			mRawQueryModelList.add(new EasySqlQueryModel(json));
+		}
+
+		mCombinedList.addAll(mRawQueryModelList);
+		mCombinedList.addAll(mSelectQueryModelList);
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		mQueryModelList = null;
+		mSelectQueryModelList = null;
+		mRawQueryModelList = null;
+		mCombinedList = null;
 	}
 
 	public void testBooleanFieldParsing(){
 		final String NON_EXISTANT_COL = "THIS_COLUMN_DOES_NOT_EXIST";
 		final String EXISTANT_COL = "hascomposer";
 
-		for(int i = 0; i < mQueryModelList.size(); i++){
+		for(int i = 0; i < mCombinedList.size(); i++){
 			Log.v(TAG, "testBooleanFieldParsing: " + i);
-			final EasySqlCursor cursor = (EasySqlCursor) mQueryModelList.get(i).execute(mDb.getReadableDatabase());
+			final EasySqlCursor cursor = (EasySqlCursor) mCombinedList.get(i).execute(mDb.getReadableDatabase());
 
 			Assert.assertTrue(cursor.getBoolean(EXISTANT_COL));
 			Assert.assertTrue(cursor.optBooleanAsWrapperType(EXISTANT_COL));
@@ -68,9 +87,9 @@ public class SelectModelTest extends android.test.AndroidTestCase {
 		final int EXPECTED_VALUE = 14;
 		final int FALLBACK = -100;
 
-		for(int i = 0; i < mQueryModelList.size(); i++){
+		for(int i = 0; i < mCombinedList.size(); i++){
 			Log.v(TAG, "testIntegerFieldParsing: " + i);
-			final EasySqlCursor cursor = (EasySqlCursor) mQueryModelList.get(i).execute(mDb.getReadableDatabase());
+			final EasySqlCursor cursor = (EasySqlCursor) mCombinedList.get(i).execute(mDb.getReadableDatabase());
 
 			Assert.assertEquals(cursor.getInt(EXISTANT_COL), EXPECTED_VALUE);
 			Assert.assertEquals((int) cursor.optIntAsWrapperType(EXISTANT_COL), EXPECTED_VALUE);
@@ -90,9 +109,9 @@ public class SelectModelTest extends android.test.AndroidTestCase {
 		final long EXPECTED_VALUE = 2400415l;
 		final long FALLBACK = -100l;
 
-		for(int i = 0; i < mQueryModelList.size(); i++){
+		for(int i = 0; i < mCombinedList.size(); i++){
 			Log.v(TAG, "testLongFieldParsing: " + i);
-			final EasySqlCursor cursor = (EasySqlCursor) mQueryModelList.get(i).execute(mDb.getReadableDatabase());
+			final EasySqlCursor cursor = (EasySqlCursor) mCombinedList.get(i).execute(mDb.getReadableDatabase());
 
 			Assert.assertEquals(cursor.getLong(EXISTANT_COL), EXPECTED_VALUE);
 			Assert.assertEquals((long) cursor.optLongAsWrapperType(EXISTANT_COL), EXPECTED_VALUE);
@@ -113,9 +132,9 @@ public class SelectModelTest extends android.test.AndroidTestCase {
 		final double FALLBACK = -9.99;
 		final double DELTA = 0.0100;
 
-		for(int i = 0; i < mQueryModelList.size(); i++){
+		for(int i = 0; i < mCombinedList.size(); i++){
 			Log.v(TAG, "testDoubleFieldParsing: " + i);
-			final EasySqlCursor cursor = (EasySqlCursor) mQueryModelList.get(i).execute(mDb.getReadableDatabase());
+			final EasySqlCursor cursor = (EasySqlCursor) mCombinedList.get(i).execute(mDb.getReadableDatabase());
 
 			Assert.assertEquals(cursor.getDouble(EXISTANT_COL), EXPECTED_VALUE, DELTA);
 			Assert.assertEquals((double) cursor.optDoubleAsWrapperType(EXISTANT_COL), EXPECTED_VALUE, DELTA);
@@ -135,9 +154,9 @@ public class SelectModelTest extends android.test.AndroidTestCase {
 		final float EXPECTED_VALUE = 720845.345345345f;
 		final float FALLBACK = -9.99f;
 
-		for(int i = 0; i < mQueryModelList.size(); i++){
+		for(int i = 0; i < mCombinedList.size(); i++){
 			Log.v(TAG, "testLongFieldParsing: " + i);
-			final EasySqlCursor cursor = (EasySqlCursor) mQueryModelList.get(i).execute(mDb.getReadableDatabase());
+			final EasySqlCursor cursor = (EasySqlCursor) mCombinedList.get(i).execute(mDb.getReadableDatabase());
 
 			Assert.assertEquals(cursor.getFloat(EXISTANT_COL), EXPECTED_VALUE);
 			Assert.assertEquals((float) cursor.optFloatAsWrapperType(EXISTANT_COL), EXPECTED_VALUE);
@@ -151,21 +170,29 @@ public class SelectModelTest extends android.test.AndroidTestCase {
 		}
 	}
 
-	public void testModelEquality(){
-		final EasySqlQueryModel first = mQueryModelList.get(0);
-		for(int i = 1; i < mQueryModelList.size(); i++){
-			Log.v(TAG, "testModelEquality: " + i);
-			Assert.assertEquals("Comparing first model with item # " + i, first, mQueryModelList.get(i));
+	public void testSelectModelEquality(){
+		final EasySqlQueryModel first = mSelectQueryModelList.get(0);
+		for(int i = 1; i < mSelectQueryModelList.size(); i++){
+			Log.v(TAG, "testSelectModelEquality: " + i);
+			Assert.assertEquals("Comparing first model with item # " + i, first, mSelectQueryModelList.get(i));
+		}
+	}
+
+	public void testRawModelEquality(){
+		final EasySqlQueryModel first = mRawQueryModelList.get(0);
+		for(int i = 1; i < mRawQueryModelList.size(); i++){
+			Log.v(TAG, "testSelectModelEquality: " + i);
+			Assert.assertEquals("Comparing first model with item # " + i, first, mRawQueryModelList.get(i));
 		}
 	}
 
 	public void testModelResults(){
-		EasySqlCursor cursor = (EasySqlCursor) mQueryModelList.get(0).execute(mDb.getReadableDatabase());
+		EasySqlCursor cursor = (EasySqlCursor) mCombinedList.get(0).execute(mDb.getReadableDatabase());
 		final int res = cursor.getCount();
 		cursor.close();
 
-		for(int i = 1; i < mQueryModelList.size(); i++){
-			cursor = (EasySqlCursor) mQueryModelList.get(i).execute(mDb.getReadableDatabase());
+		for(int i = 1; i < mCombinedList.size(); i++){
+			cursor = (EasySqlCursor) mCombinedList.get(i).execute(mDb.getReadableDatabase());
 			final int tmp = cursor.getCount();
 			cursor.close();
 			Log.v(TAG, "testModelResults: " + i + ": " + tmp);
@@ -179,9 +206,9 @@ public class SelectModelTest extends android.test.AndroidTestCase {
 		final String EXPECTED_VALUE = "AC/DC";
 		final String FALLBACK = "lalalala";
 
-		for(int i = 0; i < mQueryModelList.size(); i++){
+		for(int i = 0; i < mCombinedList.size(); i++){
 			Log.v(TAG, "testStringFieldParsing: " + i);
-			final EasySqlCursor cursor = (EasySqlCursor) mQueryModelList.get(i).execute(mDb.getReadableDatabase());
+			final EasySqlCursor cursor = (EasySqlCursor) mCombinedList.get(i).execute(mDb.getReadableDatabase());
 
 			Assert.assertEquals(cursor.getString(EXISTANT_COL), EXPECTED_VALUE);
 
