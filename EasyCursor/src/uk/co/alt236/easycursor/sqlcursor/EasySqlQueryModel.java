@@ -742,8 +742,8 @@ public class EasySqlQueryModel implements EasyQueryModel{
 		/**
 		 * Sets the list of tables to query. Multiple tables can be specified to perform a join.
 		 * For example:
-		 *   setTables("foo, bar")
-		 *   setTables("foo LEFT OUTER JOIN bar ON (foo.id = bar.foo_id)")
+		 *   setFrom("foo, bar")
+		 *   setFrom("foo LEFT OUTER JOIN bar ON (foo.id = bar.foo_id)")
 		 *
 		 * @param inTables the list of tables to query on
 		 */
