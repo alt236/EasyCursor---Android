@@ -147,6 +147,11 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor{
 		return mDebugEnabled;
 	}
 
+	@Override
+	public boolean isNull(final String columnName) {
+		return isNull(getColumnIndex(columnName));
+	}
+
 	/* (non-Javadoc)
 	 * @see uk.co.alt236.easycursor.EasyCursor#optBoolean(java.lang.String)
 	 */
