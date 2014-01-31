@@ -58,4 +58,13 @@ public class StaticModelBuilder {
 
 		return model;
 	}
+
+	public static EasySqlQueryModel getRawQueryModel(){
+		final EasySqlQueryModel model = new EasySqlQueryModel.RawQueryBuilder()
+		.setRawSql(QueryConstants.RAW_QUERY)
+		.setSelectionArgs(QueryConstants.RAW_SQL_PARAMS)
+		.build();
+
+		return model;
+	}
 }
