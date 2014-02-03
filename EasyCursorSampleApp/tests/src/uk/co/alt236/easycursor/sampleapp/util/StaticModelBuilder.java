@@ -1,4 +1,4 @@
-package uk.co.alt236.easycursor.sampleapp.test;
+package uk.co.alt236.easycursor.sampleapp.util;
 
 import uk.co.alt236.easycursor.sampleapp.database.QueryConstants;
 import uk.co.alt236.easycursor.sampleapp.database.builders.LousyQueryBuilder;
