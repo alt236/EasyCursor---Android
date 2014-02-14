@@ -117,7 +117,7 @@ public class EasySqlQueryModel implements EasyQueryModel{
 		mSelectionArgs = builder.selectionArgs;
 		mSortOrder = builder.sortOrder;
 		mStrict = builder.strict;
-		mTables = builder.from;
+		mTables = builder.tables;
 		mQueryType = builder.queryType;
 	}
 
@@ -153,7 +153,7 @@ public class EasySqlQueryModel implements EasyQueryModel{
 		mSelectionArgs = builder.getWhereArgs();
 		mSortOrder = builder.getOrderBy();
 		mStrict = builder.isStrict();
-		mTables = builder.getTables();
+		mTables = builder.getProjectionIn();
 		mQueryType = QUERY_TYPE_MANAGED;
 	}
 
@@ -622,7 +622,7 @@ public class EasySqlQueryModel implements EasyQueryModel{
 		//
 		private boolean distinct;
 		private boolean strict;
-		private String from;
+		private String tables;
 		private String[] projectionIn;
 		private String[] selectionArgs;
 		private String selection;
@@ -745,10 +745,10 @@ public class EasySqlQueryModel implements EasyQueryModel{
 		 *   setFrom("foo, bar")
 		 *   setFrom("foo LEFT OUTER JOIN bar ON (foo.id = bar.foo_id)")
 		 *
-		 * @param inTables the list of tables to query on
+		 * @param tables the list of tables to query on
 		 */
-		public SelectQueryBuilder setFrom(String from){
-			this.from = from;
+		public SelectQueryBuilder setTables(String tables){
+			this.tables = tables;
 			return this;
 		}
 	}

@@ -16,7 +16,7 @@ public interface SqlSelectBuilder {
 
 	public abstract String[] getSelect();
 
-	public abstract String getTables();
+	public abstract String getProjectionIn();
 
 	public abstract String getWhere();
 

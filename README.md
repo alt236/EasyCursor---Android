@@ -36,7 +36,7 @@ For a normal Select Query:
 	.setDistict(true)
 	.setStrict(true)
 	.setSelect(QueryConstants.DEFAULT_SELECT)
-	.setFrom(QueryConstants.DEFAULT_TABLES)
+	.setTables(QueryConstants.DEFAULT_TABLES)
 	.setWhere(QueryConstants.DEFAULT_WHERE)
 	.setWhereArgs(QueryConstants.DEFAULT_SELECT_WHERE_PARAMS)
 	.setGroupBy(QueryConstants.DEFAULT_SELECT_GROUP_BY)
@@ -68,6 +68,7 @@ This way you can write, or re-use, your own builders.
     final LousyQueryBuilder builder = new LousyQueryBuilder();
     
     final EasySqlQueryModel model = builder.setSelect(QueryConstants.DEFAULT_SELECT)
+            .setFrom(QueryConstants.DEFAULT_TABLES)
     		.setWhere(QueryConstants.DEFAULT_WHERE)
     		.setWhereArgs(QueryConstants.DEFAULT_PARAMS)
     		.setOrderBy(QueryConstants.DEFAULT_ORDER_BY)

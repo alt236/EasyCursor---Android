@@ -46,7 +46,7 @@ public class LousyQueryBuilder implements SqlSelectBuilder{
 	}
 
 	@Override
-	public String getTables() {
+	public String getProjectionIn() {
 		return mTables;
 	}
 
