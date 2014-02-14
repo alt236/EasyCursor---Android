@@ -215,7 +215,7 @@ If you need to extend the base implementation of EasySqlCursor, for example beca
 *TODO*
 
 ##Links
-* Github: [https://github.com/alt236/Reflective-Drawable-Loader---Android]()
+* Github: [https://github.com/alt236/EasyCursor---Android]()
 
 ##Credits
 Author: [Alexandros Schillings](https://github.com/alt236).
