@@ -153,7 +153,7 @@ public class EasySqlQueryModel implements EasyQueryModel{
 		mSelectionArgs = builder.getWhereArgs();
 		mSortOrder = builder.getOrderBy();
 		mStrict = builder.isStrict();
-		mTables = builder.getProjectionIn();
+		mTables = builder.getTables();
 		mQueryType = QUERY_TYPE_MANAGED;
 	}
 
