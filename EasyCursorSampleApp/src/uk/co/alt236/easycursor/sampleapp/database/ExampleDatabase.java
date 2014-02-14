@@ -84,7 +84,7 @@ public class ExampleDatabase extends SQLiteAssetHelper {
 
 	public EasyCursor doEasySelectQuery(){
 		final EasySqlQueryModel model = new EasySqlQueryModel.SelectQueryBuilder()
-		.setDistict(true)
+		.setDistinct(true)
 		.setSelect(QueryConstants.DEFAULT_SELECT)
 		.setTables(QueryConstants.DEFAULT_TABLES)
 		.setWhere(QueryConstants.DEFAULT_WHERE)

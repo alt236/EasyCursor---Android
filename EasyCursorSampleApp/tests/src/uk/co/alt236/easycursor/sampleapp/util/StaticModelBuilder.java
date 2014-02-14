@@ -44,7 +44,7 @@ public class StaticModelBuilder {
 
 	public static EasySqlQueryModel getDefaultSelectModel(){
 		final EasySqlQueryModel model = new EasySqlQueryModel.SelectQueryBuilder()
-		.setDistict(true)
+		.setDistinct(true)
 		.setStrict(true)
 		.setSelect(QueryConstants.DEFAULT_SELECT)
 		.setTables(QueryConstants.DEFAULT_TABLES)

@@ -640,7 +640,7 @@ public class EasySqlQueryModel implements EasyQueryModel{
 		 *
 		 * @param distinct true if true the query is DISTINCT, otherwise it isn't
 		 */
-		public SelectQueryBuilder setDistict(boolean distinct){
+		public SelectQueryBuilder setDistinct(boolean distinct){
 			this.distinct = distinct;
 			return this;
 		}
