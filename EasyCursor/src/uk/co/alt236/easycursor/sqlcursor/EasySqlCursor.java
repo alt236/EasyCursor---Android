@@ -71,8 +71,15 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor{
 	}
 
 
-	/* (non-Javadoc)
-	 * @see uk.co.alt236.easycursor.EasyCursor#getBoolean(java.lang.String)
+	/**
+	 * Returns the value of the requested column as a boolean or throws
+	 * IllegalArgumentException if the column doesn't exist.
+	 *
+	 * The logic is defined in {@link #calcBoolean(int)}
+	 *
+	 * @param columnName the column name
+	 * @return the value from cursor
+	 * @throws IllegalArgumentException if the column doesn't exist
 	 */
 	@Override
 	public boolean getBoolean(final String columnName) {
@@ -152,16 +159,29 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor{
 		return isNull(getColumnIndex(columnName));
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.co.alt236.easycursor.EasyCursor#optBoolean(java.lang.String)
+	/**
+	 * Extracts the contents of a cursors Column as a Boolean.
+	 * If the column does not exist, it will return null;
+	 *
+	 * The logic is defined in {@link #calcBoolean(int)}
+	 *
+	 * @param columnName the name of the cursor column that we want to get the value from
+	 * @return the value from cursor if the column exists, {@value #DEFAULT_BOOLEAN} otherwise
 	 */
 	@Override
 	public boolean optBoolean(final String columnName) {
 		return optBoolean(columnName, DEFAULT_BOOLEAN);
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.co.alt236.easycursor.EasyCursor#optBoolean(java.lang.String, boolean)
+	/**
+	 * Extracts the contents of a cursors Column as a Boolean.
+	 * If the column does not exist, it will return the fallback value;
+	 *
+	 * The logic is defined in {@link #calcBoolean(int)}
+	 *
+	 * @param columnName the column name
+	 * @param fallback the value to return if the cursor does not exist
+	 * @return the value from cursor if the column exists, null otherwise
 	 */
 	@Override
 	public boolean optBoolean(final String columnName, boolean fallback) {
@@ -174,8 +194,16 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor{
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.co.alt236.easycursor.EasyCursor#optBooleanAsWrapperType(java.lang.String)
+	/**
+	 * Extracts the contents of a cursors Column as a Boolean.
+	 * If the column does not exist, it will return null.
+	 *
+	 * Use this if you want to know if the column did not exist.
+	 *
+	 * The logic is defined in {@link #calcBoolean(int)}
+	 *
+	 * @param columnName the column name
+	 * @return the value from cursor if the column exists, null otherwise
 	 */
 	@Override
 	public Boolean optBooleanAsWrapperType(final String columnName) {
@@ -188,8 +216,12 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor{
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.co.alt236.easycursor.EasyCursor#optDouble(java.lang.String)
+	/**
+	 * Extracts the contents of a cursors Column as a double.
+	 *
+	 * @param columnName the name of the cursor column that we want to get the value from
+	 * @return the value from cursor if the column exists, {@value #DEFAULT_DOUBLE} otherwise.
+	 *
 	 */
 	@Override
 	public double optDouble(final String columnName) {
@@ -224,8 +256,11 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor{
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.co.alt236.easycursor.EasyCursor#optFloat(java.lang.String)
+	/**
+	 * Extracts the contents of a cursors Column as a float.
+	 *
+	 * @param columnName the name of the cursor column that we want to get the value from
+	 * @return the value from cursor if the column exists, {@value #DEFAULT_FLOAT} otherwise.
 	 */
 	@Override
 	public float optFloat(final String columnName) {
@@ -260,8 +295,11 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor{
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.co.alt236.easycursor.EasyCursor#optInt(java.lang.String)
+	/**
+	 * Extracts the contents of a cursors Column as an int.
+	 *
+	 * @param columnName the name of the cursor column that we want to get the value from
+	 * @return the value from cursor if the column exists, {@value #DEFAULT_INT} otherwise.
 	 */
 	@Override
 	public int optInt(final String columnName) {
@@ -296,8 +334,11 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor{
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.co.alt236.easycursor.EasyCursor#optLong(java.lang.String)
+	/**
+	 * Extracts the contents of a cursors Column as a long.
+	 *
+	 * @param columnName the name of the cursor column that we want to get the value from
+	 * @return the value from cursor if the column exists, {@value #DEFAULT_LONG} otherwise.
 	 */
 	@Override
 	public long optLong(final String columnName) {
@@ -332,8 +373,12 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor{
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.co.alt236.easycursor.EasyCursor#optString(java.lang.String)
+	/**
+	 * Extracts the contents of a cursors Column as a String.
+	 * If the column does not exist, it will return {@value #DEFAULT_STRING};
+	 *
+	 * @param columnName the name of the cursor column that we want to get the value from
+	 * @return the value from cursor if the column exists, {@value #DEFAULT_STRING} otherwise.
 	 */
 	@Override
 	public String optString(final String columnName) {

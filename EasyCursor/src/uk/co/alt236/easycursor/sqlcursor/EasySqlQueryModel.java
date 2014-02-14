@@ -486,7 +486,7 @@ public class EasySqlQueryModel implements EasyQueryModel{
 	/**
 	 * Will return the JSON representation of this QueryModel.
 	 * It can be converted back into a QueryModel object using the
-	 * {@link #getInstance(String)} static method.
+	 * {@link #EasySqlQueryModel(String)} constructor.
 	 *
 	 * @throws IllegalStateExcetion if one tries to create
 	 *   a JSON representation when the model is uninitialised.

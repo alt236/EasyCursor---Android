@@ -18,7 +18,7 @@ public interface EasyCursor extends Cursor{
 	 * Returns the value of the requested column as a boolean or throws
 	 * IllegalArgumentException if the column doesn't exist.
 	 *
-	 * The logic is defined in {@link #calcBoolean(int)}
+	 * The logic is implementation specific
 	 *
 	 * @param columnName the column name
 	 * @return the value from cursor
@@ -97,10 +97,10 @@ public interface EasyCursor extends Cursor{
 	 * Extracts the contents of a cursors Column as a Boolean.
 	 * If the column does not exist, it will return null;
 	 *
-	 * The logic is defined in {@link #calcBoolean(int)}
+	 * The logic is implementation specific.
 	 *
 	 * @param columnName the name of the cursor column that we want to get the value from
-	 * @return the value from cursor if the column exists, {@value #DEFAULT_BOOLEAN} otherwise
+	 * @return the value from cursor if the column exists, the implementation specific default value otherwise
 	 */
 	public abstract boolean optBoolean(final String columnName);
 
@@ -108,7 +108,7 @@ public interface EasyCursor extends Cursor{
 	 * Extracts the contents of a cursors Column as a Boolean.
 	 * If the column does not exist, it will return the fallback value;
 	 *
-	 * The logic is defined in {@link #calcBoolean(int)}
+	 * The logic is implementation specific.
 	 *
 	 * @param columnName the column name
 	 * @param fallback the value to return if the cursor does not exist
@@ -122,7 +122,7 @@ public interface EasyCursor extends Cursor{
 	 *
 	 * Use this if you want to know if the column did not exist.
 	 *
-	 * The logic is defined in {@link #calcBoolean(int)}
+	 * The logic is implementation specific.
 	 *
 	 * @param columnName the column name
 	 * @return the value from cursor if the column exists, null otherwise
@@ -133,8 +133,7 @@ public interface EasyCursor extends Cursor{
 	 * Extracts the contents of a cursors Column as a double.
 	 *
 	 * @param columnName the name of the cursor column that we want to get the value from
-	 * @return the value from cursor if the column exists, {@value #DEFAULT_DOUBLE} otherwise as per
-	 * http://www.sqlite.org/c3ref/column_blob.html
+	 * @return the value from cursor if the column exists, the implementation specific default value otherwise
 	 *
 	 */
 	public abstract double optDouble(final String columnName);
@@ -164,7 +163,7 @@ public interface EasyCursor extends Cursor{
 	 * Extracts the contents of a cursors Column as a float.
 	 *
 	 * @param columnName the name of the cursor column that we want to get the value from
-	 * @return the value from cursor if the column exists, {@value #DEFAULT_FLOAT} otherwise.
+	 * @return the value from cursor if the column exists, the implementation specific default value otherwise
 	 */
 	public abstract float optFloat(final String columnName);
 
@@ -193,7 +192,7 @@ public interface EasyCursor extends Cursor{
 	 * Extracts the contents of a cursors Column as an int.
 	 *
 	 * @param columnName the name of the cursor column that we want to get the value from
-	 * @return the value from cursor if the column exists, {@value #DEFAULT_INT} otherwise.
+	 * @return the value from cursor if the column exists, the implementation specific default value otherwise
 	 */
 	public abstract int optInt(final String columnName);
 
@@ -222,7 +221,7 @@ public interface EasyCursor extends Cursor{
 	 * Extracts the contents of a cursors Column as a long.
 	 *
 	 * @param columnName the name of the cursor column that we want to get the value from
-	 * @return the value from cursor if the column exists, {@value #DEFAULT_LONG} otherwise.
+	 * @return the value from cursor if the column exists, the implementation specific default value otherwise
 	 */
 	public abstract long optLong(final String columnName);
 
@@ -249,10 +248,10 @@ public interface EasyCursor extends Cursor{
 
 	/**
 	 * Extracts the contents of a cursors Column as a String.
-	 * If the column does not exist, it will return {@value #DEFAULT_STRING};
+	 * If the column does not exist, it will return the implementation specific default value
 	 *
 	 * @param columnName the name of the cursor column that we want to get the value from
-	 * @return the value from cursor if the column exists, {@value #DEFAULT_STRING} otherwise.
+	 * @return the value from cursor if the column exists, the implementation specific default value
 	 */
 	public abstract String optString(final String columnName);
 
