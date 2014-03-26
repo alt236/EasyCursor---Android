@@ -9,16 +9,25 @@ import java.util.Set;
 
 import junit.framework.Assert;
 import uk.co.alt236.easycursor.objectcursor.ObjectCursor;
+import uk.co.alt236.easycursor.sampleapp.container.TrackInfo;
 import uk.co.alt236.easycursor.sampleapp.containers.TestObject;
+import uk.co.alt236.easycursor.sampleapp.database.DbSingleton;
+import uk.co.alt236.easycursor.sampleapp.database.ExampleDatabase;
 import android.util.Log;
 
-public class ObjectCursorTests extends android.test.AndroidTestCase {
-	private final String TAG = getClass().getName();
+public class ObjectCursorTests extends CommonTestCases {
+	private ExampleDatabase mDb;
 	private List<TestObject> mTestObjects;
+	private ObjectCursor<TrackInfo> mObjectCursor;
+	private final String TAG = getClass().getName();
 	private final static long SEED = 1000;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void setUp() throws Exception {
+		mDb = DbSingleton.getInstance(getContext());
+		mObjectCursor = (ObjectCursor<TrackInfo>) mDb.doObjectCursorQuery();
+
 		mTestObjects = new ArrayList<TestObject>();
 
 		for(int i = 0; i< 10; i++){
@@ -30,13 +39,12 @@ public class ObjectCursorTests extends android.test.AndroidTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
+		mObjectCursor.close();
 		super.tearDown();
 	}
 
-
-	public void testBooleanDataRetrieval(){
+	public void testBooleanFieldParsing(){
 		final ObjectCursor<TestObject> cursor = new ObjectCursor<TestObject>(TestObject.class, mTestObjects);
-
 
 		cursor.moveToFirst();
 		String fieldName = "bool";
@@ -53,7 +61,7 @@ public class ObjectCursorTests extends android.test.AndroidTestCase {
 	}
 
 
-	public void testByteArrayDataRetrieval(){
+	public void testByteArrayFieldParsing(){
 		final ObjectCursor<TestObject> cursor = new ObjectCursor<TestObject>(TestObject.class, mTestObjects);
 		final String[] cols = cursor.getColumnNames();
 		final Set<String> convertables = new HashSet<String>();
@@ -85,6 +93,40 @@ public class ObjectCursorTests extends android.test.AndroidTestCase {
 		}
 
 		cursor.close();
+	}
+
+	public void testDoubleFieldParsing(){
+		testDoubleFieldParsing(mObjectCursor);
+	}
+
+	public void testFieldIndexes(){
+		final ObjectCursor<TestObject> cursor = new ObjectCursor<TestObject>(TestObject.class, mTestObjects);
+		cursor.moveToFirst();
+		final String[] cols = cursor.getColumnNames();
+
+		int index = 0;
+		for(final String col : cols){
+			final int cursorFieldIndex = cursor.getColumnIndex(col);
+			Assert.assertEquals(index, cursorFieldIndex);
+			final String cursorFieldName = cursor.getColumnName(cursorFieldIndex);
+			Assert.assertEquals(col, cursorFieldName);
+			index++;
+		}
+
+		cursor.close();
+	}
+
+	public void testFloatFieldParsing(){
+		testFloatFieldParsing(mObjectCursor);
+	}
+
+	public void testIntegerFieldParsing(){
+		testIntegerFieldParsing(mObjectCursor);
+	}
+
+
+	public void testLongFieldParsing(){
+		testLongFieldParsing(mObjectCursor);
 	}
 
 	public void testMethodSet(){
@@ -126,7 +168,7 @@ public class ObjectCursorTests extends android.test.AndroidTestCase {
 		cursor.close();
 	}
 
-	public void testStringDataRetrieval(){
+	public void testStringFieldParsing(){
 		final ObjectCursor<TestObject> cursor = new ObjectCursor<TestObject>(TestObject.class, mTestObjects);
 		final String[] cols = cursor.getColumnNames();
 
@@ -145,6 +187,8 @@ public class ObjectCursorTests extends android.test.AndroidTestCase {
 		}
 
 		cursor.close();
+
+		testStringFieldParsing(mObjectCursor);
 	}
 
 	private static void logFieldData(String tag, String fieldName, int position, String data){

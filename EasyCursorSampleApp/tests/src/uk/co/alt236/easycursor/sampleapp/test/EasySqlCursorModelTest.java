@@ -11,7 +11,7 @@ import uk.co.alt236.easycursor.sqlcursor.EasySqlCursor;
 import uk.co.alt236.easycursor.sqlcursor.EasySqlQueryModel;
 import android.util.Log;
 
-public class ModelTest extends android.test.AndroidTestCase {
+public class EasySqlCursorModelTest extends android.test.AndroidTestCase {
 	private final String TAG = getClass().getName();
 
 	private List<EasySqlQueryModel> mSelectQueryModelList;
