@@ -37,8 +37,14 @@ public class ObjectCursor<T> extends AbstractCursor implements EasyCursor {
 	private final List<T> mObjectList;
 	private final Map<String, Integer> mFieldToIndexMap;
 	private final Map<String, Method> mFieldToMethodMap;
+	private final EasyQueryModel mQueryModel;
 
 	public ObjectCursor(Class<T> clazz, List<T> objectList) {
+		this(clazz, objectList, null);
+	}
+
+	public ObjectCursor(Class<T> clazz, List<T> objectList, EasyQueryModel model) {
+		mQueryModel = model;
 		mFieldToIndexMap = new HashMap<String, Integer>();
 		mFieldToMethodMap = Collections.synchronizedMap(new HashMap<String, Method>());
 		mMethodList = new ArrayList<Method>();
@@ -49,7 +55,11 @@ public class ObjectCursor<T> extends AbstractCursor implements EasyCursor {
 	}
 
 	public ObjectCursor(Class<T> clazz, T[] objectArray) {
-		this(clazz, new ArrayList<T>(Arrays.asList(objectArray)));
+		this(clazz, new ArrayList<T>(Arrays.asList(objectArray)), null);
+	}
+
+	public ObjectCursor(Class<T> clazz, T[] objectArray, EasyQueryModel model) {
+		this(clazz, new ArrayList<T>(Arrays.asList(objectArray)), model);
 	}
 
 	@Override
@@ -212,7 +222,7 @@ public class ObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
 	@Override
 	public EasyQueryModel getQueryModel() {
-		return null;
+		return mQueryModel;
 	}
 
 	@Override
