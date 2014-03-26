@@ -14,8 +14,8 @@ public class DatabaseLoader extends AbstractCursorLoader {
 	public final static int QUERY_TYPE_EASYCURSOR_DEFAULT_RAW = 2;
 	public final static int QUERY_TYPE_EASYCURSOR_CUSTOM_BUILDER = 3;
 	public final static int QUERY_TYPE_EASYCURSOR_COMPATIBILITY = 4;
-	public final static int QUERY_TYPE_EASYCURSOR_SAVED = 5;
-
+	public final static int QUERY_TYPE_EASYCURSOR_OBJECT_CURSOR = 5;
+	public final static int QUERY_TYPE_EASYCURSOR_SAVED = 6;
 	private final int mType;
 
 	public DatabaseLoader(final Context context, final int type) {
@@ -49,6 +49,9 @@ public class DatabaseLoader extends AbstractCursorLoader {
 			break;
 		case QUERY_TYPE_EASYCURSOR_SAVED:
 			result = db.doSavedQuery(getContext());
+			break;
+		case QUERY_TYPE_EASYCURSOR_OBJECT_CURSOR:
+			result = db.doObjectCursorQuery();
 			break;
 		default:
 			result = null;

@@ -1,8 +1,13 @@
 package uk.co.alt236.easycursor.sampleapp.database;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.json.JSONException;
 
 import uk.co.alt236.easycursor.EasyCursor;
+import uk.co.alt236.easycursor.objectcursor.ObjectCursor;
+import uk.co.alt236.easycursor.sampleapp.container.TrackInfo;
 import uk.co.alt236.easycursor.sampleapp.database.builders.LousyQueryBuilder;
 import uk.co.alt236.easycursor.sampleapp.util.Constants;
 import uk.co.alt236.easycursor.sqlcursor.EasySqlCursor;
@@ -67,6 +72,8 @@ public class ExampleDatabase extends SQLiteAssetHelper {
 				.setWhere(QueryConstants.DEFAULT_WHERE)
 				.setWhereArgs(QueryConstants.DEFAULT_SELECT_WHERE_PARAMS)
 				.setOrderBy(QueryConstants.DEFAULT_ORDER_BY)
+				.setGroupBy(QueryConstants.DEFAULT_SELECT_GROUP_BY)
+				.setHaving(QueryConstants.DEFAULT_SELECT_HAVING)
 				.build();
 		model.setModelComment("Custom Builder query");
 		return model.execute(getReadableDatabase());
@@ -114,5 +121,21 @@ public class ExampleDatabase extends SQLiteAssetHelper {
 		}
 
 		return result;
+	}
+
+	public EasyCursor doObjectCursorQuery() {
+		final EasyCursor dataIn = doEasyRawQuery();
+		final List<TrackInfo> list = new ArrayList<TrackInfo>();
+
+		while(!dataIn.isAfterLast()){
+			list.add(new TrackInfo(dataIn));
+			dataIn.moveToNext();
+		}
+
+		dataIn.close();
+
+		final EasyCursor methodResult = new ObjectCursor<TrackInfo>(TrackInfo.class, list);
+		methodResult.moveToFirst();
+		return methodResult;
 	}
 }

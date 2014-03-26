@@ -33,12 +33,12 @@ public class QueryConstants {
 		"SUM(track.Milliseconds)/3.33 AS meaninglessDiv"
 	};
 
-	public static final String DEFAULT_ORDER_BY = "artist, album, track, composer";
-	public static final String DEFAULT_SELECT_GROUP_BY = "album";
-	public static final String DEFAULT_SELECT_HAVING = "meaninglessSum > 1000";
-	public static final String DEFAULT_SELECT_LIMIT = "10000";
 	public static final String DEFAULT_WHERE = "media=?";
-	public static final String[] DEFAULT_SELECT_WHERE_PARAMS = { "MPEG audio file" };
+	public static final String DEFAULT_SELECT_GROUP_BY = "album";
+	public static final String DEFAULT_SELECT_HAVING = "SUM(track.Milliseconds) > 1000";
+	public static final String DEFAULT_SELECT_LIMIT = "10000";
+	public static final String DEFAULT_ORDER_BY = "artist, album, track, composer";
+	public static final String[] DEFAULT_SELECT_WHERE_PARAMS = RAW_SQL_PARAMS;
 	public static final String DEFAULT_TABLES = "track"
 			+ " LEFT OUTER JOIN album ON track.albumId = album.albumid"
 			+ " LEFT OUTER JOIN artist ON artist.artistId = album.artistid "
