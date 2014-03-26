@@ -1,16 +1,17 @@
 package uk.co.alt236.easycursor.objectcursor;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import uk.co.alt236.easycursor.EasyCursor;
 import uk.co.alt236.easycursor.EasyQueryModel;
@@ -18,6 +19,10 @@ import android.database.AbstractCursor;
 import android.util.Log;
 
 public class ObjectCursor<T> extends AbstractCursor implements EasyCursor {
+	private static final String UTF_8 = "UTF-8";
+	private static final String IS = "is";
+	private static final String GET = "get";
+
 	public static final String DEFAULT_STRING = null;
 	public static final int DEFAULT_INT = 0;
 	public static final long DEFAULT_LONG = 0l;
@@ -26,31 +31,31 @@ public class ObjectCursor<T> extends AbstractCursor implements EasyCursor {
 	public static final double DEFAULT_DOUBLE = 0.0d;
 	public static final boolean DEFAULT_BOOLEAN = false;
 
-	private static final String IS = "is";
-	private static final String GET = "get";
-
 	private final String TAG = this.getClass().getName();
+	private final List<Method> mMethodList;
+	private final List<String> mFieldNameList;
+	private final List<T> mObjectList;
+	private final Map<String, Integer> mFieldToIndexMap;
+	private final Map<String, Method> mFieldToMethodMap;
 
-	final Map<Integer, String> mNumberToFieldMap;
-	final List<T> mObjectList;
-	final Set<Method> mMethodSet;
-	final Map<String, Method> mFieldToMethodMap;
-
-	public ObjectCursor(Class<T> clazz, List<T> objectList, Map<Integer, String> numberToFieldMap) {
-		mNumberToFieldMap = numberToFieldMap;
-		mObjectList = objectList;
-		mMethodSet = populateMethodSet(clazz);
+	public ObjectCursor(Class<T> clazz, List<T> objectList) {
+		mFieldToIndexMap = new HashMap<String, Integer>();
 		mFieldToMethodMap = Collections.synchronizedMap(new HashMap<String, Method>());
+		mMethodList = new ArrayList<Method>();
+		mObjectList = objectList;
+		mFieldNameList = new ArrayList<String>();
+
+		populateMethodList(clazz);
 	}
 
-	public ObjectCursor(Class<T> clazz, T[] objectArray, Map<Integer, String> numberToFieldMap) {
-		this(clazz, new ArrayList<T>(Arrays.asList(objectArray)), numberToFieldMap);
+	public ObjectCursor(Class<T> clazz, T[] objectArray) {
+		this(clazz, new ArrayList<T>(Arrays.asList(objectArray)));
 	}
 
 	@Override
 	public byte[] getBlob(String fieldName) {
 		final Method method = getGetterForFieldOrThrow(fieldName);
-		return ((byte[]) runGetter(method, getItem(getPosition())));
+		return toByteArray(runGetter(method, getItem(getPosition())));
 	}
 
 	@Override
@@ -60,8 +65,31 @@ public class ObjectCursor<T> extends AbstractCursor implements EasyCursor {
 	}
 
 	@Override
+	public int getColumnIndex(String columnName) {
+		if(mFieldToIndexMap.containsKey(columnName)){
+			return mFieldToIndexMap.get(columnName).intValue();
+		} else {
+			return -1;
+		}
+	}
+
+	@Override
+	public int getColumnIndexOrThrow(String columnName) {
+		if(mFieldToIndexMap.containsKey(columnName)){
+			return mFieldToIndexMap.get(columnName).intValue();
+		} else {
+			throw new IllegalArgumentException("There is no column named '" + columnName + "'");
+		}
+	}
+
+	@Override
+	public String getColumnName(int columnIndex) {
+		return mFieldNameList.get(columnIndex);
+	}
+
+	@Override
 	public String[] getColumnNames() {
-		return new String[0];
+		return mFieldNameList.toArray(new String[mFieldNameList.size()]);
 	}
 
 	@Override
@@ -72,25 +100,31 @@ public class ObjectCursor<T> extends AbstractCursor implements EasyCursor {
 	@Override
 	public double getDouble(int column) {
 		validateFieldNumberMapping(column);
-		return getDouble(mNumberToFieldMap.get(column));
+		return getDouble(mMethodList.get(column));
+	}
+
+	private double getDouble(Method method){
+		return ((Double) runGetter(method, getItem(getPosition()))).doubleValue();
 	}
 
 	@Override
 	public double getDouble(String fieldName) {
-		final Method method = getGetterForFieldOrThrow(fieldName);
-		return ((Double) runGetter(method, getItem(getPosition()))).doubleValue();
+		return getDouble(getGetterForFieldOrThrow(fieldName));
 	}
 
 	@Override
 	public float getFloat(int column) {
 		validateFieldNumberMapping(column);
-		return getFloat(mNumberToFieldMap.get(column));
+		return getFloat(mMethodList.get(column));
+	}
+
+	private float getFloat(Method method){
+		return ((Float) runGetter(method, getItem(getPosition()))).floatValue();
 	}
 
 	@Override
 	public float getFloat(String fieldName) {
-		final Method method = getGetterForFieldOrThrow(fieldName);
-		return ((Float) runGetter(method, getItem(getPosition()))).floatValue();
+		return getFloat(getGetterForFieldOrThrow(fieldName));
 	}
 
 	private synchronized Method getGetterForField(String field){
@@ -101,7 +135,7 @@ public class ObjectCursor<T> extends AbstractCursor implements EasyCursor {
 			final String otherField = GET + field.toLowerCase(Locale.US);
 
 			Method methodResult = null;
-			for (final Method method : mMethodSet) {
+			for (final Method method : mMethodList) {
 				if(method.getName().toLowerCase(Locale.US).equals(booleanField)){
 					methodResult = method;
 					break;
@@ -128,13 +162,16 @@ public class ObjectCursor<T> extends AbstractCursor implements EasyCursor {
 	@Override
 	public int getInt(int column) {
 		validateFieldNumberMapping(column);
-		return getInt(mNumberToFieldMap.get(column));
+		return getInt(mMethodList.get(column));
+	}
+
+	private int getInt(Method method){
+		return ((Integer) runGetter(method, getItem(getPosition()))).intValue();
 	}
 
 	@Override
 	public int getInt(String fieldName) {
-		final Method method = getGetterForFieldOrThrow(fieldName);
-		return ((Integer) runGetter(method, getItem(getPosition()))).intValue();
+		return getInt(getGetterForFieldOrThrow(fieldName));
 	}
 
 	public T getItem(int position){
@@ -144,17 +181,33 @@ public class ObjectCursor<T> extends AbstractCursor implements EasyCursor {
 	@Override
 	public long getLong(int column) {
 		validateFieldNumberMapping(column);
-		return getLong(mNumberToFieldMap.get(column));
+		return getLong(mMethodList.get(column));
+	}
+
+	private long getLong(Method method){
+		return ((Long) runGetter(method, getItem(getPosition()))).longValue();
 	}
 
 	@Override
 	public long getLong(String fieldName) {
-		final Method method = getGetterForFieldOrThrow(fieldName);
-		return ((Long) runGetter(method, getItem(getPosition()))).longValue();
+		return getLong(getGetterForFieldOrThrow(fieldName));
 	}
 
-	public Set<Method> getMethods(){
-		return mMethodSet;
+	public List<Method> getMethods(){
+		return mMethodList;
+	}
+
+	public Object getObject(int column) {
+		validateFieldNumberMapping(column);
+		return getObject(mMethodList.get(column));
+	}
+
+	private Object getObject(Method method){
+		return runGetter(method, getItem(getPosition()));
+	}
+
+	public Object getObject(String fieldName){
+		return getObject(getGetterForFieldOrThrow(fieldName));
 	}
 
 	@Override
@@ -165,97 +218,51 @@ public class ObjectCursor<T> extends AbstractCursor implements EasyCursor {
 	@Override
 	public short getShort(int column) {
 		validateFieldNumberMapping(column);
-		return getShort(mNumberToFieldMap.get(column));
+		return getShort(mMethodList.get(column));
+	}
+
+	public short getShort(Method method) {
+		return ((Short) runGetter(method, getItem(getPosition()))).shortValue();
 	}
 
 	public short getShort(String fieldName) {
-		final Method method = getGetterForFieldOrThrow(fieldName);
-		return ((Short) runGetter(method, getItem(getPosition()))).shortValue();
+		return getShort(getGetterForFieldOrThrow(fieldName));
 	}
 
 	@Override
 	public String getString(int column) {
 		validateFieldNumberMapping(column);
-		return getString(mNumberToFieldMap.get(column));
+		return getString(mMethodList.get(column));
+	}
+
+	public String getString(Method method) {
+		return toString(runGetter(method, getItem(getPosition())));
 	}
 
 	@Override
 	public String getString(String fieldName) {
-		final Method method = getGetterForFieldOrThrow(fieldName);
-		return String.valueOf(runGetter(method, getItem(getPosition())));
-	}
-
-	private boolean invokeForBoolean(Method method, boolean fallback) {
-		final Object res = runGetter(method, getItem(getPosition()));
-		if(res == null){
-			return fallback;
-		} else {
-			return ((Boolean) res).booleanValue();
-		}
-	}
-
-	private double invokeForDouble(Method method, double fallback) {
-		final Object res = runGetter(method, getItem(getPosition()));
-		if(res == null){
-			return fallback;
-		} else {
-			return ((Double) res).doubleValue();
-		}
-	}
-
-	private float invokeForFloat(Method method, float fallback) {
-		final Object res = runGetter(method, getItem(getPosition()));
-		if(res == null){
-			return fallback;
-		} else {
-			return ((Float) res).floatValue();
-		}
-	}
-
-	private int invokeForInt(Method method, int fallback) {
-		final Object res = runGetter(method, getItem(getPosition()));
-		if(res == null){
-			return fallback;
-		} else {
-			return ((Integer) res).intValue();
-		}
-	}
-
-	private long invokeForLong(Method method, long fallback) {
-		final Object res = runGetter(method, getItem(getPosition()));
-		if(res == null){
-			return fallback;
-		} else {
-			return ((Long) res).longValue();
-		}
-	}
-
-	private String invokeForString(Method method, String fallback) {
-		final Object res = runGetter(method, getItem(getPosition()));
-		if(res == null){
-			return fallback;
-		} else {
-			return String.valueOf(res);
-		}
+		return getString(getGetterForFieldOrThrow(fieldName));
 	}
 
 	@Override
 	public boolean isNull(int column) {
 		validateFieldNumberMapping(column);
-		return isNull(mNumberToFieldMap.get(column));
+		return isNull(mMethodList.get(column));
+	}
+
+	private boolean isNull(Method method) {
+		return (runGetter(method, getItem(getPosition())) == null);
 	}
 
 	@Override
 	public boolean isNull(String fieldName) {
-		final Method method = getGetterForFieldOrThrow(fieldName);
-		return (runGetter(method, getItem(getPosition())) == null);
+		return isNull(getGetterForFieldOrThrow(fieldName));
 	}
 
 	@Override
 	public boolean optBoolean(String fieldName) {
 		return optBoolean(fieldName, DEFAULT_BOOLEAN);
 	}
-
 
 	@Override
 	public boolean optBoolean(String fieldName, boolean fallback) {
@@ -264,7 +271,7 @@ public class ObjectCursor<T> extends AbstractCursor implements EasyCursor {
 		if(method == null){
 			return fallback;
 		} else {
-			return invokeForBoolean(method, fallback);
+			return safeInvokeForBoolean(method, fallback);
 		}
 	}
 
@@ -291,7 +298,7 @@ public class ObjectCursor<T> extends AbstractCursor implements EasyCursor {
 		if(method == null){
 			return fallback;
 		} else {
-			return invokeForDouble(method, fallback);
+			return safeInvokeForDouble(method, fallback);
 		}
 	}
 
@@ -306,6 +313,7 @@ public class ObjectCursor<T> extends AbstractCursor implements EasyCursor {
 		}
 	}
 
+
 	@Override
 	public float optFloat(String fieldName) {
 		return optFloat(fieldName, DEFAULT_FLOAT);
@@ -318,7 +326,7 @@ public class ObjectCursor<T> extends AbstractCursor implements EasyCursor {
 		if(method == null){
 			return fallback;
 		} else {
-			return invokeForFloat(method, fallback);
+			return safeInvokeForFloat(method, fallback);
 		}
 	}
 
@@ -345,7 +353,7 @@ public class ObjectCursor<T> extends AbstractCursor implements EasyCursor {
 		if(method == null){
 			return fallback;
 		} else {
-			return invokeForInt(method, fallback);
+			return safeInvokeForInt(method, fallback);
 		}
 	}
 
@@ -372,7 +380,7 @@ public class ObjectCursor<T> extends AbstractCursor implements EasyCursor {
 		if(method == null){
 			return fallback;
 		} else {
-			return invokeForLong(method, fallback);
+			return safeInvokeForLong(method, fallback);
 		}
 	}
 
@@ -399,38 +407,51 @@ public class ObjectCursor<T> extends AbstractCursor implements EasyCursor {
 		if(method == null){
 			return fallback;
 		} else {
-			return invokeForString(method, fallback);
+			return safeInvokeForString(method, fallback);
 		}
 	}
 
-	private Set<Method> populateMethodSet(Class<T> clazz){
-		final Set<Method> methodResult = new HashSet<Method>();
+	private void populateMethodList(Class<T> clazz){
+		Method candidate;
+		String canditateCleanName;
 
+		int count = 0;
 		for(final Method method : clazz.getMethods()){
-			Method candidate = null;
+			candidate = null;
+			canditateCleanName = null;
 
-			if(method.getName().startsWith(GET)){
-				if(!method.getReturnType().equals(Void.TYPE)){
-					candidate = method;
-				}
-			} else if (method.getName().startsWith(IS)){
-				if(!method.getReturnType().equals(Void.TYPE)){
-					candidate = method;
-				}
-			}
+			if(Modifier.isPublic(method.getModifiers())){
+				if(method.getName().length() > 3){
+					if(method.getParameterTypes().length == 0){
 
-			if(candidate != null){
-				// we can only use getter with no params
-				if(candidate.getParameterTypes().length == 0){
-					methodResult.add(candidate);
+						if(method.getName().startsWith(GET)){
+							if(!method.getReturnType().equals(Void.TYPE)){
+								candidate = method;
+								canditateCleanName =
+										method.getName().substring(GET.length()).toLowerCase(Locale.US);
+							}
+						} else if (method.getName().startsWith(IS)){
+							if(!method.getReturnType().equals(Void.TYPE)){
+								candidate = method;
+								canditateCleanName =
+										method.getName().substring(IS.length()).toLowerCase(Locale.US);
+							}
+						}
+
+						if(candidate != null){
+							mMethodList.add(candidate);
+							mFieldToIndexMap.put(canditateCleanName, count);
+							mFieldNameList.add(canditateCleanName);
+							count++;
+						}
+
+					}
 				}
 			}
 		}
-
-		return methodResult;
 	}
 
-	public Object runGetter(Method method, T object) {
+	private Object runGetter(Method method, T object) {
 		if(method != null){
 			try{
 				return method.invoke(object);
@@ -444,13 +465,98 @@ public class ObjectCursor<T> extends AbstractCursor implements EasyCursor {
 		return null;
 	}
 
+	private boolean safeInvokeForBoolean(Method method, boolean fallback) {
+		final Object res = runGetter(method, getItem(getPosition()));
+		if(res == null){
+			return fallback;
+		} else {
+			return ((Boolean) res).booleanValue();
+		}
+	}
+
+	private double safeInvokeForDouble(Method method, double fallback) {
+		final Object res = runGetter(method, getItem(getPosition()));
+		if(res == null){
+			return fallback;
+		} else {
+			return ((Double) res).doubleValue();
+		}
+	}
+
+	private float safeInvokeForFloat(Method method, float fallback) {
+		final Object res = runGetter(method, getItem(getPosition()));
+		if(res == null){
+			return fallback;
+		} else {
+			return ((Float) res).floatValue();
+		}
+	}
+
+	private int safeInvokeForInt(Method method, int fallback) {
+		final Object res = runGetter(method, getItem(getPosition()));
+		if(res == null){
+			return fallback;
+		} else {
+			return ((Integer) res).intValue();
+		}
+	}
+
+	private long safeInvokeForLong(Method method, long fallback) {
+		final Object res = runGetter(method, getItem(getPosition()));
+		if(res == null){
+			return fallback;
+		} else {
+			return ((Long) res).longValue();
+		}
+	}
+
+	private String safeInvokeForString(Method method, String fallback) {
+		final Object res = runGetter(method, getItem(getPosition()));
+		if(res == null){
+			return null;
+		} else {
+			return toString(res);
+		}
+	}
+
 	private void validateFieldNumberMapping(final int fieldNumber) {
-		if (mNumberToFieldMap == null) {
+		if (mMethodList == null) {
 			throw new IllegalArgumentException("There is no valid field to id mapping and was asked to get a field by id");
 		}
+	}
 
-		if (!mNumberToFieldMap.containsKey(fieldNumber)) {
-			throw new IllegalArgumentException("There is no mapping for field number: " + fieldNumber);
+	private static byte[] toByteArray(Object obj){
+		if(obj == null){return null;}
+
+		if(obj instanceof byte[]){
+			return (byte[]) obj;
+		} else if(obj instanceof String){
+			return ((String) obj).getBytes();
+		} else if (obj instanceof Integer){
+			return ByteBuffer.allocate(4).putInt((Integer) obj).array();
+		} else if (obj instanceof Long){
+			return ByteBuffer.allocate(8).putLong((Long) obj).array();
+		} else if (obj instanceof Float){
+			return ByteBuffer.allocate(4).putFloat((Float) obj).array();
+		} else if (obj instanceof Double){
+			return ByteBuffer.allocate(8).putDouble((Double) obj).array();
+		} else if (obj instanceof Short){
+			return ByteBuffer.allocate(2).putShort((Short) obj).array();
+		} else {
+			throw new ClassCastException("Unable to convert " + obj.getClass().getName() + " to byte[]");
+		}
+	}
+
+	private static String toString(Object obj){
+		if(obj instanceof byte[]){
+			try {
+				return new String((byte[]) obj, UTF_8);
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+				return new String((byte[]) obj);
+			}
+		} else {
+			return String.valueOf(obj);
 		}
 	}
 }
