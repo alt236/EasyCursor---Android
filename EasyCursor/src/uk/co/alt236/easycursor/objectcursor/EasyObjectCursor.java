@@ -39,6 +39,7 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 	private final Map<String, Integer> mFieldToIndexMap;
 	private final Map<String, Method> mFieldToMethodMap;
 	private final String TAG = this.getClass().getName();
+	private boolean mDebugEnabled;
 
 	public EasyObjectCursor(Class<T> clazz, List<T> objectList) {
 		this(clazz, objectList, null);
@@ -255,6 +256,10 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 		return getString(getGetterForFieldOrThrow(fieldName));
 	}
 
+	public boolean isDebugEnabled(){
+		return mDebugEnabled;
+	}
+
 	@Override
 	public boolean isNull(int column) {
 		validateFieldNumberMapping(column);
@@ -282,7 +287,15 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 		if(method == null){
 			return fallback;
 		} else {
-			return toBoolean(runGetter(method, getItem(getPosition())));
+			try{
+				return toBoolean(runGetter(method, getItem(getPosition())));
+			} catch (Exception e){
+				if(mDebugEnabled){
+					Log.w(TAG, "optBoolean('" + fieldName + "') Caught Exception  at " + getPosition() + "/" + getCount(), e);
+					e.printStackTrace();
+				}
+				return fallback;
+			}
 		}
 	}
 
@@ -293,7 +306,15 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 		if(method == null){
 			return null;
 		} else {
-			return toBoolean(runGetter(method, getItem(getPosition())));
+			try{
+				return toBoolean(runGetter(method, getItem(getPosition())));
+			} catch (Exception e){
+				if(mDebugEnabled){
+					Log.w(TAG, "optBooleanAsWrapperType('" + fieldName + "') Caught Exception  at " + getPosition() + "/" + getCount(), e);
+					e.printStackTrace();
+				}
+				return null;
+			}
 		}
 	}
 
@@ -309,7 +330,15 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 		if(method == null){
 			return fallback;
 		} else {
-			return toDouble(runGetter(method, getItem(getPosition())));
+			try{
+				return toDouble(runGetter(method, getItem(getPosition())));
+			} catch (Exception e){
+				if(mDebugEnabled){
+					Log.w(TAG, "optDouble('" + fieldName + "') Caught Exception  at " + getPosition() + "/" + getCount(), e);
+					e.printStackTrace();
+				}
+				return fallback;
+			}
 		}
 	}
 
@@ -320,7 +349,15 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 		if(method == null){
 			return null;
 		} else {
-			return (Double) runGetter(method, getItem(getPosition()));
+			try{
+				return toDouble(runGetter(method, getItem(getPosition())));
+			} catch (Exception e){
+				if(mDebugEnabled){
+					Log.w(TAG, "optDoubleAsWrapperType('" + fieldName + "') Caught Exception  at " + getPosition() + "/" + getCount(), e);
+					e.printStackTrace();
+				}
+				return null;
+			}
 		}
 	}
 
@@ -329,7 +366,6 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 		return optFloat(fieldName, DEFAULT_FLOAT);
 	}
 
-
 	@Override
 	public float optFloat(String fieldName, float fallback) {
 		final Method method = getGetterForField(fieldName);
@@ -337,9 +373,18 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 		if(method == null){
 			return fallback;
 		} else {
-			return toFloat(runGetter(method, getItem(getPosition())));
+			try{
+				return toFloat(runGetter(method, getItem(getPosition())));
+			} catch (Exception e){
+				if(mDebugEnabled){
+					Log.w(TAG, "optFloat('" + fieldName + "') Caught Exception  at " + getPosition() + "/" + getCount(), e);
+					e.printStackTrace();
+				}
+				return fallback;
+			}
 		}
 	}
+
 
 	@Override
 	public Float optFloatAsWrapperType(String fieldName) {
@@ -348,7 +393,15 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 		if(method == null){
 			return null;
 		} else {
-			return toFloat(runGetter(method, getItem(getPosition())));
+			try{
+				return toFloat(runGetter(method, getItem(getPosition())));
+			} catch (Exception e){
+				if(mDebugEnabled){
+					Log.w(TAG, "optFloatAsWrapperType('" + fieldName + "') Caught Exception  at " + getPosition() + "/" + getCount(), e);
+					e.printStackTrace();
+				}
+				return null;
+			}
 		}
 	}
 
@@ -364,7 +417,15 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 		if(method == null){
 			return fallback;
 		} else {
-			return toInt(runGetter(method, getItem(getPosition())));
+			try{
+				return toInt(runGetter(method, getItem(getPosition())));
+			} catch (Exception e){
+				if(mDebugEnabled){
+					Log.w(TAG, "optInt('" + fieldName + "') Caught Exception  at " + getPosition() + "/" + getCount(), e);
+					e.printStackTrace();
+				}
+				return fallback;
+			}
 		}
 	}
 
@@ -375,7 +436,15 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 		if(method == null){
 			return null;
 		} else {
-			return toInt(runGetter(method, getItem(getPosition())));
+			try{
+				return toInt(runGetter(method, getItem(getPosition())));
+			} catch (Exception e){
+				if(mDebugEnabled){
+					Log.w(TAG, "optIntAsWrapperType('" + fieldName + "') Caught Exception  at " + getPosition() + "/" + getCount(), e);
+					e.printStackTrace();
+				}
+				return null;
+			}
 		}
 	}
 
@@ -391,7 +460,15 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 		if(method == null){
 			return fallback;
 		} else {
-			return toLong(runGetter(method, getItem(getPosition())));
+			try{
+				return toLong(runGetter(method, getItem(getPosition())));
+			} catch (Exception e){
+				if(mDebugEnabled){
+					Log.w(TAG, "optLong('" + fieldName + "') Caught Exception  at " + getPosition() + "/" + getCount(), e);
+					e.printStackTrace();
+				}
+				return fallback;
+			}
 		}
 	}
 
@@ -402,7 +479,15 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 		if(method == null){
 			return null;
 		} else {
-			return toLong(runGetter(method, getItem(getPosition())));
+			try{
+				return toLong(runGetter(method, getItem(getPosition())));
+			} catch (Exception e){
+				if(mDebugEnabled){
+					Log.w(TAG, "optLongAsWrapperType('" + fieldName + "') Caught Exception  at " + getPosition() + "/" + getCount(), e);
+					e.printStackTrace();
+				}
+				return null;
+			}
 		}
 	}
 
@@ -418,7 +503,15 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 		if(method == null){
 			return fallback;
 		} else {
-			return toString(runGetter(method, getItem(getPosition())));
+			try{
+				return toString(runGetter(method, getItem(getPosition())));
+			} catch (Exception e){
+				if(mDebugEnabled){
+					Log.w(TAG, "optString('" + fieldName + "') Caught Exception  at " + getPosition() + "/" + getCount(), e);
+					e.printStackTrace();
+				}
+				return fallback;
+			}
 		}
 	}
 
@@ -476,9 +569,23 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 		return null;
 	}
 
+	public void setDebugEnabled(boolean enabled){
+		mDebugEnabled = enabled;
+	}
+
 	private void validateFieldNumberMapping(final int fieldNumber) {
 		if (mMethodList == null) {
 			throw new IllegalArgumentException("There is no valid field to id mapping and was asked to get a field by id");
+		}
+	}
+
+	private static boolean toBoolean(Object obj){
+		if(obj instanceof Boolean){
+			return ((Boolean) obj).booleanValue();
+		} else if(obj instanceof String){
+			return Boolean.valueOf(String.valueOf(obj)).booleanValue();
+		} else {
+			throw new ClassCastException("Unable to convert " + obj.getClass().getName() + " to boolean");
 		}
 	}
 
@@ -534,6 +641,7 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 		}
 	}
 
+
 	private static long toLong(Object obj){
 		if(obj instanceof Number){
 			return ((Number) obj).longValue();
@@ -541,17 +649,6 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 			return Short.valueOf(String.valueOf(obj)).longValue();
 		} else {
 			throw new ClassCastException("Unable to convert " + obj.getClass().getName() + " to long");
-		}
-	}
-
-
-	private static boolean toBoolean(Object obj){
-		if(obj instanceof Boolean){
-			return ((Boolean) obj).booleanValue();
-		} else if(obj instanceof String){
-			return Boolean.valueOf(String.valueOf(obj)).booleanValue();
-		} else {
-			throw new ClassCastException("Unable to convert " + obj.getClass().getName() + " to boolean");
 		}
 	}
 
