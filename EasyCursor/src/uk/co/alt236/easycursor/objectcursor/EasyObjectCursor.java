@@ -18,7 +18,7 @@ import uk.co.alt236.easycursor.EasyQueryModel;
 import android.database.AbstractCursor;
 import android.util.Log;
 
-public class ObjectCursor<T> extends AbstractCursor implements EasyCursor {
+public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 	private static final String UTF_8 = "UTF-8";
 	private static final String IS = "is";
 	private static final String GET = "get";
@@ -40,11 +40,11 @@ public class ObjectCursor<T> extends AbstractCursor implements EasyCursor {
 	private final Map<String, Method> mFieldToMethodMap;
 	private final String TAG = this.getClass().getName();
 
-	public ObjectCursor(Class<T> clazz, List<T> objectList) {
+	public EasyObjectCursor(Class<T> clazz, List<T> objectList) {
 		this(clazz, objectList, null);
 	}
 
-	public ObjectCursor(Class<T> clazz, List<T> objectList, EasyQueryModel model) {
+	public EasyObjectCursor(Class<T> clazz, List<T> objectList, EasyQueryModel model) {
 		mQueryModel = model;
 		mFieldToIndexMap = new HashMap<String, Integer>();
 		mFieldToMethodMap = Collections.synchronizedMap(new HashMap<String, Method>());
@@ -55,11 +55,11 @@ public class ObjectCursor<T> extends AbstractCursor implements EasyCursor {
 		populateMethodList(clazz);
 	}
 
-	public ObjectCursor(Class<T> clazz, T[] objectArray) {
+	public EasyObjectCursor(Class<T> clazz, T[] objectArray) {
 		this(clazz, new ArrayList<T>(Arrays.asList(objectArray)), null);
 	}
 
-	public ObjectCursor(Class<T> clazz, T[] objectArray, EasyQueryModel model) {
+	public EasyObjectCursor(Class<T> clazz, T[] objectArray, EasyQueryModel model) {
 		this(clazz, new ArrayList<T>(Arrays.asList(objectArray)), model);
 	}
 

@@ -1,6 +1,5 @@
 package uk.co.alt236.easycursor.sampleapp.container;
 
-import android.R;
 import uk.co.alt236.easycursor.EasyCursor;
 
 public class TrackInfo {

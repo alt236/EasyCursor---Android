@@ -2,7 +2,6 @@ package uk.co.alt236.easycursor.sampleapp.test;
 
 import junit.framework.Assert;
 import uk.co.alt236.easycursor.EasyCursor;
-import uk.co.alt236.easycursor.objectcursor.ObjectCursor;
 import uk.co.alt236.easycursor.sqlcursor.EasySqlCursor;
 
 public abstract class CommonTestCases extends android.test.AndroidTestCase{
@@ -81,7 +80,7 @@ public abstract class CommonTestCases extends android.test.AndroidTestCase{
 		final String FALLBACK = "lalalala";
 
 		Assert.assertEquals(cursor.getString(EXISTANT_COL), EXPECTED_VALUE);
-		Assert.assertEquals(cursor.optString(NON_EXISTANT_COL), ObjectCursor.DEFAULT_STRING);
+		Assert.assertEquals(cursor.optString(NON_EXISTANT_COL), EasySqlCursor.DEFAULT_STRING);
 		Assert.assertEquals(cursor.optString (NON_EXISTANT_COL, FALLBACK), FALLBACK);
 	}
 }

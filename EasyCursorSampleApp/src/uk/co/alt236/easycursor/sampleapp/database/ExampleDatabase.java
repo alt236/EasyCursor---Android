@@ -6,7 +6,7 @@ import java.util.List;
 import org.json.JSONException;
 
 import uk.co.alt236.easycursor.EasyCursor;
-import uk.co.alt236.easycursor.objectcursor.ObjectCursor;
+import uk.co.alt236.easycursor.objectcursor.EasyObjectCursor;
 import uk.co.alt236.easycursor.sampleapp.container.TrackInfo;
 import uk.co.alt236.easycursor.sampleapp.database.builders.LousyQueryBuilder;
 import uk.co.alt236.easycursor.sampleapp.util.Constants;
@@ -134,7 +134,7 @@ public class ExampleDatabase extends SQLiteAssetHelper {
 
 		dataIn.close();
 
-		final EasyCursor methodResult = new ObjectCursor<TrackInfo>(TrackInfo.class, list);
+		final EasyCursor methodResult = new EasyObjectCursor<TrackInfo>(TrackInfo.class, list);
 		methodResult.moveToFirst();
 		return methodResult;
 	}
