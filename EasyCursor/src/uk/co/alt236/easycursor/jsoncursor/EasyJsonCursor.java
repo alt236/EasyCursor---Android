@@ -92,6 +92,14 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 		}
 	}
 
+	public JSONArray getJSONArray(String name) {
+		try {
+			return getCurrentJsonObject().getJSONArray(name);
+		} catch (JSONException e) {
+			throw new EasyJsonException(e);
+		}
+	}
+
 	public JSONObject getJSONObject(String name) {
 		try {
 			return getCurrentJsonObject().getJSONObject(name);
@@ -226,6 +234,10 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 		} else {
 			return null;
 		}
+	}
+
+	public JSONArray optJSONArray(String name) {
+		return getCurrentJsonObject().optJSONArray(name);
 	}
 
 	public JSONObject optJSONObject(String name) {
