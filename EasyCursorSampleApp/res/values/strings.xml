@@ -14,5 +14,6 @@
         <item>EasyCursor - ObjectCursor</item>
         <item>EasyCursor - Saved</item>
     </string-array>
+        <string name="go">GO</string>
 
 </resources>

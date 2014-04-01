@@ -7,55 +7,61 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical" >
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="5dp" >
 
         <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="EasySqkCursor Example\n(and an EasyObjectCursor for fun)" />
+
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="5dp"
-            android:text="@string/label_query_type" />
-
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/query_types" />
+            android:onClick="onEasySqlCursorExampleClick"
+            android:text="@string/go" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical" >
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="5dp" >
 
-        <Button
-            android:id="@+id/buttonExecute"
-            android:layout_width="fill_parent"
+        <TextView
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:onClick="onExecuteClick"
-            android:text="@string/label_execute" />
+            android:text="EasyObjectCursor Example" />
 
         <Button
-            android:id="@+id/buttonSave"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:onClick="onSaveQueryClick"
-            android:text="@string/label_save"
-            android:visibility="invisible" />
+            android:onClick="onEasyObjectCursorExampleClick"
+            android:text="@string/go" />
     </LinearLayout>
 
-    <ListView
-        android:id="@android:id/list"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </ListView>
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="5dp" >
 
-    <TextView
-        android:id="@android:id/empty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical|center_horizontal"
-        android:text="No data" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="EasyJsonCursor Example" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onEasyJsonCursorExampleClick"
+            android:text="@string/go" />
+    </LinearLayout>
 
 </LinearLayout>
