@@ -33,20 +33,6 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 		populateMethodList(array);
 	}
 
-	private void populateMethodList(JSONArray array){
-	    int count = 0;
-		final JSONObject obj = array.optJSONObject(0);
-
-	    @SuppressWarnings("unchecked")
-		final Iterator<String> keyIterator = obj.keys();
-	    while (keyIterator.hasNext()){
-	    	final String key = keyIterator.next();
-	    	mPropertyList.add(key);
-	    	mPropertyToIndexMap.put(key, count);
-	    	count ++;
-	    }
-	}
-
 	@Override
 	public byte[] getBlob(String name) {
 		throw new UnsupportedOperationException("getBlob is not supported");
@@ -140,12 +126,20 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 		}
 	}
 
+	public JSONArray getJSONArray(int column) {
+		return getJSONArray(mPropertyList.get(column));
+	}
+
 	public JSONArray getJSONArray(String name) {
 		try {
 			return getCurrentJsonObject().getJSONArray(name);
 		} catch (JSONException e) {
 			throw new EasyJsonException(e);
 		}
+	}
+
+	public JSONObject getJSONObject(int column) {
+		return getJSONObject(mPropertyList.get(column));
 	}
 
 	public JSONObject getJSONObject(String name) {
@@ -284,8 +278,16 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 		}
 	}
 
+	public JSONArray optJSONArray(int column) {
+		return optJSONArray(mPropertyList.get(column));
+	}
+
 	public JSONArray optJSONArray(String name) {
 		return getCurrentJsonObject().optJSONArray(name);
+	}
+
+	public JSONObject optJSONObject(int column) {
+		return optJSONObject(mPropertyList.get(column));
 	}
 
 	public JSONObject optJSONObject(String name) {
@@ -319,6 +321,20 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 	@Override
 	public String optString(String name, String fallback) {
 		return getCurrentJsonObject().optString(name, fallback);
+	}
+
+	private void populateMethodList(JSONArray array){
+	    int count = 0;
+		final JSONObject obj = array.optJSONObject(0);
+
+	    @SuppressWarnings("unchecked")
+		final Iterator<String> keyIterator = obj.keys();
+	    while (keyIterator.hasNext()){
+	    	final String key = keyIterator.next();
+	    	mPropertyList.add(key);
+	    	mPropertyToIndexMap.put(key, count);
+	    	count ++;
+	    }
 	}
 
 }
