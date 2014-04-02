@@ -1,5 +1,11 @@
 package uk.co.alt236.easycursor.jsoncursor;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,14 +17,34 @@ import android.database.AbstractCursor;
 public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 	private final EasyQueryModel mQueryModel;
 	private final JSONArray mJsonArray;
+	private List<String> mPropertyList;
+	private final Map<String, Integer> mPropertyToIndexMap;
 
 	public EasyJsonCursor(JSONArray array) {
 		this(array, null);
 	}
 
 	public EasyJsonCursor(JSONArray array, EasyQueryModel model) {
+		mPropertyList = new ArrayList<String>();
+		mPropertyToIndexMap = new HashMap<String, Integer>();
+
 		mQueryModel = model;
 		mJsonArray = array;
+		populateMethodList(array);
+	}
+
+	private void populateMethodList(JSONArray array){
+	    int count = 0;
+		final JSONObject obj = array.optJSONObject(0);
+
+	    @SuppressWarnings("unchecked")
+		final Iterator<String> keyIterator = obj.keys();
+	    while (keyIterator.hasNext()){
+	    	final String key = keyIterator.next();
+	    	mPropertyList.add(key);
+	    	mPropertyToIndexMap.put(key, count);
+	    	count ++;
+	    }
 	}
 
 	@Override
@@ -36,8 +62,31 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 	}
 
 	@Override
+	public int getColumnIndex(String columnName) {
+		if(mPropertyToIndexMap.containsKey(columnName)){
+			return mPropertyToIndexMap.get(columnName).intValue();
+		} else {
+			return -1;
+		}
+	}
+
+	@Override
+	public int getColumnIndexOrThrow(String columnName) {
+		if(mPropertyToIndexMap.containsKey(columnName)){
+			return mPropertyToIndexMap.get(columnName).intValue();
+		} else {
+			throw new IllegalArgumentException("There is no column named '" + columnName + "'");
+		}
+	}
+
+	@Override
+	public String getColumnName(int columnIndex) {
+		return mPropertyList.get(columnIndex);
+	}
+
+	@Override
 	public String[] getColumnNames() {
-		throw new UnsupportedOperationException("getColumnNames is not supported");
+		return mPropertyList.toArray(new String[mPropertyList.size()]);
 	}
 
 	@Override
@@ -51,7 +100,7 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 
 	@Override
 	public double getDouble(int column) {
-		throw new UnsupportedOperationException("getDouble(int column) is not supported (as field order is meaningless in JSON)");
+		return getDouble(mPropertyList.get(column));
 	}
 
 	@Override
@@ -65,7 +114,7 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 
 	@Override
 	public float getFloat(int column) {
-		throw new UnsupportedOperationException("getFloat(int column) is not supported (as field order is meaningless in JSON)");
+		return getFloat(mPropertyList.get(column));
 	}
 
 	@Override
@@ -79,8 +128,7 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 
 	@Override
 	public int getInt(int column) {
-		throw new UnsupportedOperationException("getInt(int column) is not supported (as field order is meaningless in JSON)");
-
+		return getInt(mPropertyList.get(column));
 	}
 
 	@Override
@@ -110,8 +158,7 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 
 	@Override
 	public long getLong(int column) {
-		throw new UnsupportedOperationException("getLong(int column) is not supported (as field order is meaningless in JSON)");
-
+		return getLong(mPropertyList.get(column));
 	}
 
 	@Override
@@ -130,14 +177,16 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 
 	@Override
 	public short getShort(int column) {
-		throw new UnsupportedOperationException("getShort(int column) is not supported (as field order is meaningless in JSON)");
+		return getShort(mPropertyList.get(column));
+	}
 
+	public short getShort(String name) {
+		return (short) getInt(name);
 	}
 
 	@Override
 	public String getString(int column) {
-		throw new UnsupportedOperationException("getString(int column) is not supported (as field order is meaningless in JSON)");
-
+		return getString(mPropertyList.get(column));
 	}
 
 	@Override
@@ -151,8 +200,7 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 
 	@Override
 	public boolean isNull(int column) {
-		throw new UnsupportedOperationException("isNull(int column) is not supported (as field order is meaningless in JSON)");
-
+		return isNull(mPropertyList.get(column));
 	}
 
 	@Override
