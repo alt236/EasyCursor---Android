@@ -31,14 +31,14 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	public void  onEasyJsonCursorExampleClick(View v){
-
+		startActivity(new Intent(this, EasyJsonCursorExampleActivity.class));
 	}
 
 	public void  onEasyObjectCursorExampleClick(View v){
-
+		startActivity(new Intent(this, EasyObjectCursorExampleActivity.class));
 	}
 
 	public void  onEasySqlCursorExampleClick(View v){
-		startActivity(new Intent(this, EasySqlCursorActivity.class));
+		startActivity(new Intent(this, EasySqlCursorExampleActivity.class));
 	}
 }

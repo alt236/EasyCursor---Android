@@ -134,7 +134,8 @@ public class ExampleDatabase extends SQLiteAssetHelper {
 
 		dataIn.close();
 
-		final EasyCursor methodResult = new EasyObjectCursor<TrackInfo>(TrackInfo.class, list);
+		// the TrackInfo object already contains an _id getter, so we pass null as the alias
+		final EasyCursor methodResult = new EasyObjectCursor<TrackInfo>(TrackInfo.class, list, null);
 		methodResult.moveToFirst();
 		return methodResult;
 	}

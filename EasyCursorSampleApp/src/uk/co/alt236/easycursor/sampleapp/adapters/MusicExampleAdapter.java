@@ -8,13 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class ExampleAdapter extends SimpleCursorAdapter{
+public class MusicExampleAdapter extends SimpleCursorAdapter{
 	private static final String NO_SUCH_COLUMN = "<no column>";
 	private static final String HAS_COMPOSER = "Has composer";
 	private static final String NO_COMPOSER = "No composer";
 	
 	@SuppressWarnings("deprecation")
-	public ExampleAdapter(Context context, int layout, EasyCursor c, String[] from, int[] to) {
+	public MusicExampleAdapter(Context context, int layout, EasyCursor c, String[] from, int[] to) {
 		super(context, layout, c, from, to);
 	}
 

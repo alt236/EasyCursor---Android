@@ -5,7 +5,7 @@
     <string name="label_execute">Execute</string>
     <string name="label_save">Save</string>
 
-    <string-array name="query_types">
+    <string-array name="sql_query_types">
         <item>Android - Default</item>
         <item>EasyCursor - Default Select</item>
         <item>EasyCursor - Default Raw</item>
@@ -14,6 +14,15 @@
         <item>EasyCursor - ObjectCursor</item>
         <item>EasyCursor - Saved</item>
     </string-array>
-        <string name="go">GO</string>
+    <string-array name="json_query_types">
+        <item>SimpleAdaptor</item>
+        <item>CustomAdaptor</item>
+    </string-array>
+    <string-array name="object_query_types">
+        <item>SimpleAdaptor</item>
+        <item>CustomAdaptor</item>
+    </string-array>
+
+    <string name="go">GO</string>
 
 </resources>

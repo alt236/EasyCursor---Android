@@ -15,17 +15,11 @@
  ******************************************************************************/
 package uk.co.alt236.easycursor.sampleapp.activities;
 
-import org.json.JSONException;
-
 import uk.co.alt236.easycursor.EasyCursor;
 import uk.co.alt236.easycursor.sampleapp.R;
-import uk.co.alt236.easycursor.sampleapp.adapters.ExampleAdapter;
-import uk.co.alt236.easycursor.sampleapp.database.loaders.DatabaseLoader;
-import uk.co.alt236.easycursor.sampleapp.util.Constants;
-import android.content.SharedPreferences;
+import uk.co.alt236.easycursor.sampleapp.database.loaders.ObjectLoader;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -33,18 +27,14 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.Toast;
 
-public class EasySqlCursorActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor> {
-	private final static String EXTRA_QUERY_TYPE = "EXTRA_QUERY_TYPE";
+public class EasyObjectCursorExampleActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 	private final int LOADER_ID = 1;
 
 	private SimpleCursorAdapter mAdapter;
 	private Button mSaveQueryButton;
-	private DatabaseLoader mLoader=null;
+	private Loader<Cursor> mLoader=null;
 	private ListView mListView;
-	private Spinner mSpinner;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState){
@@ -53,59 +43,28 @@ public class EasySqlCursorActivity extends FragmentActivity implements LoaderMan
 		mListView = (ListView) findViewById(android.R.id.list);
 		mListView.setEmptyView(findViewById(android.R.id.empty));
 		mSaveQueryButton = (Button) findViewById(R.id.buttonSave);
-		mSpinner = (Spinner) findViewById(R.id.spinner);
+		findViewById(R.id.spinner_container).setVisibility(View.GONE);
 
+		final String[] from = new String[]{"name", "gender", "age", "guid", "about"};
+		final int[] to = new int[]{R.id.name, R.id.gender, R.id.age, R.id.guid, R.id.about};
 
-		final String[] from = new String[]{"artist", "album"};
-		final int[] to = new int[]{R.id.artist, R.id.album};
-
-		mAdapter = new ExampleAdapter(this, R.layout.list_item, (EasyCursor) null, from, to);
+		mAdapter = new SimpleCursorAdapter(this, R.layout.list_item_json, null, from, to, 0);
 		mListView.setAdapter(mAdapter);
 		mListView.setFastScrollEnabled(true);
 	}
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-		mLoader = new DatabaseLoader(this, arg1.getInt(EXTRA_QUERY_TYPE, -2));
+		mLoader = new ObjectLoader(this);
 		return mLoader;
 	}
 
 	public void onExecuteClick(View v){
-		final Bundle bundle = generateLoaderBundle();
-
-		if(bundle == null ){
-			Toast.makeText(this, "Could not decide what query to run...", Toast.LENGTH_SHORT).show();
-		} else {
-			getSupportLoaderManager().restartLoader(
-					LOADER_ID,
-					bundle,
-					this);
-		}
+		getSupportLoaderManager().restartLoader(
+				LOADER_ID,
+				null,
+				this);
 	}
-
-	private Bundle generateLoaderBundle(){
-		final Bundle bundle;
-		final String[] array = getResources().getStringArray(R.array.query_types);
-		final String selectedQuery = mSpinner.getSelectedItem().toString();
-		int res = -1;
-
-		for(int i = 0; i < array.length; i++){
-			if(selectedQuery.equals(array[i])){
-				res = i;
-				break;
-			}
-		}
-
-		if(res == -1){
-			bundle = null;
-		} else {
-			bundle = new Bundle();
-			bundle.putInt(EXTRA_QUERY_TYPE, res);
-		}
-
-		return bundle;
-	}
-
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> arg0) {
@@ -126,23 +85,5 @@ public class EasySqlCursorActivity extends FragmentActivity implements LoaderMan
 		}
 
 		mAdapter.changeCursor(cursor);
-	}
-
-	public void onSaveQueryClick(View v){
-		if(mAdapter.getCursor() instanceof EasyCursor){
-			final EasyCursor cursor = (EasyCursor) mAdapter.getCursor();
-			try {
-				final String json = cursor.getQueryModel().toJson();
-				final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-				final SharedPreferences.Editor editor = settings.edit();
-				editor.putString(Constants.PREFS_SAVED_QUERY, json);
-
-				// Commit the edits!
-				editor.apply();
-				Toast.makeText(this, "Query Saved Succesfully (size= "+json.length()+")!", Toast.LENGTH_SHORT).show();
-			} catch (JSONException e) {
-				Toast.makeText(this, "Error Converting QueryModel to JSON...", Toast.LENGTH_SHORT).show();
-			}
-		}
 	}
 }

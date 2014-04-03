@@ -19,8 +19,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="uk.co.alt236.easycursor.sampleapp.activities.EasySqlCursorActivity" >
-        </activity>
+        <activity android:name="uk.co.alt236.easycursor.sampleapp.activities.EasySqlCursorExampleActivity" />
+        <activity android:name="uk.co.alt236.easycursor.sampleapp.activities.EasyJsonCursorExampleActivity" />
+        <activity android:name="uk.co.alt236.easycursor.sampleapp.activities.EasyObjectCursorExampleActivity" />
     </application>
 
 </manifest>
