@@ -15,22 +15,39 @@ import uk.co.alt236.easycursor.EasyQueryModel;
 import android.database.AbstractCursor;
 
 public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
+	private static final String _ID = "_id";
+
+	private List<String> mPropertyList;
 	private final EasyQueryModel mQueryModel;
 	private final JSONArray mJsonArray;
-	private List<String> mPropertyList;
 	private final Map<String, Integer> mPropertyToIndexMap;
+	private final String m_IdAlias;
 
-	public EasyJsonCursor(JSONArray array) {
-		this(array, null);
+	public EasyJsonCursor(JSONArray array, String _idAlias) {
+		this(array, _idAlias, null);
 	}
 
-	public EasyJsonCursor(JSONArray array, EasyQueryModel model) {
+	public EasyJsonCursor(JSONArray array, String _idAlias, EasyQueryModel model) {
 		mPropertyList = new ArrayList<String>();
 		mPropertyToIndexMap = new HashMap<String, Integer>();
-
+		m_IdAlias = _idAlias;
 		mQueryModel = model;
 		mJsonArray = array;
 		populateMethodList(array);
+	}
+
+	private String applyAlias(String columnName){
+		if(_ID.equals(columnName)){
+			if(m_IdAlias != null){
+				return m_IdAlias;
+			}
+		}
+
+		return columnName;
+	}
+
+	public String get_IdAlias(){
+		return m_IdAlias;
 	}
 
 	@Override
@@ -41,27 +58,31 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 	@Override
 	public boolean getBoolean(String name) {
 		try {
-			return getCurrentJsonObject().getBoolean(name);
+			return getCurrentJsonObject().getBoolean(applyAlias(name));
 		} catch (JSONException e) {
 			throw new EasyJsonException(e);
 		}
 	}
 
 	@Override
-	public int getColumnIndex(String columnName) {
-		if(mPropertyToIndexMap.containsKey(columnName)){
-			return mPropertyToIndexMap.get(columnName).intValue();
+	public int getColumnIndex(String name) {
+		final String column = applyAlias(name);
+
+		if(mPropertyToIndexMap.containsKey(column)){
+			return mPropertyToIndexMap.get(column).intValue();
 		} else {
 			return -1;
 		}
 	}
 
 	@Override
-	public int getColumnIndexOrThrow(String columnName) {
-		if(mPropertyToIndexMap.containsKey(columnName)){
-			return mPropertyToIndexMap.get(columnName).intValue();
+	public int getColumnIndexOrThrow(String name) {
+		final String column = applyAlias(name);
+
+		if(mPropertyToIndexMap.containsKey(column)){
+			return mPropertyToIndexMap.get(column).intValue();
 		} else {
-			throw new IllegalArgumentException("There is no column named '" + columnName + "'");
+			throw new IllegalArgumentException("There is no column named '" + column + "'");
 		}
 	}
 
@@ -92,7 +113,7 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 	@Override
 	public double getDouble(String name) {
 		try {
-			return getCurrentJsonObject().getDouble(name);
+			return getCurrentJsonObject().getDouble(applyAlias(name));
 		} catch (JSONException e) {
 			throw new EasyJsonException(e);
 		}
@@ -106,7 +127,7 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 	@Override
 	public float getFloat(String name) {
 		try {
-			return (float) getCurrentJsonObject().getDouble(name);
+			return (float) getCurrentJsonObject().getDouble(applyAlias(name));
 		} catch (JSONException e) {
 			throw new EasyJsonException(e);
 		}
@@ -120,7 +141,7 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 	@Override
 	public int getInt(String name) {
 		try {
-			return getCurrentJsonObject().getInt(name);
+			return getCurrentJsonObject().getInt(applyAlias(name));
 		} catch (JSONException e) {
 			throw new EasyJsonException(e);
 		}
@@ -132,7 +153,7 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 
 	public JSONArray getJSONArray(String name) {
 		try {
-			return getCurrentJsonObject().getJSONArray(name);
+			return getCurrentJsonObject().getJSONArray(applyAlias(name));
 		} catch (JSONException e) {
 			throw new EasyJsonException(e);
 		}
@@ -144,7 +165,7 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 
 	public JSONObject getJSONObject(String name) {
 		try {
-			return getCurrentJsonObject().getJSONObject(name);
+			return getCurrentJsonObject().getJSONObject(applyAlias(name));
 		} catch (JSONException e) {
 			throw new EasyJsonException(e);
 		}
@@ -158,7 +179,7 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 	@Override
 	public long getLong(String name) {
 		try {
-			return getCurrentJsonObject().getLong(name);
+			return getCurrentJsonObject().getLong(applyAlias(name));
 		} catch (JSONException e) {
 			throw new EasyJsonException(e);
 		}
@@ -175,7 +196,7 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 	}
 
 	public short getShort(String name) {
-		return (short) getInt(name);
+		return (short) getInt(applyAlias(name));
 	}
 
 	@Override
@@ -186,7 +207,7 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 	@Override
 	public String getString(String name) {
 		try {
-			return getCurrentJsonObject().getString(name);
+			return getCurrentJsonObject().getString(applyAlias(name));
 		} catch (JSONException e) {
 			throw new EasyJsonException(e);
 		}
@@ -199,23 +220,24 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 
 	@Override
 	public boolean isNull(String name) {
-		return getCurrentJsonObject().isNull(name);
+		return getCurrentJsonObject().isNull(applyAlias(name));
 	}
 
 	@Override
 	public boolean optBoolean(String name) {
-		return getCurrentJsonObject().optBoolean(name);
+		return getCurrentJsonObject().optBoolean(applyAlias(name));
 	}
 
 	@Override
 	public boolean optBoolean(String name, boolean fallback) {
-		return getCurrentJsonObject().optBoolean(name, fallback);
+		return getCurrentJsonObject().optBoolean(applyAlias(name), fallback);
 	}
 
 	@Override
 	public Boolean optBooleanAsWrapperType(String name) {
-		if(getCurrentJsonObject().has(name)){
-			return optBoolean(name);
+		final String column = applyAlias(name);
+		if(getCurrentJsonObject().has(column)){
+			return optBoolean(column);
 		} else {
 			return null;
 		}
@@ -223,18 +245,19 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 
 	@Override
 	public double optDouble(String name) {
-		return getCurrentJsonObject().optDouble(name);
+		return getCurrentJsonObject().optDouble(applyAlias(name));
 	}
 
 	@Override
 	public double optDouble(String name, double fallback) {
-		return getCurrentJsonObject().optDouble(name, fallback);
+		return getCurrentJsonObject().optDouble(applyAlias(name), fallback);
 	}
 
 	@Override
 	public Double optDoubleAsWrapperType(String name) {
-		if(getCurrentJsonObject().has(name)){
-			return optDouble(name);
+		final String column = applyAlias(name);
+		if(getCurrentJsonObject().has(column)){
+			return optDouble(column);
 		} else {
 			return null;
 		}
@@ -242,18 +265,19 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 
 	@Override
 	public float optFloat(String name) {
-		return (float) getCurrentJsonObject().optDouble(name);
+		return (float) getCurrentJsonObject().optDouble(applyAlias(name));
 	}
 
 	@Override
 	public float optFloat(String name, float fallback) {
-		return (float) getCurrentJsonObject().optDouble(name, fallback);
+		return (float) getCurrentJsonObject().optDouble(applyAlias(name), fallback);
 	}
 
 	@Override
 	public Float optFloatAsWrapperType(String name) {
-		if(getCurrentJsonObject().has(name)){
-			return optFloat(name);
+		final String column = applyAlias(name);
+		if(getCurrentJsonObject().has(column)){
+			return optFloat(column);
 		} else {
 			return null;
 		}
@@ -261,12 +285,12 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 
 	@Override
 	public int optInt(String name) {
-		return getCurrentJsonObject().optInt(name);
+		return getCurrentJsonObject().optInt(applyAlias(name));
 	}
 
 	@Override
 	public int optInt(String name, int fallback) {
-		return getCurrentJsonObject().optInt(name, fallback);
+		return getCurrentJsonObject().optInt(applyAlias(name), fallback);
 	}
 
 	@Override
@@ -283,7 +307,7 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 	}
 
 	public JSONArray optJSONArray(String name) {
-		return getCurrentJsonObject().optJSONArray(name);
+		return getCurrentJsonObject().optJSONArray(applyAlias(name));
 	}
 
 	public JSONObject optJSONObject(int column) {
@@ -291,23 +315,24 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 	}
 
 	public JSONObject optJSONObject(String name) {
-		return getCurrentJsonObject().optJSONObject(name);
+		return getCurrentJsonObject().optJSONObject(applyAlias(name));
 	}
 
 	@Override
 	public long optLong(String name) {
-		return getCurrentJsonObject().optLong(name);
+		return getCurrentJsonObject().optLong(applyAlias(name));
 	}
 
 	@Override
 	public long optLong(String name, long fallback) {
-		return getCurrentJsonObject().optLong(name, fallback);
+		return getCurrentJsonObject().optLong(applyAlias(name), fallback);
 	}
 
 	@Override
 	public Long optLongAsWrapperType(String name) {
-		if(getCurrentJsonObject().has(name)){
-			return optLong(name);
+		final String column = applyAlias(name);
+		if(getCurrentJsonObject().has(column)){
+			return optLong(column);
 		} else {
 			return null;
 		}
@@ -315,12 +340,12 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 
 	@Override
 	public String optString(String name) {
-		return getCurrentJsonObject().optString(name);
+		return getCurrentJsonObject().optString(applyAlias(name));
 	}
 
 	@Override
 	public String optString(String name, String fallback) {
-		return getCurrentJsonObject().optString(name, fallback);
+		return getCurrentJsonObject().optString(applyAlias(name), fallback);
 	}
 
 	private void populateMethodList(JSONArray array){
@@ -336,5 +361,4 @@ public class EasyJsonCursor extends AbstractCursor implements EasyCursor{
 	    	count ++;
 	    }
 	}
-
 }

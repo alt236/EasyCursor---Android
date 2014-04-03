@@ -18,17 +18,17 @@ import android.database.AbstractCursor;
 import android.util.Log;
 
 public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
+	private static final String _ID = "_id";
 	private static final String IS = "is";
 	private static final String GET = "get";
 
 	public static final String DEFAULT_STRING = null;
-	public static final int DEFAULT_INT = 0;
-	public static final short DEFAULT_SHORT = 0;
-	public static final long DEFAULT_LONG = 0l;
-	public static final float DEFAULT_FLOAT = 0.0f;
-
-	public static final double DEFAULT_DOUBLE = 0.0d;
 	public static final boolean DEFAULT_BOOLEAN = false;
+	public static final double DEFAULT_DOUBLE = 0.0d;
+	public static final float DEFAULT_FLOAT = 0.0f;
+	public static final int DEFAULT_INT = 0;
+	public static final long DEFAULT_LONG = 0l;
+	public static final short DEFAULT_SHORT = 0;
 
 	private final EasyQueryModel mQueryModel;
 	private final List<Method> mMethodList;
@@ -37,47 +37,61 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 	private final Map<String, Integer> mFieldToIndexMap;
 	private final Map<String, Method> mFieldToMethodMap;
 	private final String TAG = this.getClass().getName();
+	private final String m_IdAlias;
+
 	private boolean mDebugEnabled;
 
-	public EasyObjectCursor(Class<T> clazz, List<T> objectList) {
-		this(clazz, objectList, null);
+	public EasyObjectCursor(Class<T> clazz, List<T> objectList, String _idAlias) {
+		this(clazz, objectList, _idAlias, null);
 	}
 
-	public EasyObjectCursor(Class<T> clazz, List<T> objectList, EasyQueryModel model) {
+	public EasyObjectCursor(Class<T> clazz, List<T> objectList, String _idAlias, EasyQueryModel model) {
 		mQueryModel = model;
 		mFieldToIndexMap = new HashMap<String, Integer>();
 		mFieldToMethodMap = Collections.synchronizedMap(new HashMap<String, Method>());
 		mMethodList = new ArrayList<Method>();
 		mFieldNameList = new ArrayList<String>();
 		mObjectList = objectList;
+		m_IdAlias = _idAlias;
 
 		populateMethodList(clazz);
 	}
 
-	public EasyObjectCursor(Class<T> clazz, T[] objectArray) {
-		this(clazz, new ArrayList<T>(Arrays.asList(objectArray)), null);
+	public EasyObjectCursor(Class<T> clazz, T[] objectArray, String _idAlias) {
+		this(clazz, new ArrayList<T>(Arrays.asList(objectArray)), _idAlias, null);
 	}
 
-	public EasyObjectCursor(Class<T> clazz, T[] objectArray, EasyQueryModel model) {
-		this(clazz, new ArrayList<T>(Arrays.asList(objectArray)), model);
+	public EasyObjectCursor(Class<T> clazz, T[] objectArray, String _idAlias, EasyQueryModel model) {
+		this(clazz, new ArrayList<T>(Arrays.asList(objectArray)), _idAlias, model);
+	}
+
+	private String applyAlias(String columnName){
+		if(_ID.equals(columnName)){
+			if(m_IdAlias != null){
+				return m_IdAlias;
+			}
+		}
+
+		return columnName;
 	}
 
 	@Override
 	public byte[] getBlob(String fieldName) {
-		final Method method = getGetterForFieldOrThrow(fieldName);
+		final Method method = getGetterForFieldOrThrow(applyAlias(fieldName));
 		return ObjectConverters.toByteArray(runGetter(method, getItem(getPosition())));
 	}
 
 	@Override
 	public boolean getBoolean(String fieldName) {
-		final Method method = getGetterForFieldOrThrow(fieldName);
+		final Method method = getGetterForFieldOrThrow(applyAlias(fieldName));
 		return ObjectConverters.toBoolean(runGetter(method, getItem(getPosition())));
 	}
 
 	@Override
 	public int getColumnIndex(String columnName) {
-		if(mFieldToIndexMap.containsKey(columnName)){
-			return mFieldToIndexMap.get(columnName).intValue();
+		final String column = applyAlias(columnName);
+		if(mFieldToIndexMap.containsKey(column)){
+			return mFieldToIndexMap.get(column).intValue();
 		} else {
 			return -1;
 		}
@@ -85,10 +99,11 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
 	@Override
 	public int getColumnIndexOrThrow(String columnName) {
-		if(mFieldToIndexMap.containsKey(columnName)){
-			return mFieldToIndexMap.get(columnName).intValue();
+		final String column = applyAlias(columnName);
+		if(mFieldToIndexMap.containsKey(column)){
+			return mFieldToIndexMap.get(column).intValue();
 		} else {
-			throw new IllegalArgumentException("There is no column named '" + columnName + "'");
+			throw new IllegalArgumentException("There is no column named '" + column + "'");
 		}
 	}
 
@@ -109,7 +124,6 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
 	@Override
 	public double getDouble(int column) {
-		validateFieldNumberMapping(column);
 		return getDouble(mMethodList.get(column));
 	}
 
@@ -119,12 +133,11 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
 	@Override
 	public double getDouble(String fieldName) {
-		return getDouble(getGetterForFieldOrThrow(fieldName));
+		return getDouble(getGetterForFieldOrThrow(applyAlias(fieldName)));
 	}
 
 	@Override
 	public float getFloat(int column) {
-		validateFieldNumberMapping(column);
 		return getFloat(mMethodList.get(column));
 	}
 
@@ -134,7 +147,7 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
 	@Override
 	public float getFloat(String fieldName) {
-		return getFloat(getGetterForFieldOrThrow(fieldName));
+		return getFloat(getGetterForFieldOrThrow(applyAlias(fieldName)));
 	}
 
 	private synchronized Method getGetterForField(String field){
@@ -161,9 +174,9 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 	}
 
 	private Method getGetterForFieldOrThrow(String fieldName){
-		final Method method = getGetterForField(fieldName);
+		final Method method = getGetterForField(applyAlias(fieldName));
 		if(method == null){
-			throw new IllegalArgumentException("Could not find getter for field '" + fieldName + "'");
+			throw new IllegalArgumentException("Could not find getter for field '" + applyAlias(fieldName) + "'");
 		} else {
 			return method;
 		}
@@ -171,7 +184,6 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
 	@Override
 	public int getInt(int column) {
-		validateFieldNumberMapping(column);
 		return getInt(mMethodList.get(column));
 	}
 
@@ -181,7 +193,7 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
 	@Override
 	public int getInt(String fieldName) {
-		return getInt(getGetterForFieldOrThrow(fieldName));
+		return getInt(getGetterForFieldOrThrow(applyAlias(fieldName)));
 	}
 
 	public T getItem(int position){
@@ -190,7 +202,6 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
 	@Override
 	public long getLong(int column) {
-		validateFieldNumberMapping(column);
 		return getLong(mMethodList.get(column));
 	}
 
@@ -200,7 +211,7 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
 	@Override
 	public long getLong(String fieldName) {
-		return getLong(getGetterForFieldOrThrow(fieldName));
+		return getLong(getGetterForFieldOrThrow(applyAlias(fieldName)));
 	}
 
 	public List<Method> getMethods(){
@@ -208,7 +219,6 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 	}
 
 	public Object getObject(int column) {
-		validateFieldNumberMapping(column);
 		return getObject(mMethodList.get(column));
 	}
 
@@ -217,7 +227,7 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 	}
 
 	public Object getObject(String fieldName){
-		return getObject(getGetterForFieldOrThrow(fieldName));
+		return getObject(getGetterForFieldOrThrow(applyAlias(fieldName)));
 	}
 
 	@Override
@@ -227,7 +237,6 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
 	@Override
 	public short getShort(int column) {
-		validateFieldNumberMapping(column);
 		return getShort(mMethodList.get(column));
 	}
 
@@ -236,12 +245,11 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 	}
 
 	public short getShort(String fieldName) {
-		return getShort(getGetterForFieldOrThrow(fieldName));
+		return getShort(getGetterForFieldOrThrow(applyAlias(fieldName)));
 	}
 
 	@Override
 	public String getString(int column) {
-		validateFieldNumberMapping(column);
 		return getString(mMethodList.get(column));
 	}
 
@@ -251,7 +259,7 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
 	@Override
 	public String getString(String fieldName) {
-		return getString(getGetterForFieldOrThrow(fieldName));
+		return getString(getGetterForFieldOrThrow(applyAlias(fieldName)));
 	}
 
 	public boolean isDebugEnabled(){
@@ -260,7 +268,6 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
 	@Override
 	public boolean isNull(int column) {
-		validateFieldNumberMapping(column);
 		return isNull(mMethodList.get(column));
 	}
 
@@ -270,7 +277,7 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
 	@Override
 	public boolean isNull(String fieldName) {
-		return isNull(getGetterForFieldOrThrow(fieldName));
+		return isNull(getGetterForFieldOrThrow(applyAlias(fieldName)));
 	}
 
 	@Override
@@ -280,7 +287,7 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
 	@Override
 	public boolean optBoolean(String fieldName, boolean fallback) {
-		final Method method = getGetterForField(fieldName);
+		final Method method = getGetterForField(applyAlias(fieldName));
 
 		if(method == null){
 			return fallback;
@@ -302,7 +309,7 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
 	@Override
 	public Boolean optBooleanAsWrapperType(String fieldName) {
-		final Method method = getGetterForField(fieldName);
+		final Method method = getGetterForField(applyAlias(fieldName));
 
 		if(method == null){
 			if(mDebugEnabled){
@@ -329,7 +336,7 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
 	@Override
 	public double optDouble(String fieldName, double fallback) {
-		final Method method = getGetterForField(fieldName);
+		final Method method = getGetterForField(applyAlias(fieldName));
 
 		if(method == null){
 			if(mDebugEnabled){
@@ -351,7 +358,7 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
 	@Override
 	public Double optDoubleAsWrapperType(String fieldName) {
-		final Method method = getGetterForField(fieldName);
+		final Method method = getGetterForField(applyAlias(fieldName));
 
 		if(method == null){
 			if(mDebugEnabled){
@@ -378,7 +385,7 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
 	@Override
 	public float optFloat(String fieldName, float fallback) {
-		final Method method = getGetterForField(fieldName);
+		final Method method = getGetterForField(applyAlias(fieldName));
 
 		if(method == null){
 			if(mDebugEnabled){
@@ -401,7 +408,7 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
 	@Override
 	public Float optFloatAsWrapperType(String fieldName) {
-		final Method method = getGetterForField(fieldName);
+		final Method method = getGetterForField(applyAlias(fieldName));
 
 		if(method == null){
 			if(mDebugEnabled){
@@ -428,7 +435,7 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
 	@Override
 	public int optInt(String fieldName, int fallback) {
-		final Method method = getGetterForField(fieldName);
+		final Method method = getGetterForField(applyAlias(fieldName));
 
 		if(method == null){
 			if(mDebugEnabled){
@@ -450,7 +457,7 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
 	@Override
 	public Integer optIntAsWrapperType(String fieldName) {
-		final Method method = getGetterForField(fieldName);
+		final Method method = getGetterForField(applyAlias(fieldName));
 
 		if(method == null){
 			if(mDebugEnabled){
@@ -477,7 +484,7 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
 	@Override
 	public long optLong(String fieldName, long fallback) {
-		final Method method = getGetterForField(fieldName);
+		final Method method = getGetterForField(applyAlias(fieldName));
 
 		if(method == null){
 			if(mDebugEnabled){
@@ -499,7 +506,7 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
 	@Override
 	public Long optLongAsWrapperType(String fieldName) {
-		final Method method = getGetterForField(fieldName);
+		final Method method = getGetterForField(applyAlias(fieldName));
 
 		if(method == null){
 			if(mDebugEnabled){
@@ -526,7 +533,7 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
 	@Override
 	public String optString(String fieldName, String fallback) {
-		final Method method = getGetterForField(fieldName);
+		final Method method = getGetterForField(applyAlias(fieldName));
 
 		if(method == null){
 			if(mDebugEnabled){
@@ -602,11 +609,5 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
 	public void setDebugEnabled(boolean enabled){
 		mDebugEnabled = enabled;
-	}
-
-	private void validateFieldNumberMapping(final int fieldNumber) {
-		if (mMethodList == null) {
-			throw new IllegalArgumentException("There is no valid field to id mapping and was asked to get a field by id");
-		}
 	}
 }
