@@ -2,19 +2,116 @@
 
 For those who find statements like `cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME));` or `cursor.getColumnIndex(COLUMN)==-1 ? value=FALLBACK : value=cursor.getString(COLUMN);`a bit too arcane and verbose.
 
-This library provides an different way to run queries and use the resulting cursor.
+Also, for those that have to maintain both a CursorAdaptor and an ArrayAdaptor for the same data from different sources.
 
-It offers:
+There are 3 types of EasyCursors:
+
+1. EasySqlCursor - A wrapper for normal SqlCursors
+2. EasyJsonCursor (experimental) - Converts a JSONArray into a Cursor
+3. EasyObjectCursor (experimental) - Converts a List/Array of generic Objects into a Cursor.
+
+**EasyCursors** in general offer the following benefits:
 
 1. A number of code simplification functions such as `cursor.getString(COLUMN_NAME)` to reduce verbosity.
-2. A way of accessing optional columns such as `cursor.optLong(COLUMN_NAME)` and `cursor.optLong(COLUMN_NAME, FALLBACK_VALUE)`.
-3. A way to automatically get a JSON representation of a query for persistence.
-4. A way to easily convert any existing Cursor into an EasyCursor - but you will not get the JSON representation :).
-5. A way to access booleans directly (i.e. `cursor.getBoolean()`/`cursor.optBoolean()`. The default implementation of EasySqlCursor assumes that `true==1` and `false!=1` where 1 is a number, but it can be overridden by subclassing.
+2. A way of accessing optional columns/fields such as `cursor.optLong(COLUMN_NAME)` and `cursor.optLong(COLUMN_NAME, FALLBACK_VALUE)`.
+3. (Optionally) A way to store the way the cursor was constructed so that it can be stored for later re-creation. Currently the library only implements this for the EasySqlCursor but it can be build for the others as well.
 
-The way this happens via an Interface, EasyCursor, which extends the bog standard Cursor.
+**EasySqlCursors** also offer:
 
-At the moment the only implementation of EasyCursor is EasySqlCursor.
+1. A way to access booleans directly (i.e. `cursor.getBoolean()`/`cursor.optBoolean()`). The default implementation of EasySqlCursor assumes that `true==1` and `false!=1` where 1 is a number, but it can be overridden by subclassing.
+
+
+##Getting Started Guide
+
+###EasySqlCursors
+This is the way to convert boring old cursors to an EasyCursor:
+
+```
+    final Cursor cursor = builder.query(...);
+    
+    cursor.moveToFirst();
+    
+    final EasyCursor eCursor = new EasySqlCursor(cursor);
+
+```
+Notes and Caveats:
+
+* Look [here](#easysqlcursor_full) for a more in-depth explanation on how EasySqlCursors work.
+
+
+###EasyJsonCursors
+Any JSON array can be converted to a cursor like this:
+
+```
+    final JSONArray jArray = ... // Any Json Array.
+    
+    // If the JSONObjects in the JSONArray do not have an android-valid "_id" field,
+    // you can setup an alias.
+    final String _idAlias = "id"; 
+	final EasyCursor cursor = new EasyJsonCursor(
+			jArray,
+			_idAlias);
+```
+Notes and Caveats:
+
+* The "columns" array for the "getColumnIndexOrThrow() / getColumnIndex()" methods is calculated based on the JSON fields of the first array item. This means that if the other items have more, you will not be able to access them using any of the getXXX methods - you will get an EasyJsonException - and if they have less, you will also get an EasyJsonException. To access those fields you will need to use the optXXX methods.
+
+* EasyJsonCursor is internally using org.json. Normally, org.json getXXX methods throw checked JsonExceptions but in order to keep the EasyCursor API consistent these exceptions are caught (when thrown from getXXX methods) and re-thrown as runtime EasyJsonExceptions.
+
+* getBytes()/optBytes() is not implemented and will throw an UnsupportedOperationException when called.
+
+* In addition to the usual EasyCursor methods, an EasyJsonCursor also has the following:
+       1. `getJsonObject(String name)`
+       2. `getJsonArray(String name)`
+       3. `optJsonObject(String name)`
+       4. `optJsonArray(String name)`
+       
+###EasyObjectCursors
+
+```
+	final List<WhateverObject> data = ... // somehow get an object list
+
+    // If the Objects in the list do not have "get_Id()" getter method, 
+    // you can setup an alias. The alias below will match a "getId()" method.
+    
+    final String _idAlias = "id"; 
+	final EasyCursor cursor = new EasyObjectCursor<WhateverObject>(
+			WhateverObject.class,
+			data,
+			_idAlias);
+```
+Notes and Caveats:
+
+* The "columns" array for the "getColumnIndexOrThrow() / getColumnIndex()" methods is calculated as follows:
+    * Take the class type you passed as a parameter in the constructor
+    * Reflectively get all public methods with zero parameters which are non-void and their name is more than 3 characters long.
+    * Check to see if they start with "get" or "is".
+    * If they do, chop the "get" / "is" prefix off, lowercase them add add them to the array. 
+
+* This means that if you call `cursor.getBytes("bytes") you will internally call the `getBytes()` getter of the current object.
+
+* In addition to the usual EasyCursor methods, an EasyObjectCursor also has the following:
+       1. `getItem()` - Which returns the current object.
+       2. `getObject(int fieldNo)` - Which return the result of the getter execution as an object
+       3. `getObject(String name)` - Which return the result of the getter execution as an object
+       4. `optObject(int fieldNo)` - Which return the result of the getter execution as an object
+       5. `optObject(String name)` - Which return the result of the getter execution as an object
+
+* An EasyObjectCursor will not catch any exceptions that calling an object's method will throw.
+
+* When calling a `get[Number] or /opt[Number]` method the following actions will take place:
+    1. Check to see if what comes out of the getter is an instance of the Number class. If so, return the correct type
+    2. If not, check if the object is a String and try to parse it as the requested Number type. - This can throw a NumberFormatException
+    3. Throw a ClassCastException
+    
+* The getBlob() / getBlob() methods is only valid the types listed below. Any other will throw a ClassCastException.
+    1. Strings
+    2. ByteArrays
+    3. Integers
+    4. Long
+    5. Float
+    6. Double
+    7. Short
 
 ##Installation
 To install:
@@ -25,8 +122,13 @@ Alternatively you can produce a JAR file and use that (see Jarification below).
 ##Jarification
 Type `ant` at the root of the Library Project to produce a Jar file. This will also produce the Javadoc Jar.
 
-##Generating an EasyCursor for SQL
-###1. Using one of the inlcuded Builders EasyQueryModel
+&nbsp;
+&nbsp;
+&nbsp;
+
+##<a name="easysqlcursor_full"></a>EasySqlCursors In Depth
+###Creation
+####1. Using one of the included Builders EasyQueryModel
 
 This is the "native" way of using EasyCursor.
 
@@ -59,7 +161,7 @@ For a raw SQL query:
     
     final EasyCursor eCursor = model.execute(getReadableDatabase());
 ```
-###2. Using an QueryBuilder Interface
+####2. Using an QueryBuilder Interface
 
 You can define a class implementing either the `SqlSelectBuilder` or `SqlRawQueryBuilder` interfaces and do the following:
 This way you can write, or re-use, your own builders.
@@ -78,7 +180,7 @@ This way you can write, or re-use, your own builders.
     
     final EasyCursor eCursor = model.execute(getReadableDatabase());
 ```
-###3. The Backwards Compatible way
+####3. The Backwards Compatible way
 
 You can convert an existing Cursor to an EasyCursor by wrapping it like this:
 
@@ -104,7 +206,7 @@ You can convert an existing Cursor to an EasyCursor by wrapping it like this:
 
 But, as you did not use an SqlQueryModel, you will not be able to access the JSON representation of the query.
 
-###4. The "Compatibility" way
+####4. The "Compatibility" way
 By compatibility I mean that the API is similar to a SQLiteQueryBuilder.
 
 ```
@@ -130,7 +232,7 @@ By compatibility I mean that the API is similar to a SQLiteQueryBuilder.
 
 The `setQueryParams()` method has an identical signature to `SQLiteQueryBuilder.query()` minus the database instance parameter.
 
-##Things you can do with an EasyCursor
+###Things you can do with an EasyCursor
 An EasyCursor offers (apart from the usual Cursor methods) the following:
 
 * `easycursor.getXXX(String columnName)` : Which is shorthand for `easycursor.getXXX(easycursor.getColumnIndexOrThrow(COLUMN_NAME))`.
@@ -142,7 +244,7 @@ Where XXX is the usual data types (long, int, String, etc.).
 
 Not all functions are available for all datatypes though, as some are meaningless (`getStringAsWrapperType()` for example).
 
-##Booleans
+###Booleans
 In addition you get the following functions for booleans, which work the same as the ones above:
 
 * `easycursor.getBoolean(String columnName)`
@@ -152,7 +254,7 @@ In addition you get the following functions for booleans, which work the same as
 
 The logic behind a boolean is as follows: `true==1` and `false!=1` where 1 is a number.
 
-##Accessing an EasyCursor's EasyQueryModel, saving it and replaying
+###Accessing an EasyCursor's EasyQueryModel, saving it and replaying
 If the cursor has been generated via an EasyQueryModel, then you can access the model like this: 
 
 ```
@@ -184,7 +286,7 @@ The following snippet will get the Model JSON of a cursor, save it in local pref
 	final EasySqlQueryModel model = new EasySqlQueryModel(json);
 	final EasyCursor eCursor = model.execute(getReadableDatabase());
 ```  		
-##Keeping track of an EasyQueryModel
+###Keeping track of an EasyQueryModel
 In order to keep track of an EasyQueryModel file and help in maintaining compatibility of the model to the underlying DB (if your schema can change), you can use the following functions.
 
 * `setModelComment(String comment)/String getModelComment()`
