@@ -45,7 +45,7 @@ public class ObjectCursorTests extends CommonTestCases {
 	}
 
 	public void testBooleanFieldParsing(){
-		final EasyObjectCursor<TestObject> cursor = new EasyObjectCursor<TestObject>(TestObject.class, mTestObjects);
+		final EasyObjectCursor<TestObject> cursor = new EasyObjectCursor<TestObject>(TestObject.class, mTestObjects, null);
 
 		cursor.moveToFirst();
 		String fieldName = "bool";
@@ -63,7 +63,7 @@ public class ObjectCursorTests extends CommonTestCases {
 
 
 	public void testByteArrayFieldParsing(){
-		final EasyCursor cursor = new EasyObjectCursor<TestObject>(TestObject.class, mTestObjects);
+		final EasyCursor cursor = new EasyObjectCursor<TestObject>(TestObject.class, mTestObjects, null);
 		final String[] cols = cursor.getColumnNames();
 		final Set<String> convertables = new HashSet<String>();
 		convertables.add("byte");
@@ -101,7 +101,7 @@ public class ObjectCursorTests extends CommonTestCases {
 	}
 
 	public void testFieldIndexes(){
-		final EasyCursor cursor = new EasyObjectCursor<TestObject>(TestObject.class, mTestObjects);
+		final EasyCursor cursor = new EasyObjectCursor<TestObject>(TestObject.class, mTestObjects, null);
 		cursor.moveToFirst();
 		final String[] cols = cursor.getColumnNames();
 
@@ -131,7 +131,7 @@ public class ObjectCursorTests extends CommonTestCases {
 	}
 
 	public void testMethodSet(){
-		final EasyObjectCursor<TestObject> cursor = new EasyObjectCursor<TestObject>(TestObject.class, mTestObjects);
+		final EasyObjectCursor<TestObject> cursor = new EasyObjectCursor<TestObject>(TestObject.class, mTestObjects, null);
 		final List<Method> methods = cursor.getMethods();
 
 		for(final Method method : methods){
@@ -149,7 +149,7 @@ public class ObjectCursorTests extends CommonTestCases {
 
 
 	public void testNullCheck(){
-		final EasyObjectCursor<TestObject> cursor = new EasyObjectCursor<TestObject>(TestObject.class, mTestObjects);
+		final EasyObjectCursor<TestObject> cursor = new EasyObjectCursor<TestObject>(TestObject.class, mTestObjects, null);
 		final String[] cols = cursor.getColumnNames();
 
 		cursor.moveToFirst();
@@ -170,7 +170,7 @@ public class ObjectCursorTests extends CommonTestCases {
 	}
 
 	public void testStringFieldParsing(){
-		final EasyCursor cursor = new EasyObjectCursor<TestObject>(TestObject.class, mTestObjects);
+		final EasyCursor cursor = new EasyObjectCursor<TestObject>(TestObject.class, mTestObjects, null);
 		final String[] cols = cursor.getColumnNames();
 
 		cursor.moveToFirst();
