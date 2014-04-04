@@ -207,6 +207,7 @@ If you need to extend the base implementation of EasySqlCursor, for example beca
 
 ##Changelog
 * v0.1.0 First public release
+* v0.1.1 Fixed a crash caused by not properly handing null arrays in JsonPayloadHelper 
 
 ##Permission Explanation
 * No permissions required
