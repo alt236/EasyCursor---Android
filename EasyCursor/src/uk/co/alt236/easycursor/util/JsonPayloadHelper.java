@@ -33,9 +33,13 @@ public class JsonPayloadHelper {
 
 	public static void add(final JSONObject object, final String key, final String[] value) throws JSONException{
 			final JSONArray arr = new JSONArray();
-			for(String str : value){
-				arr.put(str);
+
+			if(value != null && value.length > 0){
+				for(String str : value){
+					arr.put(str);
+				}
 			}
+
 			object.put(key, arr);
 	}
 
