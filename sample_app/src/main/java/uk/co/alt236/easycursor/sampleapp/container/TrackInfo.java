@@ -14,7 +14,7 @@ public class TrackInfo {
     private final double mMeaninglessDiv;
 
 
-    public TrackInfo(EasyCursor c) {
+    public TrackInfo(final EasyCursor c) {
         m_id = c.getLong("_id");
         mArtist = c.getString("artist");
         mAlbum = c.getString("album");

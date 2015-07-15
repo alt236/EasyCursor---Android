@@ -25,7 +25,7 @@ public class LousyQueryBuilder implements SqlSelectBuilder {
         return mGroupBy;
     }
 
-    public LousyQueryBuilder setGroupBy(String groupBy) {
+    public LousyQueryBuilder setGroupBy(final String groupBy) {
         mGroupBy = groupBy;
         return this;
     }
@@ -35,7 +35,7 @@ public class LousyQueryBuilder implements SqlSelectBuilder {
         return mHaving;
     }
 
-    public LousyQueryBuilder setHaving(String having) {
+    public LousyQueryBuilder setHaving(final String having) {
         mHaving = having;
         return this;
     }
@@ -45,7 +45,7 @@ public class LousyQueryBuilder implements SqlSelectBuilder {
         return mLimit;
     }
 
-    public LousyQueryBuilder setLimit(String limit) {
+    public LousyQueryBuilder setLimit(final String limit) {
         mLimit = limit;
         return this;
     }
@@ -55,7 +55,7 @@ public class LousyQueryBuilder implements SqlSelectBuilder {
         return mOrderBy;
     }
 
-    public LousyQueryBuilder setOrderBy(String orderBy) {
+    public LousyQueryBuilder setOrderBy(final String orderBy) {
         mOrderBy = orderBy;
         return this;
     }
@@ -65,7 +65,7 @@ public class LousyQueryBuilder implements SqlSelectBuilder {
         return mSelect;
     }
 
-    public LousyQueryBuilder setSelect(String[] select) {
+    public LousyQueryBuilder setSelect(final String[] select) {
         mSelect = select;
         return this;
     }
@@ -80,7 +80,7 @@ public class LousyQueryBuilder implements SqlSelectBuilder {
         return mWhere;
     }
 
-    public LousyQueryBuilder setWhere(String where) {
+    public LousyQueryBuilder setWhere(final String where) {
         mWhere = where;
         return this;
     }
@@ -90,7 +90,7 @@ public class LousyQueryBuilder implements SqlSelectBuilder {
         return mWhereArgs;
     }
 
-    public LousyQueryBuilder setWhereArgs(String[] whereArgs) {
+    public LousyQueryBuilder setWhereArgs(final String[] whereArgs) {
         mWhereArgs = whereArgs;
         return this;
     }
@@ -100,7 +100,7 @@ public class LousyQueryBuilder implements SqlSelectBuilder {
         return mDistinct;
     }
 
-    public LousyQueryBuilder setDistinct(boolean value) {
+    public LousyQueryBuilder setDistinct(final boolean value) {
         mDistinct = value;
         return this;
     }
@@ -110,12 +110,12 @@ public class LousyQueryBuilder implements SqlSelectBuilder {
         return mStrict;
     }
 
-    public LousyQueryBuilder setStrict(boolean strict) {
+    public LousyQueryBuilder setStrict(final boolean strict) {
         mStrict = strict;
         return this;
     }
 
-    public LousyQueryBuilder setFrom(String tables) {
+    public LousyQueryBuilder setFrom(final String tables) {
         mTables = tables;
         return this;
     }

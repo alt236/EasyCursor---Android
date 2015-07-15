@@ -65,7 +65,7 @@ public class EasySqlQueryModel implements EasyQueryModel {
     private String mModelTag;
     private String mModelComment;
 
-    public EasySqlQueryModel(EasyCompatSqlModelBuilder builder) {
+    public EasySqlQueryModel(final EasyCompatSqlModelBuilder builder) {
         mDistinct = builder.isDistinct();
         mGroupBy = builder.getGroupBy();
         mHaving = builder.getHaving();
@@ -83,7 +83,7 @@ public class EasySqlQueryModel implements EasyQueryModel {
         mQueryType = builder.getQueryType();
     }
 
-    private EasySqlQueryModel(RawQueryBuilder builder) {
+    private EasySqlQueryModel(final RawQueryBuilder builder) {
         mDistinct = false;
         mGroupBy = null;
         mHaving = null;
@@ -101,7 +101,7 @@ public class EasySqlQueryModel implements EasyQueryModel {
         mQueryType = builder.queryType;
     }
 
-    private EasySqlQueryModel(SelectQueryBuilder builder) {
+    private EasySqlQueryModel(final SelectQueryBuilder builder) {
         mDistinct = builder.distinct;
         mGroupBy = builder.groupBy;
         mHaving = builder.having;
@@ -119,7 +119,7 @@ public class EasySqlQueryModel implements EasyQueryModel {
         mQueryType = builder.queryType;
     }
 
-    public EasySqlQueryModel(SqlRawQueryBuilder builder) {
+    public EasySqlQueryModel(final SqlRawQueryBuilder builder) {
         mDistinct = false;
         mGroupBy = null;
         mHaving = null;
@@ -137,7 +137,7 @@ public class EasySqlQueryModel implements EasyQueryModel {
         mQueryType = QUERY_TYPE_RAW;
     }
 
-    public EasySqlQueryModel(SqlSelectBuilder builder) {
+    public EasySqlQueryModel(final SqlSelectBuilder builder) {
         mDistinct = builder.isDistinct();
         mGroupBy = builder.getGroupBy();
         mHaving = builder.getHaving();
@@ -155,7 +155,7 @@ public class EasySqlQueryModel implements EasyQueryModel {
         mQueryType = QUERY_TYPE_MANAGED;
     }
 
-    public EasySqlQueryModel(String json) throws JSONException {
+    public EasySqlQueryModel(final String json) throws JSONException {
         final JSONObject payload = new JSONObject(json);
         mDistinct = JsonPayloadHelper.getBoolean(payload, FIELD_DISTINCT);
         mGroupBy = JsonPayloadHelper.getString(payload, FIELD_GROUP_BY);
@@ -175,14 +175,14 @@ public class EasySqlQueryModel implements EasyQueryModel {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj)
             return true;
         if (obj == null)
             return false;
         if (getClass() != obj.getClass())
             return false;
-        EasySqlQueryModel other = (EasySqlQueryModel) obj;
+        final EasySqlQueryModel other = (EasySqlQueryModel) obj;
         if (mDistinct != other.mDistinct)
             return false;
         if (mGroupBy == null) {
@@ -271,7 +271,7 @@ public class EasySqlQueryModel implements EasyQueryModel {
      * @throws InstantiationException    if the class cannot be instantiated
      * @throws IllegalArgumentException  if an incorrect number of arguments are passed, or an argument could not be converted by a widening conversion
      */
-    public EasyCursor execute(final SQLiteDatabase db, Class<? extends EasySqlCursor> easyCursorClass) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+    public EasyCursor execute(final SQLiteDatabase db, final Class<? extends EasySqlCursor> easyCursorClass) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 
         final Cursor c = executeQuery(db);
         if (easyCursorClass == null) {
@@ -347,7 +347,7 @@ public class EasySqlQueryModel implements EasyQueryModel {
     }
 
     @Override
-    public void setModelComment(String modelComment) {
+    public void setModelComment(final String modelComment) {
         mModelComment = modelComment;
     }
 
@@ -357,7 +357,7 @@ public class EasySqlQueryModel implements EasyQueryModel {
     }
 
     @Override
-    public void setModelTag(String modelTag) {
+    public void setModelTag(final String modelTag) {
         mModelTag = modelTag;
     }
 
@@ -367,7 +367,7 @@ public class EasySqlQueryModel implements EasyQueryModel {
     }
 
     @Override
-    public void setModelVersion(int modelVersion) {
+    public void setModelVersion(final int modelVersion) {
         mModelVersion = modelVersion;
     }
 
@@ -487,7 +487,7 @@ public class EasySqlQueryModel implements EasyQueryModel {
      * {@link #EasySqlQueryModel(String)} constructor.
      *
      * @return the resulting JSON String
-     * @throws IllegalStateExcetion if one tries to create
+     * @throws IllegalStateException if one tries to create
      *                              a JSON representation when the model is uninitialised.
      * @throws JSONException        if there was an error creating the JSON
      */
@@ -566,7 +566,7 @@ public class EasySqlQueryModel implements EasyQueryModel {
          *
          * @return the comment
          */
-        public RawQueryBuilder setModelComment(String comment) {
+        public RawQueryBuilder setModelComment(final String comment) {
             this.modelComment = comment;
             return this;
         }
@@ -576,7 +576,7 @@ public class EasySqlQueryModel implements EasyQueryModel {
          *
          * @return the tag
          */
-        public RawQueryBuilder setModelTag(String tag) {
+        public RawQueryBuilder setModelTag(final String tag) {
             this.modelTag = tag;
             return this;
         }
@@ -587,17 +587,17 @@ public class EasySqlQueryModel implements EasyQueryModel {
          *
          * @return the version of this model
          */
-        public RawQueryBuilder setModelVersion(int version) {
+        public RawQueryBuilder setModelVersion(final int version) {
             this.modelVersion = version;
             return this;
         }
 
-        public RawQueryBuilder setRawSql(String sql) {
+        public RawQueryBuilder setRawSql(final String sql) {
             this.rawSql = sql;
             return this;
         }
 
-        public RawQueryBuilder setSelectionArgs(String args[]) {
+        public RawQueryBuilder setSelectionArgs(final String[] args) {
             this.selectionArgs = args;
             return this;
         }
@@ -636,22 +636,22 @@ public class EasySqlQueryModel implements EasyQueryModel {
          *
          * @param distinct true if true the query is DISTINCT, otherwise it isn't
          */
-        public SelectQueryBuilder setDistinct(boolean distinct) {
+        public SelectQueryBuilder setDistinct(final boolean distinct) {
             this.distinct = distinct;
             return this;
         }
 
-        public SelectQueryBuilder setGroupBy(String groupBy) {
+        public SelectQueryBuilder setGroupBy(final String groupBy) {
             this.groupBy = groupBy;
             return this;
         }
 
-        public SelectQueryBuilder setHaving(String having) {
+        public SelectQueryBuilder setHaving(final String having) {
             this.having = having;
             return this;
         }
 
-        public SelectQueryBuilder setLimit(String limit) {
+        public SelectQueryBuilder setLimit(final String limit) {
             this.limit = limit;
             return this;
         }
@@ -661,7 +661,7 @@ public class EasySqlQueryModel implements EasyQueryModel {
          *
          * @return the comment
          */
-        public SelectQueryBuilder setModelComment(String comment) {
+        public SelectQueryBuilder setModelComment(final String comment) {
             this.modelComment = comment;
             return this;
         }
@@ -671,7 +671,7 @@ public class EasySqlQueryModel implements EasyQueryModel {
          *
          * @return the tag
          */
-        public SelectQueryBuilder setModelTag(String tag) {
+        public SelectQueryBuilder setModelTag(final String tag) {
             this.modelTag = tag;
             return this;
         }
@@ -682,17 +682,17 @@ public class EasySqlQueryModel implements EasyQueryModel {
          *
          * @return the version of this model
          */
-        public SelectQueryBuilder setModelVersion(int version) {
+        public SelectQueryBuilder setModelVersion(final int version) {
             this.modelVersion = version;
             return this;
         }
 
-        public SelectQueryBuilder setSelect(String[] projectionIn) {
+        public SelectQueryBuilder setSelect(final String[] projectionIn) {
             this.projectionIn = projectionIn;
             return this;
         }
 
-        public SelectQueryBuilder setSortOrder(String sortOrder) {
+        public SelectQueryBuilder setSortOrder(final String sortOrder) {
             this.sortOrder = sortOrder;
             return this;
         }
@@ -720,7 +720,7 @@ public class EasySqlQueryModel implements EasyQueryModel {
          * <p/>
          * This value is ignored if you are on a device running API < 14.
          */
-        public SelectQueryBuilder setStrict(boolean strict) {
+        public SelectQueryBuilder setStrict(final boolean strict) {
             this.strict = strict;
             return this;
         }
@@ -733,17 +733,17 @@ public class EasySqlQueryModel implements EasyQueryModel {
          *
          * @param tables the list of tables to query on
          */
-        public SelectQueryBuilder setTables(String tables) {
+        public SelectQueryBuilder setTables(final String tables) {
             this.tables = tables;
             return this;
         }
 
-        public SelectQueryBuilder setWhere(String selection) {
+        public SelectQueryBuilder setWhere(final String selection) {
             this.selection = selection;
             return this;
         }
 
-        public SelectQueryBuilder setWhereArgs(String args[]) {
+        public SelectQueryBuilder setWhereArgs(final String[] args) {
             this.selectionArgs = args;
             return this;
         }

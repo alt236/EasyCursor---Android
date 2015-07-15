@@ -19,7 +19,7 @@ public class JsonLoader extends AbstractCursorLoader {
     private static final String DATA_SAMPLE_JSON_JSON = "data/sample_json.json";
 
 
-    public JsonLoader(Context context) {
+    public JsonLoader(final Context context) {
         super(context);
     }
 
@@ -33,7 +33,7 @@ public class JsonLoader extends AbstractCursorLoader {
             cursor = new EasyJsonCursor(
                     new JSONArray(loadAssetsFileAsString(DATA_SAMPLE_JSON_JSON)),
                     "id");
-        } catch (JSONException e) {
+        } catch (final JSONException e) {
             e.printStackTrace();
             cursor = null;
         }
@@ -41,8 +41,8 @@ public class JsonLoader extends AbstractCursorLoader {
         return cursor;
     }
 
-    public String loadAssetsFileAsString(String path) {
-        String json = null;
+    public String loadAssetsFileAsString(final String path) {
+        final String json;
         try {
             final InputStream is = getContext().getAssets().open(path);
             final int size = is.available();
@@ -51,7 +51,7 @@ public class JsonLoader extends AbstractCursorLoader {
             is.read(buffer);
             is.close();
             json = new String(buffer, UTF_8);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             ex.printStackTrace();
             return null;
         }

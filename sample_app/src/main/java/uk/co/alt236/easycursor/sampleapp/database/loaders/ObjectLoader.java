@@ -22,7 +22,7 @@ public class ObjectLoader extends AbstractCursorLoader {
     private static final String DATA_SAMPLE_JSON_JSON = "data/sample_json.json";
 
 
-    public ObjectLoader(Context context) {
+    public ObjectLoader(final Context context) {
         super(context);
     }
 
@@ -40,13 +40,13 @@ public class ObjectLoader extends AbstractCursorLoader {
                     }.getType());
 
             // the Json data we have do not have an "_id" field, so we will alias "_id" as "id"
-            cursor = new EasyObjectCursor<JsonDataGsonModel>(
+            cursor = new EasyObjectCursor<>(
                     JsonDataGsonModel.class,
                     data,
                     "id");
 
             is.close();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
             cursor = null;
         }
@@ -54,8 +54,8 @@ public class ObjectLoader extends AbstractCursorLoader {
         return cursor;
     }
 
-    public String loadAssetsFileAsString(String path) {
-        String json = null;
+    public String loadAssetsFileAsString(final String path) {
+        final String json;
         try {
             final InputStream is = getContext().getAssets().open(path);
             final int size = is.available();
@@ -64,7 +64,7 @@ public class ObjectLoader extends AbstractCursorLoader {
             is.read(buffer);
             is.close();
             json = new String(buffer, UTF_8);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             ex.printStackTrace();
             return null;
         }

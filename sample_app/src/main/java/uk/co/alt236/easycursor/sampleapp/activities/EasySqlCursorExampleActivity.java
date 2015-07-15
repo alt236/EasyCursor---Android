@@ -74,7 +74,7 @@ public class EasySqlCursorExampleActivity extends FragmentActivity implements Lo
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cursor_selection);
         mListView = (ListView) findViewById(android.R.id.list);
@@ -82,7 +82,7 @@ public class EasySqlCursorExampleActivity extends FragmentActivity implements Lo
         mSaveQueryButton = (Button) findViewById(R.id.buttonSave);
         mSpinner = (Spinner) findViewById(R.id.spinner);
 
-        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
+        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_spinner_dropdown_item,
                 getResources().getStringArray(R.array.sql_query_types));
@@ -91,18 +91,18 @@ public class EasySqlCursorExampleActivity extends FragmentActivity implements Lo
         final String[] from = new String[]{"artist", "album"};
         final int[] to = new int[]{R.id.artist, R.id.album};
 
-        mAdapter = new MusicExampleAdapter(this, R.layout.list_item_artist, (EasyCursor) null, from, to);
+        mAdapter = new MusicExampleAdapter(this, R.layout.list_item_artist, null, from, to);
         mListView.setAdapter(mAdapter);
         mListView.setFastScrollEnabled(true);
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
+    public Loader<Cursor> onCreateLoader(final int arg0, final Bundle arg1) {
         mLoader = new DatabaseLoader(this, arg1.getInt(EXTRA_QUERY_TYPE, -2));
         return mLoader;
     }
 
-    public void onExecuteClick(View v) {
+    public void onExecuteClick(final View v) {
         final Bundle bundle = generateLoaderBundle();
 
         if (bundle == null) {
@@ -116,7 +116,7 @@ public class EasySqlCursorExampleActivity extends FragmentActivity implements Lo
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> arg0, Cursor cursor) {
+    public void onLoadFinished(final Loader<Cursor> arg0, final Cursor cursor) {
         if (cursor != null && cursor.getCount() != 0 && cursor instanceof EasyCursor) {
             final EasyCursor eCursor = (EasyCursor) cursor;
             if (eCursor.getQueryModel() != null) {
@@ -132,11 +132,11 @@ public class EasySqlCursorExampleActivity extends FragmentActivity implements Lo
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> arg0) {
+    public void onLoaderReset(final Loader<Cursor> arg0) {
         mAdapter.changeCursor(null);
     }
 
-    public void onSaveQueryClick(View v) {
+    public void onSaveQueryClick(final View v) {
         if (mAdapter.getCursor() instanceof EasyCursor) {
             final EasyCursor cursor = (EasyCursor) mAdapter.getCursor();
             try {
@@ -148,7 +148,7 @@ public class EasySqlCursorExampleActivity extends FragmentActivity implements Lo
                 // Commit the edits!
                 editor.apply();
                 Toast.makeText(this, "Query Saved Succesfully (size= " + json.length() + ")!", Toast.LENGTH_SHORT).show();
-            } catch (JSONException e) {
+            } catch (final JSONException e) {
                 Toast.makeText(this, "Error Converting QueryModel to JSON...", Toast.LENGTH_SHORT).show();
             }
         }

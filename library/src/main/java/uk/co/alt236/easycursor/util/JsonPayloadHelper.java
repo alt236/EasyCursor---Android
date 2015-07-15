@@ -35,7 +35,7 @@ public class JsonPayloadHelper {
         final JSONArray arr = new JSONArray();
 
         if (value != null && value.length > 0) {
-            for (String str : value) {
+            for (final String str : value) {
                 arr.put(str);
             }
         }
@@ -48,7 +48,7 @@ public class JsonPayloadHelper {
         return object.optBoolean(key, false);
     }
 
-    public static int getInt(JSONObject object, String key) {
+    public static int getInt(final JSONObject object, final String key) {
         return object.optInt(key, 0);
     }
 
@@ -61,7 +61,7 @@ public class JsonPayloadHelper {
         }
     }
 
-    public static String[] getStringArray(JSONObject payload, String key) {
+    public static String[] getStringArray(final JSONObject payload, final String key) {
         final JSONArray arr = payload.optJSONArray(key);
         final String[] res;
 

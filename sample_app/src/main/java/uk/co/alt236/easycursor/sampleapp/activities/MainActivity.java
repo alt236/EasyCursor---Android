@@ -28,20 +28,20 @@ public class MainActivity extends FragmentActivity {
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
 
-    public void onEasyJsonCursorExampleClick(View v) {
+    public void onEasyJsonCursorExampleClick(final View v) {
         startActivity(new Intent(this, EasyJsonCursorExampleActivity.class));
     }
 
-    public void onEasyObjectCursorExampleClick(View v) {
+    public void onEasyObjectCursorExampleClick(final View v) {
         startActivity(new Intent(this, EasyObjectCursorExampleActivity.class));
     }
 
-    public void onEasySqlCursorExampleClick(View v) {
+    public void onEasySqlCursorExampleClick(final View v) {
         startActivity(new Intent(this, EasySqlCursorExampleActivity.class));
     }
 }

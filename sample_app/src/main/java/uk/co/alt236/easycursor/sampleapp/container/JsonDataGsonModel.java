@@ -95,7 +95,7 @@ public class JsonDataGsonModel {
 
     public List<String> getTags() {
         if (tags == null) {
-            tags = new ArrayList<String>();
+            tags = new ArrayList<>();
         }
 
         return tags;

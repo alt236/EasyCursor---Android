@@ -26,7 +26,7 @@ public class ExampleDatabase extends SQLiteAssetHelper {
     private static final String DATABASE_NAME = "Chinook_Sqlite.db";
     private static final int DATABASE_VERSION = 1;
 
-    public ExampleDatabase(Context context) {
+    public ExampleDatabase(final Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -106,7 +106,7 @@ public class ExampleDatabase extends SQLiteAssetHelper {
 
     public EasyCursor doObjectCursorQuery() {
         final EasyCursor dataIn = doEasyRawQuery();
-        final List<TrackInfo> list = new ArrayList<TrackInfo>();
+        final List<TrackInfo> list = new ArrayList<>();
 
         while (!dataIn.isAfterLast()) {
             list.add(new TrackInfo(dataIn));
@@ -116,12 +116,12 @@ public class ExampleDatabase extends SQLiteAssetHelper {
         dataIn.close();
 
         // the TrackInfo object already contains an _id getter, so we pass null as the alias
-        final EasyCursor methodResult = new EasyObjectCursor<TrackInfo>(TrackInfo.class, list, null);
+        final EasyCursor methodResult = new EasyObjectCursor<>(TrackInfo.class, list, null);
         methodResult.moveToFirst();
         return methodResult;
     }
 
-    public EasyCursor doSavedQuery(Context context) {
+    public EasyCursor doSavedQuery(final Context context) {
         final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         final String json = settings.getString(Constants.PREFS_SAVED_QUERY, null);
         EasyCursor result;
@@ -132,7 +132,7 @@ public class ExampleDatabase extends SQLiteAssetHelper {
             try {
                 final EasySqlQueryModel model = new EasySqlQueryModel(json);
                 result = model.execute(getReadableDatabase());
-            } catch (JSONException e) {
+            } catch (final JSONException e) {
                 e.printStackTrace();
                 result = null;
             }

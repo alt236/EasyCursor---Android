@@ -4,25 +4,25 @@ import uk.co.alt236.easycursor.EasyQueryModel;
 
 public interface SqlSelectBuilder {
 
-    public abstract EasyQueryModel build();
+    EasyQueryModel build();
 
-    public abstract String getGroupBy();
+    String getGroupBy();
 
-    public abstract String getHaving();
+    String getHaving();
 
-    public abstract String getLimit();
+    String getLimit();
 
-    public abstract String getOrderBy();
+    String getOrderBy();
 
-    public abstract String[] getSelect();
+    String[] getSelect();
 
-    public abstract String getTables();
+    String getTables();
 
-    public abstract String getWhere();
+    String getWhere();
 
-    public abstract String[] getWhereArgs();
+    String[] getWhereArgs();
 
-    public abstract boolean isDistinct();
+    boolean isDistinct();
 
-    public abstract boolean isStrict();
+    boolean isStrict();
 }

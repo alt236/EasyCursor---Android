@@ -15,7 +15,7 @@ public class MusicExampleAdapter extends SimpleCursorAdapter {
     private static final String NO_COMPOSER = "No composer";
 
     @SuppressWarnings("deprecation")
-    public MusicExampleAdapter(Context context, int layout, EasyCursor c, String[] from, int[] to) {
+    public MusicExampleAdapter(final Context context, final int layout, final EasyCursor c, final String[] from, final int[] to) {
         super(context, layout, c, from, to);
     }
 
@@ -26,7 +26,7 @@ public class MusicExampleAdapter extends SimpleCursorAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, final View convertView, final ViewGroup parent) {
         final View view = super.getView(position, convertView, parent);
         final TextView composer = (TextView) view.findViewById(R.id.hasComposer);
         final TextView media = (TextView) view.findViewById(R.id.medium);

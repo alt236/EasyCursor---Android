@@ -9,7 +9,7 @@ public class DbSingleton {
     private DbSingleton() {
     }
 
-    public static ExampleDatabase getInstance(Context context) {
+    public static ExampleDatabase getInstance(final Context context) {
         if (sInstance == null) {
             synchronized (mLock) {
                 if (sInstance == null) {

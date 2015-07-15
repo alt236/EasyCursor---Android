@@ -40,7 +40,7 @@ public class EasyJsonCursorExampleActivity extends FragmentActivity implements L
     private ListView mListView;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cursor_selection);
         mListView = (ListView) findViewById(android.R.id.list);
@@ -57,12 +57,12 @@ public class EasyJsonCursorExampleActivity extends FragmentActivity implements L
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
+    public Loader<Cursor> onCreateLoader(final int arg0, final Bundle arg1) {
         mLoader = new JsonLoader(this);
         return mLoader;
     }
 
-    public void onExecuteClick(View v) {
+    public void onExecuteClick(final View v) {
         getSupportLoaderManager().restartLoader(
                 LOADER_ID,
                 null,
@@ -70,7 +70,7 @@ public class EasyJsonCursorExampleActivity extends FragmentActivity implements L
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> arg0, Cursor cursor) {
+    public void onLoadFinished(final Loader<Cursor> arg0, final Cursor cursor) {
         if (cursor != null && cursor.getCount() != 0 && cursor instanceof EasyCursor) {
             final EasyCursor eCursor = (EasyCursor) cursor;
             if (eCursor.getQueryModel() != null) {
@@ -86,7 +86,7 @@ public class EasyJsonCursorExampleActivity extends FragmentActivity implements L
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> arg0) {
+    public void onLoaderReset(final Loader<Cursor> arg0) {
         mAdapter.changeCursor(null);
     }
 }

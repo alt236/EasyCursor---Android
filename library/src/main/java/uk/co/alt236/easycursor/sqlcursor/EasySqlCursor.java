@@ -56,9 +56,9 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
      * @param columnNumber the number of the column containing the value to assess
      * @return true if the value of the boolean is true, false otherwise
      */
-    protected boolean calcBoolean(int columnNumber) {
+    protected boolean calcBoolean(final int columnNumber) {
         final int value = getInt(columnNumber);
-        return (value == 1) ? true : false;
+        return (value == 1);
     }
 
     /* (non-Javadoc)
@@ -153,7 +153,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
         return mDebugEnabled;
     }
 
-    public void setDebugEnabled(boolean enabled) {
+    public void setDebugEnabled(final boolean enabled) {
         mDebugEnabled = enabled;
     }
 
@@ -187,7 +187,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
      * @return the value from cursor if the column exists, null otherwise
      */
     @Override
-    public boolean optBoolean(final String columnName, boolean fallback) {
+    public boolean optBoolean(final String columnName, final boolean fallback) {
         final int columnNo = getColumnIndex(columnName);
 
         if (isColumnPresent(columnName, columnNo)) {
@@ -234,7 +234,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
      * @see uk.co.alt236.easycursor.EasyCursor#optDouble(java.lang.String, double)
      */
     @Override
-    public double optDouble(final String columnName, double fallback) {
+    public double optDouble(final String columnName, final double fallback) {
         final int columnNo = getColumnIndex(columnName);
 
         if (isColumnPresent(columnName, columnNo)) {
@@ -273,7 +273,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
      * @see uk.co.alt236.easycursor.EasyCursor#optFloat(java.lang.String, float)
      */
     @Override
-    public float optFloat(final String columnName, float fallback) {
+    public float optFloat(final String columnName, final float fallback) {
         final int columnNo = getColumnIndex(columnName);
 
         if (isColumnPresent(columnName, columnNo)) {
@@ -312,7 +312,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
      * @see uk.co.alt236.easycursor.EasyCursor#optInt(java.lang.String, int)
      */
     @Override
-    public int optInt(final String columnName, int fallback) {
+    public int optInt(final String columnName, final int fallback) {
         final int columnNo = getColumnIndex(columnName);
 
         if (isColumnPresent(columnName, columnNo)) {
@@ -351,7 +351,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
      * @see uk.co.alt236.easycursor.EasyCursor#optLong(java.lang.String, long)
      */
     @Override
-    public long optLong(final String columnName, long fallback) {
+    public long optLong(final String columnName, final long fallback) {
         final int columnNo = getColumnIndex(columnName);
 
         if (isColumnPresent(columnName, columnNo)) {

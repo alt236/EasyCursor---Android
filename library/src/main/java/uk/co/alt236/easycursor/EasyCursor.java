@@ -12,7 +12,7 @@ public interface EasyCursor extends Cursor {
      * @return the value from cursor
      * @throws IllegalArgumentException if the column doesn't exist
      */
-    public abstract byte[] getBlob(final String columnName);
+    byte[] getBlob(final String columnName);
 
     /**
      * Returns the value of the requested column as a boolean or throws
@@ -24,7 +24,7 @@ public interface EasyCursor extends Cursor {
      * @return the value from cursor
      * @throws IllegalArgumentException if the column doesn't exist
      */
-    public abstract boolean getBoolean(final String columnName);
+    boolean getBoolean(final String columnName);
 
     /**
      * Returns the value of the requested column as a double or throws
@@ -34,7 +34,7 @@ public interface EasyCursor extends Cursor {
      * @return the value from cursor
      * @throws IllegalArgumentException if the column doesn't exist
      */
-    public abstract double getDouble(final String columnName);
+    double getDouble(final String columnName);
 
     /**
      * Returns the value of the requested column as a float or throws
@@ -44,7 +44,7 @@ public interface EasyCursor extends Cursor {
      * @return the value from cursor
      * @throws IllegalArgumentException if the column doesn't exist
      */
-    public abstract float getFloat(final String columnName);
+    float getFloat(final String columnName);
 
     /**
      * Returns the value of the requested column as an int or throws
@@ -54,7 +54,7 @@ public interface EasyCursor extends Cursor {
      * @return the value from cursor
      * @throws IllegalArgumentException if the column doesn't exist
      */
-    public abstract int getInt(final String columnName);
+    int getInt(final String columnName);
 
     /**
      * Returns the value of the requested column as a long or throws
@@ -64,7 +64,7 @@ public interface EasyCursor extends Cursor {
      * @return the value from cursor
      * @throws IllegalArgumentException if the column doesn't exist
      */
-    public abstract long getLong(final String columnName);
+    long getLong(final String columnName);
 
     /**
      * Gets the {@link EasyQueryModel} which produced this cursor (if any).
@@ -73,7 +73,7 @@ public interface EasyCursor extends Cursor {
      *
      * @return the query model
      */
-    public abstract EasyQueryModel getQueryModel();
+    EasyQueryModel getQueryModel();
 
     /**
      * Returns the value of the requested column as a String or throws
@@ -83,7 +83,7 @@ public interface EasyCursor extends Cursor {
      * @return the value from cursor
      * @throws IllegalArgumentException if the column doesn't exist
      */
-    public abstract String getString(final String columnName);
+    String getString(final String columnName);
 
     /**
      * Returns <code>true</code> if the value in the indicated column is null.
@@ -91,7 +91,7 @@ public interface EasyCursor extends Cursor {
      * @param columnName the the name of the column to check.
      * @return whether the column value is null.
      */
-    public abstract boolean isNull(String columnName);
+    boolean isNull(String columnName);
 
     /**
      * Extracts the contents of a cursors Column as a Boolean.
@@ -102,7 +102,7 @@ public interface EasyCursor extends Cursor {
      * @param columnName the name of the cursor column that we want to get the value from
      * @return the value from cursor if the column exists, the implementation specific default value otherwise
      */
-    public abstract boolean optBoolean(final String columnName);
+    boolean optBoolean(final String columnName);
 
     /**
      * Extracts the contents of a cursors Column as a Boolean.
@@ -114,7 +114,7 @@ public interface EasyCursor extends Cursor {
      * @param fallback   the value to return if the cursor does not exist
      * @return the value from cursor if the column exists, null otherwise
      */
-    public abstract boolean optBoolean(final String columnName, boolean fallback);
+    boolean optBoolean(final String columnName, boolean fallback);
 
     /**
      * Extracts the contents of a cursors Column as a Boolean.
@@ -127,7 +127,7 @@ public interface EasyCursor extends Cursor {
      * @param columnName the column name
      * @return the value from cursor if the column exists, null otherwise
      */
-    public abstract Boolean optBooleanAsWrapperType(final String columnName);
+    Boolean optBooleanAsWrapperType(final String columnName);
 
     /**
      * Extracts the contents of a cursors Column as a double.
@@ -135,7 +135,7 @@ public interface EasyCursor extends Cursor {
      * @param columnName the name of the cursor column that we want to get the value from
      * @return the value from cursor if the column exists, the implementation specific default value otherwise
      */
-    public abstract double optDouble(final String columnName);
+    double optDouble(final String columnName);
 
     /**
      * Extracts the contents of a cursors Column as a double.
@@ -145,7 +145,7 @@ public interface EasyCursor extends Cursor {
      * @param fallback   the value to return if the cursor does not exist
      * @return the value from cursor if the column exists, the fallback otherwise
      */
-    public abstract double optDouble(final String columnName, double fallback);
+    double optDouble(final String columnName, double fallback);
 
     /**
      * Extracts the contents of a cursors Column as a Double.
@@ -156,7 +156,7 @@ public interface EasyCursor extends Cursor {
      * @param columnName the column name
      * @return the value from cursor if the column exists, null otherwise
      */
-    public abstract Double optDoubleAsWrapperType(final String columnName);
+    Double optDoubleAsWrapperType(final String columnName);
 
     /**
      * Extracts the contents of a cursors Column as a float.
@@ -164,7 +164,7 @@ public interface EasyCursor extends Cursor {
      * @param columnName the name of the cursor column that we want to get the value from
      * @return the value from cursor if the column exists, the implementation specific default value otherwise
      */
-    public abstract float optFloat(final String columnName);
+    float optFloat(final String columnName);
 
     /**
      * Extracts the contents of a cursors Column as a float.
@@ -174,7 +174,7 @@ public interface EasyCursor extends Cursor {
      * @param fallback   the value to return if the cursor does not exist
      * @return the value from cursor if the column exists, the fallback otherwise
      */
-    public abstract float optFloat(final String columnName, float fallback);
+    float optFloat(final String columnName, float fallback);
 
     /**
      * Extracts the contents of a cursors Column as a Float.
@@ -185,7 +185,7 @@ public interface EasyCursor extends Cursor {
      * @param columnName the column name
      * @return the value from cursor if the column exists, null otherwise
      */
-    public abstract Float optFloatAsWrapperType(final String columnName);
+    Float optFloatAsWrapperType(final String columnName);
 
     /**
      * Extracts the contents of a cursors Column as an int.
@@ -193,7 +193,7 @@ public interface EasyCursor extends Cursor {
      * @param columnName the name of the cursor column that we want to get the value from
      * @return the value from cursor if the column exists, the implementation specific default value otherwise
      */
-    public abstract int optInt(final String columnName);
+    int optInt(final String columnName);
 
     /**
      * Extracts the contents of a cursors Column as an int.
@@ -203,7 +203,7 @@ public interface EasyCursor extends Cursor {
      * @param fallback   the value to return if the cursor does not exist
      * @return the value from cursor if the column exists, the fallback otherwise
      */
-    public abstract int optInt(final String columnName, int fallback);
+    int optInt(final String columnName, int fallback);
 
     /**
      * Extracts the contents of a cursors Column as an Integer.
@@ -214,7 +214,7 @@ public interface EasyCursor extends Cursor {
      * @param columnName the column name
      * @return the value from cursor if the column exists, null otherwise
      */
-    public abstract Integer optIntAsWrapperType(final String columnName);
+    Integer optIntAsWrapperType(final String columnName);
 
     /**
      * Extracts the contents of a cursors Column as a long.
@@ -222,7 +222,7 @@ public interface EasyCursor extends Cursor {
      * @param columnName the name of the cursor column that we want to get the value from
      * @return the value from cursor if the column exists, the implementation specific default value otherwise
      */
-    public abstract long optLong(final String columnName);
+    long optLong(final String columnName);
 
     /**
      * Extracts the contents of a cursors Column as a long.
@@ -232,7 +232,7 @@ public interface EasyCursor extends Cursor {
      * @param fallback   the value to return if the cursor does not exist
      * @return the value from cursor if the column exists, the fallback otherwise
      */
-    public abstract long optLong(final String columnName, long fallback);
+    long optLong(final String columnName, long fallback);
 
     /**
      * Extracts the contents of a cursors Column as a Long.
@@ -243,7 +243,7 @@ public interface EasyCursor extends Cursor {
      * @param columnName the column name
      * @return the value from cursor if the column exists, null otherwise
      */
-    public abstract Long optLongAsWrapperType(final String columnName);
+    Long optLongAsWrapperType(final String columnName);
 
     /**
      * Extracts the contents of a cursors Column as a String.
@@ -252,7 +252,7 @@ public interface EasyCursor extends Cursor {
      * @param columnName the name of the cursor column that we want to get the value from
      * @return the value from cursor if the column exists, the implementation specific default value
      */
-    public abstract String optString(final String columnName);
+    String optString(final String columnName);
 
     /**
      * Extracts the contents of a cursors Column as a String.
@@ -265,6 +265,6 @@ public interface EasyCursor extends Cursor {
      * @param fallback   the value to return if the cursor does not exist
      * @return the value from cursor if the column exists, the fallback otherwise
      */
-    public abstract String optString(final String columnName, final String fallback);
+    String optString(final String columnName, final String fallback);
 
 }

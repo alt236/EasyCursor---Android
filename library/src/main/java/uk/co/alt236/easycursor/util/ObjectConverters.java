@@ -6,7 +6,7 @@ import java.nio.ByteBuffer;
 public class ObjectConverters {
     private static final String UTF_8 = "UTF-8";
 
-    public static boolean toBoolean(Object obj) {
+    public static boolean toBoolean(final Object obj) {
         if (obj instanceof Boolean) {
             return ((Boolean) obj).booleanValue();
         } else if (obj instanceof String) {
@@ -16,7 +16,7 @@ public class ObjectConverters {
         }
     }
 
-    public static byte[] toByteArray(Object obj) {
+    public static byte[] toByteArray(final Object obj) {
         if (obj == null) {
             return null;
         }
@@ -40,7 +40,7 @@ public class ObjectConverters {
         }
     }
 
-    public static double toDouble(Object obj) {
+    public static double toDouble(final Object obj) {
         if (obj instanceof Number) {
             return ((Number) obj).doubleValue();
         } else if (obj instanceof String) {
@@ -50,7 +50,7 @@ public class ObjectConverters {
         }
     }
 
-    public static float toFloat(Object obj) {
+    public static float toFloat(final Object obj) {
         if (obj instanceof Number) {
             return ((Number) obj).floatValue();
         } else if (obj instanceof String) {
@@ -60,7 +60,7 @@ public class ObjectConverters {
         }
     }
 
-    public static int toInt(Object obj) {
+    public static int toInt(final Object obj) {
         if (obj instanceof Number) {
             return ((Number) obj).intValue();
         } else if (obj instanceof String) {
@@ -71,7 +71,7 @@ public class ObjectConverters {
     }
 
 
-    public static long toLong(Object obj) {
+    public static long toLong(final Object obj) {
         if (obj instanceof Number) {
             return ((Number) obj).longValue();
         } else if (obj instanceof String) {
@@ -81,7 +81,7 @@ public class ObjectConverters {
         }
     }
 
-    public static short toShort(Object obj) {
+    public static short toShort(final Object obj) {
         if (obj instanceof Number) {
             return ((Number) obj).shortValue();
         } else if (obj instanceof String) {
@@ -91,11 +91,11 @@ public class ObjectConverters {
         }
     }
 
-    public static String toString(Object obj) {
+    public static String toString(final Object obj) {
         if (obj instanceof byte[]) {
             try {
                 return new String((byte[]) obj, UTF_8);
-            } catch (UnsupportedEncodingException e) {
+            } catch (final UnsupportedEncodingException e) {
                 e.printStackTrace();
                 return new String((byte[]) obj);
             }

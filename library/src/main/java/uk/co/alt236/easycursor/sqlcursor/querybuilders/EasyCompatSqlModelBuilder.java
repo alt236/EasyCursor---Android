@@ -133,7 +133,7 @@ public class EasyCompatSqlModelBuilder {
      *
      * @param inTables the list of tables to query on
      */
-    public void setTables(String inTables) {
+    public void setTables(final String inTables) {
         mTables = inTables;
     }
 
@@ -151,7 +151,7 @@ public class EasyCompatSqlModelBuilder {
      *
      * @param distinct true if true the query is DISTINCT, otherwise it isn't
      */
-    public void setDistinct(boolean distinct) {
+    public void setDistinct(final boolean distinct) {
         mDistinct = distinct;
     }
 
@@ -188,14 +188,14 @@ public class EasyCompatSqlModelBuilder {
      * <p/>
      * This value is ignored if you are on a device running API < 14.
      */
-    public void setStrict(boolean value) {
+    public void setStrict(final boolean value) {
         mStrict = value;
     }
 
     /**
      * Sets the query parameters.
      * <p/>
-     * Will throw an IllegalStateExcetion if one tries to set
+     * Will throw an IllegalStateException if one tries to set
      * the parameters more than once.
      *
      * @param rawSql        the SQL query. The SQL string must not be ; terminated
@@ -216,7 +216,7 @@ public class EasyCompatSqlModelBuilder {
     /**
      * Sets the query parameters.
      * <p/>
-     * Will throw an IllegalStateExcetion if one tries to set
+     * Will throw an IllegalStateException if one tries to set
      * the parameters more than once.
      *
      * @param projectionIn  A list of which columns to return. Passing
@@ -233,14 +233,14 @@ public class EasyCompatSqlModelBuilder {
      *                      ORDER BY clause (excluding the ORDER BY itself). Passing null
      *                      will use the default sort order, which may be unordered.
      */
-    public void setQueryParams(String[] projectionIn, String selection, String[] selectionArgs, String sortOrder) {
+    public void setQueryParams(final String[] projectionIn, final String selection, final String[] selectionArgs, final String sortOrder) {
         setQueryParams(projectionIn, selection, selectionArgs, null, null, sortOrder, null);
     }
 
     /**
      * Sets the query parameters.
      * <p/>
-     * Will throw an IllegalStateExcetion if one tries to set
+     * Will throw an IllegalStateException if one tries to set
      * the parameters more than once.
      *
      * @param projectionIn  A list of which columns to return. Passing
@@ -265,7 +265,7 @@ public class EasyCompatSqlModelBuilder {
      *                      ORDER BY clause (excluding the ORDER BY itself). Passing null
      *                      will use the default sort order, which may be unordered.
      */
-    public void setQueryParams(String[] projectionIn, String selection, String[] selectionArgs, String groupBy, String having, String sortOrder) {
+    public void setQueryParams(final String[] projectionIn, final String selection, final String[] selectionArgs, final String groupBy, final String having, final String sortOrder) {
         setQueryParams(projectionIn, selection, selectionArgs, groupBy, having, sortOrder, null);
     }
 
@@ -298,7 +298,7 @@ public class EasyCompatSqlModelBuilder {
      * @throws IllegalStateException if one tries to set
      *                               the parameters more than once.
      */
-    public void setQueryParams(String[] projectionIn, String selection, String[] selectionArgs, String groupBy, String having, String sortOrder, String limit) {
+    public void setQueryParams(final String[] projectionIn, final String selection, final String[] selectionArgs, final String groupBy, final String having, final String sortOrder, final String limit) {
         if (mQueryType != EasySqlQueryModel.QUERY_TYPE_UNINITIALISED) {
             throw new IllegalStateException("A Model file's query parameters can only be set once!");
         }

@@ -4,9 +4,9 @@ import uk.co.alt236.easycursor.EasyQueryModel;
 
 public interface SqlRawQueryBuilder {
 
-    public abstract EasyQueryModel build();
+    EasyQueryModel build();
 
-    public abstract String getRawSql();
+    String getRawSql();
 
-    public abstract String[] getWhereArgs();
+    String[] getWhereArgs();
 }
