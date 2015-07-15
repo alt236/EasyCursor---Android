@@ -5,18 +5,15 @@ import android.util.Log;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 import uk.co.alt236.easycursor.EasyCursor;
 import uk.co.alt236.easycursor.EasyQueryModel;
-import uk.co.alt236.easycursor.util.ObjectConverters;
+import uk.co.alt236.easycursor.exceptions.ConversionErrorException;
+import uk.co.alt236.easycursor.internal.conversion.ObjectConverter;
+import uk.co.alt236.easycursor.internal.conversion.ObjectType;
 
 public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
     public static final String DEFAULT_STRING = null;
@@ -27,17 +24,13 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
     public static final long DEFAULT_LONG = 0l;
     public static final short DEFAULT_SHORT = 0;
     private static final String _ID = "_id";
-    private static final String IS = "is";
-    private static final String GET = "get";
+
+    private final ObjectConverter mObjectConverter;
     private final EasyQueryModel mQueryModel;
-    private final List<Method> mMethodList;
-    private final List<String> mFieldNameList;
     private final List<T> mObjectList;
-    private final Map<String, Integer> mFieldToIndexMap;
-    private final Map<String, Method> mFieldToMethodMap;
     private final String TAG = this.getClass().getName();
     private final String m_IdAlias;
-
+    private final ObjectFieldAccessor<T> mFieldAccessor;
     private boolean mDebugEnabled;
 
     public EasyObjectCursor(final Class<T> clazz, final List<T> objectList, final String _idAlias) {
@@ -45,22 +38,23 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
     }
 
     public EasyObjectCursor(final Class<T> clazz, final List<T> objectList, final String _idAlias, final EasyQueryModel model) {
+        mObjectConverter = new ObjectConverter();
         mQueryModel = model;
-        mFieldToIndexMap = new HashMap<>();
-        mFieldToMethodMap = Collections.synchronizedMap(new HashMap<String, Method>());
-        mMethodList = new ArrayList<>();
-        mFieldNameList = new ArrayList<>();
         mObjectList = objectList;
         m_IdAlias = _idAlias;
-
-        populateMethodList(clazz);
+        mFieldAccessor = new ObjectFieldAccessor<>(clazz);
     }
 
-    public EasyObjectCursor(final Class<T> clazz, final T[] objectArray, final String _idAlias) {
+    public EasyObjectCursor(final Class<T> clazz,
+                            final T[] objectArray,
+                            final String _idAlias) {
         this(clazz, new ArrayList<>(Arrays.asList(objectArray)), _idAlias, null);
     }
 
-    public EasyObjectCursor(final Class<T> clazz, final T[] objectArray, final String _idAlias, final EasyQueryModel model) {
+    public EasyObjectCursor(final Class<T> clazz,
+                            final T[] objectArray,
+                            final String _idAlias,
+                            final EasyQueryModel model) {
         this(clazz, new ArrayList<>(Arrays.asList(objectArray)), _idAlias, model);
     }
 
@@ -77,43 +71,41 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
     @Override
     public byte[] getBlob(final String fieldName) {
         final Method method = getGetterForFieldOrThrow(applyAlias(fieldName));
-        return ObjectConverters.toByteArray(runGetter(method, getItem(getPosition())));
+        return (byte[]) internalGet(ObjectType.BYTE_ARRAY, method);
     }
 
     @Override
     public boolean getBoolean(final String fieldName) {
         final Method method = getGetterForFieldOrThrow(applyAlias(fieldName));
-        return ObjectConverters.toBoolean(runGetter(method, getItem(getPosition())));
+        return (boolean) internalGet(ObjectType.BOOLEAN, method);
     }
 
     @Override
     public int getColumnIndex(final String columnName) {
         final String column = applyAlias(columnName);
-        if (mFieldToIndexMap.containsKey(column)) {
-            return mFieldToIndexMap.get(column).intValue();
-        } else {
-            return -1;
-        }
+        return mFieldAccessor.getFieldIndexByName(column);
     }
 
     @Override
     public int getColumnIndexOrThrow(final String columnName) {
         final String column = applyAlias(columnName);
-        if (mFieldToIndexMap.containsKey(column)) {
-            return mFieldToIndexMap.get(column).intValue();
-        } else {
+        final int index = mFieldAccessor.getFieldIndexByName(column);
+
+        if (index == -1) {
             throw new IllegalArgumentException("There is no column named '" + column + "'");
+        } else {
+            return index;
         }
     }
 
     @Override
     public String getColumnName(final int columnIndex) {
-        return mFieldNameList.get(columnIndex);
+        return mFieldAccessor.getFieldNameByIndex(columnIndex);
     }
 
     @Override
     public String[] getColumnNames() {
-        return mFieldNameList.toArray(new String[mFieldNameList.size()]);
+        return mFieldAccessor.getFieldNames();
     }
 
     @Override
@@ -123,57 +115,34 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
     @Override
     public double getDouble(final int column) {
-        return getDouble(mMethodList.get(column));
-    }
-
-    private double getDouble(final Method method) {
-        return ObjectConverters.toDouble(runGetter(method, getItem(getPosition())));
+        return getDoubleIntenal(mFieldAccessor.getMethod(column));
     }
 
     @Override
     public double getDouble(final String fieldName) {
-        return getDouble(getGetterForFieldOrThrow(applyAlias(fieldName)));
+        return getDoubleIntenal(getGetterForFieldOrThrow(applyAlias(fieldName)));
+    }
+
+    private double getDoubleIntenal(final Method method) {
+        return (double) internalGet(ObjectType.DOUBLE, method);
     }
 
     @Override
     public float getFloat(final int column) {
-        return getFloat(mMethodList.get(column));
-    }
-
-    private float getFloat(final Method method) {
-        return ObjectConverters.toFloat(runGetter(method, getItem(getPosition())));
+        return getFloatInternal(mFieldAccessor.getMethod(column));
     }
 
     @Override
     public float getFloat(final String fieldName) {
-        return getFloat(getGetterForFieldOrThrow(applyAlias(fieldName)));
+        return getFloatInternal(getGetterForFieldOrThrow(applyAlias(fieldName)));
     }
 
-    private synchronized Method getGetterForField(final String field) {
-        if (mFieldToMethodMap.containsKey(field)) {
-            return mFieldToMethodMap.get(field);
-        } else {
-            final String booleanField = IS + field.toLowerCase(Locale.US);
-            final String otherField = GET + field.toLowerCase(Locale.US);
-
-            Method methodResult = null;
-            for (final Method method : mMethodList) {
-                if (method.getName().toLowerCase(Locale.US).equals(booleanField)) {
-                    methodResult = method;
-                    break;
-                } else if (method.getName().toLowerCase(Locale.US).equals(otherField)) {
-                    methodResult = method;
-                    break;
-                }
-            }
-
-            mFieldToMethodMap.put(field, methodResult);
-            return methodResult;
-        }
+    private float getFloatInternal(final Method method) {
+        return (float) internalGet(ObjectType.FLOAT, method);
     }
 
     private Method getGetterForFieldOrThrow(final String fieldName) {
-        final Method method = getGetterForField(applyAlias(fieldName));
+        final Method method = mFieldAccessor.getGetterForField(applyAlias(fieldName));
         if (method == null) {
             throw new IllegalArgumentException("Could not find getter for field '" + applyAlias(fieldName) + "'");
         } else {
@@ -183,16 +152,16 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
     @Override
     public int getInt(final int column) {
-        return getInt(mMethodList.get(column));
-    }
-
-    private int getInt(final Method method) {
-        return ObjectConverters.toInt(runGetter(method, getItem(getPosition())));
+        return getIntInternal(mFieldAccessor.getMethod(column));
     }
 
     @Override
     public int getInt(final String fieldName) {
-        return getInt(getGetterForFieldOrThrow(applyAlias(fieldName)));
+        return getIntInternal(getGetterForFieldOrThrow(applyAlias(fieldName)));
+    }
+
+    private int getIntInternal(final Method method) {
+        return (int) internalGet(ObjectType.INTEGER, method);
     }
 
     public T getItem(final int position) {
@@ -201,32 +170,32 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
     @Override
     public long getLong(final int column) {
-        return getLong(mMethodList.get(column));
-    }
-
-    private long getLong(final Method method) {
-        return ObjectConverters.toLong(runGetter(method, getItem(getPosition())));
+        return getLongInternal(mFieldAccessor.getMethod(column));
     }
 
     @Override
     public long getLong(final String fieldName) {
-        return getLong(getGetterForFieldOrThrow(applyAlias(fieldName)));
+        return getLongInternal(getGetterForFieldOrThrow(applyAlias(fieldName)));
     }
 
-    public List<Method> getMethods() {
-        return mMethodList;
+    private long getLongInternal(final Method method) {
+        return (long) internalGet(ObjectType.LONG, method);
+    }
+
+    /* package */ List<Method> getMethods() {
+        return mFieldAccessor.getMethodList();
     }
 
     public Object getObject(final int column) {
-        return getObject(mMethodList.get(column));
-    }
-
-    private Object getObject(final Method method) {
-        return runGetter(method, getItem(getPosition()));
+        return getObjectInternal(mFieldAccessor.getMethod(column));
     }
 
     public Object getObject(final String fieldName) {
-        return getObject(getGetterForFieldOrThrow(applyAlias(fieldName)));
+        return getObjectInternal(getGetterForFieldOrThrow(applyAlias(fieldName)));
+    }
+
+    private Object getObjectInternal(final Method method) {
+        return runGetter(method, getItem(getPosition()));
     }
 
     @Override
@@ -236,29 +205,64 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
     @Override
     public short getShort(final int column) {
-        return getShort(mMethodList.get(column));
-    }
-
-    public short getShort(final Method method) {
-        return ObjectConverters.toShort(runGetter(method, getItem(getPosition())));
+        return getShortInternal(mFieldAccessor.getMethod(column));
     }
 
     public short getShort(final String fieldName) {
-        return getShort(getGetterForFieldOrThrow(applyAlias(fieldName)));
+        return getShortInternal(getGetterForFieldOrThrow(applyAlias(fieldName)));
+    }
+
+    private short getShortInternal(final Method method) {
+        return (short) internalGet(ObjectType.SHORT, method);
     }
 
     @Override
     public String getString(final int column) {
-        return getString(mMethodList.get(column));
-    }
-
-    private String getString(final Method method) {
-        return ObjectConverters.toString(runGetter(method, getItem(getPosition())));
+        return getStringInternal(mFieldAccessor.getMethod(column));
     }
 
     @Override
     public String getString(final String fieldName) {
-        return getString(getGetterForFieldOrThrow(applyAlias(fieldName)));
+        return getStringInternal(getGetterForFieldOrThrow(applyAlias(fieldName)));
+    }
+
+    private String getStringInternal(final Method method) {
+        return (String) internalGet(ObjectType.STRING, method);
+    }
+
+    @SuppressWarnings("unchecked")
+    private Object internalGet(final ObjectType type, final Method method) {
+        return mObjectConverter.toType(type, runGetter(method, getItem(getPosition())));
+    }
+
+    @SuppressWarnings("unchecked")
+    private <R> R internalOpt(final ObjectType type, final String fieldName, final R fallback) {
+        final Method method = mFieldAccessor.getGetterForField(applyAlias(fieldName));
+
+        if (method == null) {
+            final String message = String.format(
+                    "No getter for '%s'. Type Requested: %s",
+                    fieldName,
+                    type);
+            Log.w(TAG, message + type);
+            return fallback;
+        } else {
+            try {
+                return (R) mObjectConverter.toType(type, runGetter(method, getItem(getPosition())));
+            } catch (final ConversionErrorException e) {
+                if (mDebugEnabled) {
+                    final String message = String.format(
+                            "Failed to convert field '%s' at %d/%d. Type Requested: %s",
+                            fieldName,
+                            getPosition(),
+                            getCount(),
+                            type);
+                    Log.w(TAG, message, e);
+                    e.printStackTrace();
+                }
+                return fallback;
+            }
+        }
     }
 
     public boolean isDebugEnabled() {
@@ -271,328 +275,113 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
     @Override
     public boolean isNull(final int column) {
-        return isNull(mMethodList.get(column));
-    }
-
-    private boolean isNull(final Method method) {
-        return (runGetter(method, getItem(getPosition())) == null);
+        return isNullInternal(mFieldAccessor.getMethod(column));
     }
 
     @Override
     public boolean isNull(final String fieldName) {
-        return isNull(getGetterForFieldOrThrow(applyAlias(fieldName)));
+        return isNullInternal(getGetterForFieldOrThrow(applyAlias(fieldName)));
+    }
+
+    private boolean isNullInternal(final Method method) {
+        return (runGetter(method, getItem(getPosition())) == null);
     }
 
     @Override
     public boolean optBoolean(final String fieldName) {
-        return optBoolean(fieldName, DEFAULT_BOOLEAN);
+        return internalOpt(ObjectType.BOOLEAN, fieldName, DEFAULT_BOOLEAN);
     }
 
     @Override
     public boolean optBoolean(final String fieldName, final boolean fallback) {
-        final Method method = getGetterForField(applyAlias(fieldName));
-
-        if (method == null) {
-            return fallback;
-        } else {
-            try {
-                if (mDebugEnabled) {
-                    Log.w(TAG, "optBoolean('" + fieldName + "') Getter was null.");
-                }
-                return ObjectConverters.toBoolean(runGetter(method, getItem(getPosition())));
-            } catch (final Exception e) {
-                if (mDebugEnabled) {
-                    Log.w(TAG, "optBoolean('" + fieldName + "') Caught Exception  at " + getPosition() + "/" + getCount(), e);
-                    e.printStackTrace();
-                }
-                return fallback;
-            }
-        }
+        return internalOpt(ObjectType.BOOLEAN, fieldName, fallback);
     }
 
     @Override
     public Boolean optBooleanAsWrapperType(final String fieldName) {
-        final Method method = getGetterForField(applyAlias(fieldName));
-
-        if (method == null) {
-            if (mDebugEnabled) {
-                Log.w(TAG, "optBooleanAsWrapperType('" + fieldName + "') Getter was null.");
-            }
-            return null;
-        } else {
-            try {
-                return ObjectConverters.toBoolean(runGetter(method, getItem(getPosition())));
-            } catch (final Exception e) {
-                if (mDebugEnabled) {
-                    Log.w(TAG, "optBooleanAsWrapperType('" + fieldName + "') Caught Exception  at " + getPosition() + "/" + getCount(), e);
-                    e.printStackTrace();
-                }
-                return null;
-            }
-        }
+        return internalOpt(ObjectType.BOOLEAN, fieldName, null);
     }
 
     @Override
     public double optDouble(final String fieldName) {
-        return optDouble(fieldName, DEFAULT_DOUBLE);
+        return internalOpt(ObjectType.DOUBLE, fieldName, DEFAULT_DOUBLE);
     }
 
     @Override
     public double optDouble(final String fieldName, final double fallback) {
-        final Method method = getGetterForField(applyAlias(fieldName));
-
-        if (method == null) {
-            if (mDebugEnabled) {
-                Log.w(TAG, "optDouble('" + fieldName + "') Getter was null.");
-            }
-            return fallback;
-        } else {
-            try {
-                return ObjectConverters.toDouble(runGetter(method, getItem(getPosition())));
-            } catch (final Exception e) {
-                if (mDebugEnabled) {
-                    Log.w(TAG, "optDouble('" + fieldName + "') Caught Exception  at " + getPosition() + "/" + getCount(), e);
-                    e.printStackTrace();
-                }
-                return fallback;
-            }
-        }
+        return internalOpt(ObjectType.DOUBLE, fieldName, fallback);
     }
 
     @Override
     public Double optDoubleAsWrapperType(final String fieldName) {
-        final Method method = getGetterForField(applyAlias(fieldName));
-
-        if (method == null) {
-            if (mDebugEnabled) {
-                Log.w(TAG, "optDoubleAsWrapperType('" + fieldName + "') Getter was null.");
-            }
-            return null;
-        } else {
-            try {
-                return ObjectConverters.toDouble(runGetter(method, getItem(getPosition())));
-            } catch (final Exception e) {
-                if (mDebugEnabled) {
-                    Log.w(TAG, "optDoubleAsWrapperType('" + fieldName + "') Caught Exception  at " + getPosition() + "/" + getCount(), e);
-                    e.printStackTrace();
-                }
-                return null;
-            }
-        }
+        return internalOpt(ObjectType.DOUBLE, fieldName, null);
     }
 
     @Override
     public float optFloat(final String fieldName) {
-        return optFloat(fieldName, DEFAULT_FLOAT);
+        return internalOpt(ObjectType.FLOAT, fieldName, DEFAULT_FLOAT);
     }
 
     @Override
     public float optFloat(final String fieldName, final float fallback) {
-        final Method method = getGetterForField(applyAlias(fieldName));
-
-        if (method == null) {
-            if (mDebugEnabled) {
-                Log.w(TAG, "optFloat('" + fieldName + "') Getter was null.");
-            }
-            return fallback;
-        } else {
-            try {
-                return ObjectConverters.toFloat(runGetter(method, getItem(getPosition())));
-            } catch (final Exception e) {
-                if (mDebugEnabled) {
-                    Log.w(TAG, "optFloat('" + fieldName + "') Caught Exception  at " + getPosition() + "/" + getCount(), e);
-                    e.printStackTrace();
-                }
-                return fallback;
-            }
-        }
+        return internalOpt(ObjectType.FLOAT, fieldName, fallback);
     }
 
     @Override
     public Float optFloatAsWrapperType(final String fieldName) {
-        final Method method = getGetterForField(applyAlias(fieldName));
-
-        if (method == null) {
-            if (mDebugEnabled) {
-                Log.w(TAG, "optFloatAsWrapperType('" + fieldName + "') Getter was null.");
-            }
-            return null;
-        } else {
-            try {
-                return ObjectConverters.toFloat(runGetter(method, getItem(getPosition())));
-            } catch (final Exception e) {
-                if (mDebugEnabled) {
-                    Log.w(TAG, "optFloatAsWrapperType('" + fieldName + "') Caught Exception  at " + getPosition() + "/" + getCount(), e);
-                    e.printStackTrace();
-                }
-                return null;
-            }
-        }
+        return internalOpt(ObjectType.FLOAT, fieldName, null);
     }
 
     @Override
     public int optInt(final String fieldName) {
-        return optInt(fieldName, DEFAULT_INT);
+        return internalOpt(ObjectType.INTEGER, fieldName, DEFAULT_INT);
     }
 
     @Override
     public int optInt(final String fieldName, final int fallback) {
-        final Method method = getGetterForField(applyAlias(fieldName));
-
-        if (method == null) {
-            if (mDebugEnabled) {
-                Log.w(TAG, "optInt('" + fieldName + "') Getter was null.");
-            }
-            return fallback;
-        } else {
-            try {
-                return ObjectConverters.toInt(runGetter(method, getItem(getPosition())));
-            } catch (final Exception e) {
-                if (mDebugEnabled) {
-                    Log.w(TAG, "optInt('" + fieldName + "') Caught Exception  at " + getPosition() + "/" + getCount(), e);
-                    e.printStackTrace();
-                }
-                return fallback;
-            }
-        }
+        return internalOpt(ObjectType.INTEGER, fieldName, fallback);
     }
 
     @Override
     public Integer optIntAsWrapperType(final String fieldName) {
-        final Method method = getGetterForField(applyAlias(fieldName));
-
-        if (method == null) {
-            if (mDebugEnabled) {
-                Log.w(TAG, "optIntAsWrapperType('" + fieldName + "') Getter was null.");
-            }
-            return null;
-        } else {
-            try {
-                return ObjectConverters.toInt(runGetter(method, getItem(getPosition())));
-            } catch (final Exception e) {
-                if (mDebugEnabled) {
-                    Log.w(TAG, "optIntAsWrapperType('" + fieldName + "') Caught Exception  at " + getPosition() + "/" + getCount(), e);
-                    e.printStackTrace();
-                }
-                return null;
-            }
-        }
+        return internalOpt(ObjectType.INTEGER, fieldName, null);
     }
 
     @Override
     public long optLong(final String fieldName) {
-        return optLong(fieldName, DEFAULT_LONG);
+        return internalOpt(ObjectType.LONG, fieldName, DEFAULT_LONG);
     }
 
     @Override
     public long optLong(final String fieldName, final long fallback) {
-        final Method method = getGetterForField(applyAlias(fieldName));
-
-        if (method == null) {
-            if (mDebugEnabled) {
-                Log.w(TAG, "optLong('" + fieldName + "') Getter was null.");
-            }
-            return fallback;
-        } else {
-            try {
-                return ObjectConverters.toLong(runGetter(method, getItem(getPosition())));
-            } catch (final Exception e) {
-                if (mDebugEnabled) {
-                    Log.w(TAG, "optLong('" + fieldName + "') Caught Exception  at " + getPosition() + "/" + getCount(), e);
-                    e.printStackTrace();
-                }
-                return fallback;
-            }
-        }
+        return internalOpt(ObjectType.LONG, fieldName, fallback);
     }
 
     @Override
     public Long optLongAsWrapperType(final String fieldName) {
-        final Method method = getGetterForField(applyAlias(fieldName));
+        return internalOpt(ObjectType.LONG, fieldName, null);
+    }
 
-        if (method == null) {
-            if (mDebugEnabled) {
-                Log.w(TAG, "optLongAsWrapperType('" + fieldName + "') Getter was null.");
-            }
-            return null;
-        } else {
-            try {
-                return ObjectConverters.toLong(runGetter(method, getItem(getPosition())));
-            } catch (final Exception e) {
-                if (mDebugEnabled) {
-                    Log.w(TAG, "optLongAsWrapperType('" + fieldName + "') Caught Exception  at " + getPosition() + "/" + getCount(), e);
-                    e.printStackTrace();
-                }
-                return null;
-            }
-        }
+    public long optShort(final String fieldName) {
+        return internalOpt(ObjectType.SHORT, fieldName, DEFAULT_SHORT);
+    }
+
+    public short optShort(final String fieldName, final short fallback) {
+        return internalOpt(ObjectType.SHORT, fieldName, fallback);
+    }
+
+    public Short optShortAsWrapperType(final String fieldName) {
+        return internalOpt(ObjectType.SHORT, fieldName, null);
     }
 
     @Override
     public String optString(final String fieldName) {
-        return optString(fieldName, DEFAULT_STRING);
+        return internalOpt(ObjectType.STRING, fieldName, DEFAULT_STRING);
     }
 
     @Override
     public String optString(final String fieldName, final String fallback) {
-        final Method method = getGetterForField(applyAlias(fieldName));
-
-        if (method == null) {
-            if (mDebugEnabled) {
-                Log.w(TAG, "optString('" + fieldName + "') Getter was null.");
-            }
-            return fallback;
-        } else {
-            try {
-                return ObjectConverters.toString(runGetter(method, getItem(getPosition())));
-            } catch (final Exception e) {
-                if (mDebugEnabled) {
-                    Log.w(TAG, "optString('" + fieldName + "') Caught Exception  at " + getPosition() + "/" + getCount(), e);
-                    e.printStackTrace();
-                }
-                return fallback;
-            }
-        }
-    }
-
-    private void populateMethodList(final Class<T> clazz) {
-        Method candidate;
-        String canditateCleanName;
-
-        int count = 0;
-        for (final Method method : clazz.getMethods()) {
-            candidate = null;
-            canditateCleanName = null;
-
-            if (Modifier.isPublic(method.getModifiers())) {
-
-                // Just in case there is a get()/is() function
-                if (method.getName().length() > 3) {
-                    if (method.getParameterTypes().length == 0) {
-                        if (!method.getReturnType().equals(Void.TYPE)) {
-
-                            if (method.getName().startsWith(GET)) {
-                                candidate = method;
-                                canditateCleanName =
-                                        method.getName().substring(GET.length()).toLowerCase(Locale.US);
-
-                            } else if (method.getName().startsWith(IS)) {
-                                candidate = method;
-                                canditateCleanName =
-                                        method.getName().substring(IS.length()).toLowerCase(Locale.US);
-                            }
-
-                            if (candidate != null) {
-                                mMethodList.add(candidate);
-                                mFieldToIndexMap.put(canditateCleanName, count);
-                                mFieldNameList.add(canditateCleanName);
-                                count++;
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        return internalOpt(ObjectType.STRING, fieldName, fallback);
     }
 
     private Object runGetter(final Method method, final T object) {

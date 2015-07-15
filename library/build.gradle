@@ -10,6 +10,8 @@ final int minSdkRed = rootProject.minSdkVersion;
 final String semanticVersion = "${versionMajor}.${versionMinor}.${versionPatch}"
 
 dependencies {
+    testCompile 'junit:junit:4.12'
+    testCompile "org.mockito:mockito-core:1.9.5"
     compile fileTree(include: ['*.jar'], dir: 'libs')
 }
 
@@ -39,6 +41,11 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            minifyEnabled false
+            testCoverageEnabled true
         }
     }
     productFlavors {

@@ -1,7 +1,5 @@
-package uk.co.alt236.easycursor.sampleapp.util;
+package uk.co.alt236.easycursor.testutils;
 
-import uk.co.alt236.easycursor.sampleapp.database.QueryConstants;
-import uk.co.alt236.easycursor.sampleapp.database.builders.LousyQueryBuilder;
 import uk.co.alt236.easycursor.sqlcursor.EasySqlQueryModel;
 import uk.co.alt236.easycursor.sqlcursor.querybuilders.EasyCompatSqlModelBuilder;
 
