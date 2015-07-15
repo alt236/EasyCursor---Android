@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:padding="10dp" >
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:padding="10dp">
 
     <TextView
         android:id="@+id/artist"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="fill_parent"/>
 
     <TextView
         android:id="@+id/album"
@@ -15,7 +15,7 @@
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/artist"
-        android:paddingLeft="5dp" />
+        android:paddingLeft="5dp"/>
 
     <TextView
         android:id="@+id/track"
@@ -23,7 +23,7 @@
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/album"
-        android:paddingLeft="5dp" />
+        android:paddingLeft="5dp"/>
 
     <TextView
         android:id="@+id/medium"
@@ -31,7 +31,7 @@
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/track"
-        android:paddingLeft="5dp" />
+        android:paddingLeft="5dp"/>
 
     <TextView
         android:id="@+id/hasComposer"
@@ -39,6 +39,6 @@
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/medium"
-        android:paddingLeft="5dp" />
+        android:paddingLeft="5dp"/>
 
 </RelativeLayout>

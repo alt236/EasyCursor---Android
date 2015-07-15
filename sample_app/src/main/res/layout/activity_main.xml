@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="5dp" >
+        android:padding="5dp">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:text="EasySqkCursor Example\n(and an EasyObjectCursor for fun)" />
+            android:text="EasySqkCursor Example\n(and an EasyObjectCursor for fun)"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onEasySqlCursorExampleClick"
-            android:text="@string/go" />
+            android:text="@string/go"/>
     </LinearLayout>
 
     <LinearLayout
@@ -29,19 +29,19 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="5dp" >
+        android:padding="5dp">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:text="EasyObjectCursor Example" />
+            android:text="EasyObjectCursor Example"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onEasyObjectCursorExampleClick"
-            android:text="@string/go" />
+            android:text="@string/go"/>
     </LinearLayout>
 
     <LinearLayout
@@ -49,19 +49,19 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="5dp" >
+        android:padding="5dp">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:text="EasyJsonCursor Example" />
+            android:text="EasyJsonCursor Example"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="onEasyJsonCursorExampleClick"
-            android:text="@string/go" />
+            android:text="@string/go"/>
     </LinearLayout>
 
 </LinearLayout>

@@ -3,63 +3,62 @@ package uk.co.alt236.easycursor.sampleapp.container;
 import uk.co.alt236.easycursor.EasyCursor;
 
 public class TrackInfo {
-	private final long m_id;
-	private final String mArtist;
-	private final String mAlbum;
-	private final String mTrack;
-	private final String mMedia;
-	private final String mComposer;
-	private final boolean mHasComposer;
-	private final long mMeaninglessSum;
-	private final double mMeaninglessDiv;
+    private final long m_id;
+    private final String mArtist;
+    private final String mAlbum;
+    private final String mTrack;
+    private final String mMedia;
+    private final String mComposer;
+    private final boolean mHasComposer;
+    private final long mMeaninglessSum;
+    private final double mMeaninglessDiv;
 
 
-	public TrackInfo(EasyCursor c){
-		m_id = c.getLong("_id");
-		mArtist = c.getString("artist");
-		mAlbum = c.getString("album");
-		mTrack = c.getString("track");
-		mMedia = c.getString("media");
-		mComposer = c.getString("composer");
-		mHasComposer = c.getBoolean("hascomposer");
-		mMeaninglessSum = c.getLong("meaninglessSum");
-		mMeaninglessDiv = c.getDouble("meaninglessDiv");
-	}
+    public TrackInfo(EasyCursor c) {
+        m_id = c.getLong("_id");
+        mArtist = c.getString("artist");
+        mAlbum = c.getString("album");
+        mTrack = c.getString("track");
+        mMedia = c.getString("media");
+        mComposer = c.getString("composer");
+        mHasComposer = c.getBoolean("hascomposer");
+        mMeaninglessSum = c.getLong("meaninglessSum");
+        mMeaninglessDiv = c.getDouble("meaninglessDiv");
+    }
 
+    public String getAlbum() {
+        return mAlbum;
+    }
 
-	public long get_id() {
-		return m_id;
-	}
+    public String getArtist() {
+        return mArtist;
+    }
 
-	public String getAlbum() {
-		return mAlbum;
-	}
+    public String getComposer() {
+        return mComposer;
+    }
 
-	public String getArtist() {
-		return mArtist;
-	}
+    public double getMeaninglessDiv() {
+        return mMeaninglessDiv;
+    }
 
-	public String getComposer() {
-		return mComposer;
-	}
+    public long getMeaninglessSum() {
+        return mMeaninglessSum;
+    }
 
-	public double getMeaninglessDiv() {
-		return mMeaninglessDiv;
-	}
+    public String getMedia() {
+        return mMedia;
+    }
 
-	public long getMeaninglessSum() {
-		return mMeaninglessSum;
-	}
+    public String getTrack() {
+        return mTrack;
+    }
 
-	public String getMedia() {
-		return mMedia;
-	}
+    public long get_id() {
+        return m_id;
+    }
 
-	public String getTrack() {
-		return mTrack;
-	}
-
-	public boolean isHasComposer() {
-		return mHasComposer;
-	}
+    public boolean isHasComposer() {
+        return mHasComposer;
+    }
 }
