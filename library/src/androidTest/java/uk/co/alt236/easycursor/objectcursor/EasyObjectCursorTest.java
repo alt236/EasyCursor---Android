@@ -8,7 +8,6 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import uk.co.alt236.easycursor.EasyCursor;
-import uk.co.alt236.easycursor.exceptions.ConversionErrorException;
 
 /**
  *
@@ -40,22 +39,23 @@ public class EasyObjectCursorTest extends TestCase {
         assertEquals(true, cursor.optBoolean(fieldName));
         assertEquals(Boolean.TRUE, cursor.optBooleanAsWrapperType(fieldName));
 
-        cursor.moveToPosition(2);
-        try {
-            assertEquals(false, cursor.getBoolean(fieldName));
-            fail("this should have blown");
-        } catch (final ConversionErrorException e) {
-            // expected
-        }
+        cursor.moveToPosition(2); // Field exists but it is null
+        assertEquals(EasyObjectCursor.DEFAULT_BOOLEAN, cursor.getBoolean(fieldName));
         assertEquals(EasyObjectCursor.DEFAULT_BOOLEAN, cursor.optBoolean(fieldName));
-        assertEquals(true, cursor.optBoolean(fieldName, true));
-        assertEquals(null, cursor.optBooleanAsWrapperType(fieldName));
+        assertEquals(EasyObjectCursor.DEFAULT_BOOLEAN, cursor.optBoolean(fieldName, true));
+        assertEquals((Boolean) EasyObjectCursor.DEFAULT_BOOLEAN, cursor.optBooleanAsWrapperType(fieldName));
 
         // Non existant
-        cursor.moveToPosition(0);
+        cursor.moveToPosition(0); // Field does NOT exist
         assertEquals(EasyObjectCursor.DEFAULT_BOOLEAN, cursor.optBoolean(does_not_exist));
         assertEquals(true, cursor.optBoolean(does_not_exist, true));
         assertEquals(null, cursor.optBooleanAsWrapperType(does_not_exist));
+        try {
+            cursor.getBoolean(does_not_exist);
+            fail("this should have blown");
+        } catch (final IllegalArgumentException e) {
+            // expected
+        }
 
         cursor.close();
     }
@@ -77,21 +77,22 @@ public class EasyObjectCursorTest extends TestCase {
         assertEquals(Double.MAX_VALUE, cursor.optDoubleAsWrapperType(fieldName));
 
         cursor.moveToPosition(2);
-        try {
-            cursor.getDouble(fieldName);
-            fail("this should have blown");
-        } catch (final ConversionErrorException e) {
-            // expected
-        }
+        assertEquals(EasyObjectCursor.DEFAULT_DOUBLE, cursor.getDouble(fieldName));
         assertEquals(EasyObjectCursor.DEFAULT_DOUBLE, cursor.optDouble(fieldName));
-        assertEquals(0.2D, cursor.optDouble(fieldName, 0.2D));
-        assertEquals(null, cursor.optDoubleAsWrapperType(fieldName));
+        assertEquals(EasyObjectCursor.DEFAULT_DOUBLE, cursor.optDouble(fieldName, 0.2D));
+        assertEquals(EasyObjectCursor.DEFAULT_DOUBLE, cursor.optDoubleAsWrapperType(fieldName));
 
         // Non existant
         cursor.moveToPosition(0);
         assertEquals(EasyObjectCursor.DEFAULT_DOUBLE, cursor.optDouble(does_not_exist));
         assertEquals(0.2D, cursor.optDouble(does_not_exist, 0.2D));
         assertEquals(null, cursor.optDoubleAsWrapperType(does_not_exist));
+        try {
+            cursor.getDouble(does_not_exist);
+            fail("this should have blown");
+        } catch (final IllegalArgumentException e) {
+            // expected
+        }
 
         cursor.close();
     }
@@ -130,22 +131,23 @@ public class EasyObjectCursorTest extends TestCase {
         assertEquals(Float.MAX_VALUE, cursor.optFloat(fieldName));
         assertEquals(Float.MAX_VALUE, cursor.optFloatAsWrapperType(fieldName));
 
-        cursor.moveToPosition(2);
-        try {
-            cursor.getFloat(fieldName);
-            fail("this should have blown");
-        } catch (final ConversionErrorException e) {
-            // expected
-        }
+        cursor.moveToPosition(2); // Field Exists and value is null
+        assertEquals(EasyObjectCursor.DEFAULT_FLOAT, cursor.getFloat(fieldName));
         assertEquals(EasyObjectCursor.DEFAULT_FLOAT, cursor.optFloat(fieldName));
-        assertEquals(0.2F, cursor.optFloat(fieldName, 0.2F));
-        assertEquals(null, cursor.optFloatAsWrapperType(fieldName));
+        assertEquals(0.0F, cursor.optFloat(fieldName, 0.2F));
+        assertEquals(0.0F, cursor.optFloatAsWrapperType(fieldName));
 
         // Non existant
-        cursor.moveToPosition(0);
+        cursor.moveToPosition(0); // Field does NOT exist
         assertEquals(EasyObjectCursor.DEFAULT_FLOAT, cursor.optFloat(does_not_exist));
         assertEquals(0.3F, cursor.optFloat(does_not_exist, 0.3F));
         assertEquals(null, cursor.optFloatAsWrapperType(does_not_exist));
+        try {
+            cursor.getFloat(does_not_exist);
+            fail("this should have blown");
+        } catch (final IllegalArgumentException e) {
+            // expected
+        }
 
         cursor.close();
     }
@@ -197,21 +199,22 @@ public class EasyObjectCursorTest extends TestCase {
         assertEquals((Integer) Integer.MAX_VALUE, cursor.optIntAsWrapperType(fieldName));
 
         cursor.moveToPosition(2);
-        try {
-            cursor.getInt(fieldName);
-            fail("this should have blown");
-        } catch (final ConversionErrorException e) {
-            // expected
-        }
+        assertEquals(EasyObjectCursor.DEFAULT_INT, cursor.getInt(fieldName));
         assertEquals(EasyObjectCursor.DEFAULT_INT, cursor.optInt(fieldName));
-        assertEquals(33, cursor.optInt(fieldName, 33));
-        assertEquals(null, cursor.optIntAsWrapperType(fieldName));
+        assertEquals(EasyObjectCursor.DEFAULT_INT, cursor.optInt(fieldName, 33));
+        assertEquals((Integer) EasyObjectCursor.DEFAULT_INT, cursor.optIntAsWrapperType(fieldName));
 
         // Non existant
         cursor.moveToPosition(0);
         assertEquals(EasyObjectCursor.DEFAULT_INT, cursor.optInt(does_not_exist));
         assertEquals(44, cursor.optInt(does_not_exist, 44));
         assertEquals(null, cursor.optIntAsWrapperType(does_not_exist));
+        try {
+            cursor.getInt(does_not_exist);
+            fail("this should have blown");
+        } catch (final IllegalArgumentException e) {
+            // expected
+        }
 
         cursor.close();
     }
@@ -233,21 +236,23 @@ public class EasyObjectCursorTest extends TestCase {
         assertEquals((Long) Long.MAX_VALUE, cursor.optLongAsWrapperType(fieldName));
 
         cursor.moveToPosition(2);
-        try {
-            cursor.getLong(fieldName);
-            fail("this should have blown");
-        } catch (final ConversionErrorException e) {
-            // expected
-        }
+        assertEquals(EasyObjectCursor.DEFAULT_LONG, cursor.getLong(fieldName));
         assertEquals(EasyObjectCursor.DEFAULT_LONG, cursor.optLong(fieldName));
-        assertEquals(33, cursor.optLong(fieldName, 33));
-        assertEquals(null, cursor.optLongAsWrapperType(fieldName));
+        assertEquals(EasyObjectCursor.DEFAULT_LONG, cursor.optLong(fieldName, 33));
+        assertEquals((Long) EasyObjectCursor.DEFAULT_LONG, cursor.optLongAsWrapperType(fieldName));
 
         // Non existant
         cursor.moveToPosition(0);
         assertEquals(EasyObjectCursor.DEFAULT_LONG, cursor.optLong(does_not_exist));
         assertEquals(44, cursor.optLong(does_not_exist, 44));
         assertEquals(null, cursor.optLongAsWrapperType(does_not_exist));
+
+        try {
+            cursor.getLong(does_not_exist);
+            fail("this should have blown");
+        } catch (final IllegalArgumentException e) {
+            // expected
+        }
 
         cursor.close();
     }
@@ -320,21 +325,22 @@ public class EasyObjectCursorTest extends TestCase {
         assertEquals((Short) Short.MAX_VALUE, cursor.optShortAsWrapperType(fieldName));
 
         cursor.moveToPosition(2);
-        try {
-            cursor.getShort(fieldName);
-            fail("this should have blown");
-        } catch (final ConversionErrorException e) {
-            // expected
-        }
+        assertEquals(EasyObjectCursor.DEFAULT_SHORT, cursor.getShort(fieldName));
         assertEquals(EasyObjectCursor.DEFAULT_SHORT, cursor.optShort(fieldName));
-        assertEquals(2, cursor.optShort(fieldName, (short) 2));
-        assertEquals(null, cursor.optShortAsWrapperType(fieldName));
+        assertEquals(EasyObjectCursor.DEFAULT_SHORT, cursor.optShort(fieldName, (short) 2));
+        assertEquals((Short) EasyObjectCursor.DEFAULT_SHORT, cursor.optShortAsWrapperType(fieldName));
 
         // Non existant
         cursor.moveToPosition(0);
         assertEquals(EasyObjectCursor.DEFAULT_SHORT, cursor.optShort(does_not_exist));
         assertEquals(3, cursor.optShort(does_not_exist, (short) 3));
         assertEquals(null, cursor.optShortAsWrapperType(does_not_exist));
+        try {
+            cursor.getShort(does_not_exist);
+            fail("this should have blown");
+        } catch (final IllegalArgumentException e) {
+            // expected
+        }
 
         cursor.close();
     }
@@ -354,15 +360,20 @@ public class EasyObjectCursorTest extends TestCase {
         assertEquals("bar", cursor.optString(fieldName));
 
         cursor.moveToPosition(2);
-        assertNull(cursor.getString(fieldName));
-
+        assertEquals(EasyObjectCursor.DEFAULT_STRING, cursor.getString(fieldName));
         assertEquals(EasyObjectCursor.DEFAULT_STRING, cursor.optString(fieldName));
-        assertEquals(null, cursor.optString(fieldName, "baz"));
+        assertEquals(EasyObjectCursor.DEFAULT_STRING, cursor.optString(fieldName, "baz"));
 
         // Non existant
         cursor.moveToPosition(0);
         assertEquals(EasyObjectCursor.DEFAULT_STRING, cursor.optString(does_not_exist));
         assertEquals("qux", cursor.optString(does_not_exist, "qux"));
+        try {
+            cursor.getString(does_not_exist);
+            fail("this should have blown");
+        } catch (final IllegalArgumentException e) {
+            // expected
+        }
 
         cursor.close();
     }

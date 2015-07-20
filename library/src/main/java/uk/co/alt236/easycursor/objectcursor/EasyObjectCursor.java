@@ -71,13 +71,23 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
     @Override
     public byte[] getBlob(final String fieldName) {
         final Method method = getGetterForFieldOrThrow(applyAlias(fieldName));
-        return (byte[]) internalGet(ObjectType.BYTE_ARRAY, method);
+        final Object result = internalGet(ObjectType.BYTE_ARRAY, method);
+        if (result == null) {
+            return null;
+        } else {
+            return (byte[]) result;
+        }
     }
 
     @Override
     public boolean getBoolean(final String fieldName) {
         final Method method = getGetterForFieldOrThrow(applyAlias(fieldName));
-        return (boolean) internalGet(ObjectType.BOOLEAN, method);
+        final Object result = internalGet(ObjectType.BOOLEAN, method);
+        if (result == null) {
+            return DEFAULT_BOOLEAN;
+        } else {
+            return (boolean) result;
+        }
     }
 
     @Override
@@ -124,7 +134,12 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
     }
 
     private double getDoubleIntenal(final Method method) {
-        return (double) internalGet(ObjectType.DOUBLE, method);
+        final Object result = internalGet(ObjectType.DOUBLE, method);
+        if (result == null) {
+            return DEFAULT_DOUBLE;
+        } else {
+            return (double) result;
+        }
     }
 
     @Override
@@ -138,7 +153,12 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
     }
 
     private float getFloatInternal(final Method method) {
-        return (float) internalGet(ObjectType.FLOAT, method);
+        final Object result = internalGet(ObjectType.FLOAT, method);
+        if (result == null) {
+            return DEFAULT_FLOAT;
+        } else {
+            return (float) result;
+        }
     }
 
     private Method getGetterForFieldOrThrow(final String fieldName) {
@@ -161,7 +181,12 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
     }
 
     private int getIntInternal(final Method method) {
-        return (int) internalGet(ObjectType.INTEGER, method);
+        final Object result = internalGet(ObjectType.INTEGER, method);
+        if (result == null) {
+            return DEFAULT_INT;
+        } else {
+            return (int) result;
+        }
     }
 
     public T getItem(final int position) {
@@ -179,7 +204,12 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
     }
 
     private long getLongInternal(final Method method) {
-        return (long) internalGet(ObjectType.LONG, method);
+        final Object result = internalGet(ObjectType.LONG, method);
+        if (result == null) {
+            return DEFAULT_LONG;
+        } else {
+            return (long) result;
+        }
     }
 
     /* package */ List<Method> getMethods() {
@@ -213,7 +243,12 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
     }
 
     private short getShortInternal(final Method method) {
-        return (short) internalGet(ObjectType.SHORT, method);
+        final Object result = internalGet(ObjectType.SHORT, method);
+        if (result == null) {
+            return DEFAULT_SHORT;
+        } else {
+            return (short) result;
+        }
     }
 
     @Override
@@ -232,11 +267,19 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
     @SuppressWarnings("unchecked")
     private Object internalGet(final ObjectType type, final Method method) {
-        return mObjectConverter.toType(type, runGetter(method, getItem(getPosition())));
+        try {
+            return mObjectConverter.toType(type, runGetter(method, getItem(getPosition())));
+        } catch (final ConversionErrorException e) {
+            return null;
+        }
     }
 
     @SuppressWarnings("unchecked")
-    private <R> R internalOpt(final ObjectType type, final String fieldName, final R fallback) {
+    private <R> R internalOpt(final ObjectType type,
+                              final String fieldName,
+                              final R getterMissingFallback,
+                              final R conversionErrorFallback) {
+
         final Method method = mFieldAccessor.getGetterForField(applyAlias(fieldName));
 
         if (method == null) {
@@ -245,7 +288,7 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
                     fieldName,
                     type);
             Log.w(TAG, message + type);
-            return fallback;
+            return getterMissingFallback;
         } else {
             try {
                 return (R) mObjectConverter.toType(type, runGetter(method, getItem(getPosition())));
@@ -260,7 +303,7 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
                     Log.w(TAG, message, e);
                     e.printStackTrace();
                 }
-                return fallback;
+                return conversionErrorFallback;
             }
         }
     }
@@ -289,99 +332,99 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
 
     @Override
     public boolean optBoolean(final String fieldName) {
-        return internalOpt(ObjectType.BOOLEAN, fieldName, DEFAULT_BOOLEAN);
+        return internalOpt(ObjectType.BOOLEAN, fieldName, DEFAULT_BOOLEAN, DEFAULT_BOOLEAN);
     }
 
     @Override
     public boolean optBoolean(final String fieldName, final boolean fallback) {
-        return internalOpt(ObjectType.BOOLEAN, fieldName, fallback);
+        return internalOpt(ObjectType.BOOLEAN, fieldName, fallback, DEFAULT_BOOLEAN);
     }
 
     @Override
     public Boolean optBooleanAsWrapperType(final String fieldName) {
-        return internalOpt(ObjectType.BOOLEAN, fieldName, null);
+        return internalOpt(ObjectType.BOOLEAN, fieldName, null, DEFAULT_BOOLEAN);
     }
 
     @Override
     public double optDouble(final String fieldName) {
-        return internalOpt(ObjectType.DOUBLE, fieldName, DEFAULT_DOUBLE);
+        return internalOpt(ObjectType.DOUBLE, fieldName, DEFAULT_DOUBLE, DEFAULT_DOUBLE);
     }
 
     @Override
     public double optDouble(final String fieldName, final double fallback) {
-        return internalOpt(ObjectType.DOUBLE, fieldName, fallback);
+        return internalOpt(ObjectType.DOUBLE, fieldName, fallback, DEFAULT_DOUBLE);
     }
 
     @Override
     public Double optDoubleAsWrapperType(final String fieldName) {
-        return internalOpt(ObjectType.DOUBLE, fieldName, null);
+        return internalOpt(ObjectType.DOUBLE, fieldName, null, DEFAULT_DOUBLE);
     }
 
     @Override
     public float optFloat(final String fieldName) {
-        return internalOpt(ObjectType.FLOAT, fieldName, DEFAULT_FLOAT);
+        return internalOpt(ObjectType.FLOAT, fieldName, DEFAULT_FLOAT, DEFAULT_FLOAT);
     }
 
     @Override
     public float optFloat(final String fieldName, final float fallback) {
-        return internalOpt(ObjectType.FLOAT, fieldName, fallback);
+        return internalOpt(ObjectType.FLOAT, fieldName, fallback, DEFAULT_FLOAT);
     }
 
     @Override
     public Float optFloatAsWrapperType(final String fieldName) {
-        return internalOpt(ObjectType.FLOAT, fieldName, null);
+        return internalOpt(ObjectType.FLOAT, fieldName, null, DEFAULT_FLOAT);
     }
 
     @Override
     public int optInt(final String fieldName) {
-        return internalOpt(ObjectType.INTEGER, fieldName, DEFAULT_INT);
+        return internalOpt(ObjectType.INTEGER, fieldName, DEFAULT_INT, DEFAULT_INT);
     }
 
     @Override
     public int optInt(final String fieldName, final int fallback) {
-        return internalOpt(ObjectType.INTEGER, fieldName, fallback);
+        return internalOpt(ObjectType.INTEGER, fieldName, fallback, DEFAULT_INT);
     }
 
     @Override
     public Integer optIntAsWrapperType(final String fieldName) {
-        return internalOpt(ObjectType.INTEGER, fieldName, null);
+        return internalOpt(ObjectType.INTEGER, fieldName, null, DEFAULT_INT);
     }
 
     @Override
     public long optLong(final String fieldName) {
-        return internalOpt(ObjectType.LONG, fieldName, DEFAULT_LONG);
+        return internalOpt(ObjectType.LONG, fieldName, DEFAULT_LONG, DEFAULT_LONG);
     }
 
     @Override
     public long optLong(final String fieldName, final long fallback) {
-        return internalOpt(ObjectType.LONG, fieldName, fallback);
+        return internalOpt(ObjectType.LONG, fieldName, fallback, DEFAULT_LONG);
     }
 
     @Override
     public Long optLongAsWrapperType(final String fieldName) {
-        return internalOpt(ObjectType.LONG, fieldName, null);
+        return internalOpt(ObjectType.LONG, fieldName, null, DEFAULT_LONG);
     }
 
     public short optShort(final String fieldName) {
-        return internalOpt(ObjectType.SHORT, fieldName, DEFAULT_SHORT);
+        return internalOpt(ObjectType.SHORT, fieldName, DEFAULT_SHORT, DEFAULT_SHORT);
     }
 
     public short optShort(final String fieldName, final short fallback) {
-        return internalOpt(ObjectType.SHORT, fieldName, fallback);
+        return internalOpt(ObjectType.SHORT, fieldName, fallback, DEFAULT_SHORT);
     }
 
     public Short optShortAsWrapperType(final String fieldName) {
-        return internalOpt(ObjectType.SHORT, fieldName, null);
+        return internalOpt(ObjectType.SHORT, fieldName, null, DEFAULT_SHORT);
     }
 
     @Override
     public String optString(final String fieldName) {
-        return internalOpt(ObjectType.STRING, fieldName, DEFAULT_STRING);
+        return internalOpt(ObjectType.STRING, fieldName, DEFAULT_STRING, DEFAULT_STRING);
     }
 
     @Override
     public String optString(final String fieldName, final String fallback) {
-        return internalOpt(ObjectType.STRING, fieldName, fallback);
+        return internalOpt(ObjectType.STRING, fieldName, fallback, DEFAULT_STRING);
     }
 
     private Object runGetter(final Method method, final T object) {
