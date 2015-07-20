@@ -39,14 +39,14 @@ public final class TestJsonCursorBuilder {
             object2.put("short", Short.MAX_VALUE);
 
             final JSONObject object3 = new JSONObject();
-            object3.put("bool", null);
-            object3.put("string", null);
-            object3.put("byte", null);
-            object3.put("double", null);
-            object3.put("float", null);
-            object3.put("int", null);
-            object3.put("long", null);
-            object3.put("short", null);
+            object3.put("bool", JSONObject.NULL);
+            object3.put("string", JSONObject.NULL);
+            object3.put("byte", JSONObject.NULL);
+            object3.put("double", JSONObject.NULL);
+            object3.put("float", JSONObject.NULL);
+            object3.put("int", JSONObject.NULL);
+            object3.put("long", JSONObject.NULL);
+            object3.put("short", JSONObject.NULL);
 
             array.put(object1);
             array.put(object2);
