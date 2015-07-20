@@ -253,9 +253,8 @@ public class EasyObjectCursorTest extends TestCase {
     }
 
     public void testMethodSet() {
-        final EasyObjectCursor<TestObject> cursor =
-                (EasyObjectCursor<TestObject>) TestObjectCursorBuilder.getCursor();
-        final List<Method> methods = cursor.getMethods();
+        final EasyCursor cursor = TestObjectCursorBuilder.getCursor();
+        final List<Method> methods = ((EasyObjectCursor<?>) cursor).getMethods();
 
         for (final Method method : methods) {
             Log.v(TAG, "Has method: " + method.getName());
@@ -305,8 +304,7 @@ public class EasyObjectCursorTest extends TestCase {
     }
 
     public void testShortFieldParsing() {
-        final EasyObjectCursor<TestObject> cursor =
-                (EasyObjectCursor<TestObject>) TestObjectCursorBuilder.getCursor();
+        final EasyCursor cursor = TestObjectCursorBuilder.getCursor();
 
         final String fieldName = "short";
         final String does_not_exist = "does_not_exist";

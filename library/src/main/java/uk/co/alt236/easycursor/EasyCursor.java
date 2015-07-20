@@ -76,6 +76,16 @@ public interface EasyCursor extends Cursor {
     EasyQueryModel getQueryModel();
 
     /**
+     * Returns the value of the requested column as a short or throws
+     * IllegalArgumentException if the column doesn't exist.
+     *
+     * @param columnName the column name
+     * @return the value from cursor
+     * @throws IllegalArgumentException if the column doesn't exist
+     */
+    short getShort(final String columnName);
+
+    /**
      * Returns the value of the requested column as a String or throws
      * IllegalArgumentException if the column doesn't exist.
      *
@@ -244,6 +254,35 @@ public interface EasyCursor extends Cursor {
      * @return the value from cursor if the column exists, null otherwise
      */
     Long optLongAsWrapperType(final String columnName);
+
+    /**
+     * Extracts the contents of a cursors Column as a short.
+     *
+     * @param columnName the name of the cursor column that we want to get the value from
+     * @return the value from cursor if the column exists, the implementation specific default value otherwise
+     */
+    short optShort(final String columnName);
+
+    /**
+     * Extracts the contents of a cursors Column as a short.
+     * If the column does not exist, it will return the fallback value;
+     *
+     * @param columnName the column name
+     * @param fallback   the value to return if the cursor does not exist
+     * @return the value from cursor if the column exists, the fallback otherwise
+     */
+    short optShort(final String columnName, short fallback);
+
+    /**
+     * Extracts the contents of a cursors Column as a Short.
+     * If the column does not exist, it will return null;
+     * <p/>
+     * Use this if you want to know if the column did not exist.
+     *
+     * @param columnName the column name
+     * @return the value from cursor if the column exists, null otherwise
+     */
+    Short optShortAsWrapperType(final String columnName);
 
     /**
      * Extracts the contents of a cursors Column as a String.

@@ -1,7 +1,9 @@
 package uk.co.alt236.easycursor.sqlcursor;
 
+import android.annotation.TargetApi;
 import android.database.Cursor;
 import android.database.CursorWrapper;
+import android.os.Build;
 import android.util.Log;
 
 import java.util.Arrays;
@@ -14,6 +16,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
     public static final long DEFAULT_LONG = 0l;
     public static final float DEFAULT_FLOAT = 0.0f;
     public static final double DEFAULT_DOUBLE = 0.0d;
+    public static final short DEFAULT_SHORT = 0;
     public static final boolean DEFAULT_BOOLEAN = false;
     private static final String TAG = "EasyCursor";
     private final static int COLUMN_NOT_PRESENT = -1;
@@ -41,10 +44,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
      * @param cursor The EasyCursor
      */
     public EasySqlCursor(final EasySqlCursor cursor) {
-        //
-        // Sadly getWrappedCursor is only available in API 11
-        //
-        this(cursor, cursor.getQueryModel());
+        this(getAppropriateCursor(cursor), cursor.getQueryModel());
     }
 
     /**
@@ -68,7 +68,6 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
     public byte[] getBlob(final String columnName) {
         return getBlob(getColumnIndexOrThrow(columnName));
     }
-
 
     /**
      * Returns the value of the requested column as a boolean or throws
@@ -130,6 +129,11 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
         return mModel;
     }
 
+    @Override
+    public short getShort(final String columnName) {
+        return getShort(getColumnIndexOrThrow(columnName));
+    }
+
     /* (non-Javadoc)
      * @see uk.co.alt236.easycursor.EasyCursor#getString(java.lang.String)
      */
@@ -169,7 +173,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
      * The logic is defined in {@link #calcBoolean(int)}
      *
      * @param columnName the name of the cursor column that we want to get the value from
-     * @return the value from cursor if the column exists, {@value #DEFAULT_BOOLEAN} otherwise
+     * @return the value from cursor if the column exists, {@link #DEFAULT_BOOLEAN} otherwise
      */
     @Override
     public boolean optBoolean(final String columnName) {
@@ -223,7 +227,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
      * Extracts the contents of a cursors Column as a double.
      *
      * @param columnName the name of the cursor column that we want to get the value from
-     * @return the value from cursor if the column exists, {@value #DEFAULT_DOUBLE} otherwise.
+     * @return the value from cursor if the column exists, {@link #DEFAULT_DOUBLE} otherwise.
      */
     @Override
     public double optDouble(final String columnName) {
@@ -262,7 +266,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
      * Extracts the contents of a cursors Column as a float.
      *
      * @param columnName the name of the cursor column that we want to get the value from
-     * @return the value from cursor if the column exists, {@value #DEFAULT_FLOAT} otherwise.
+     * @return the value from cursor if the column exists, {@link #DEFAULT_FLOAT} otherwise.
      */
     @Override
     public float optFloat(final String columnName) {
@@ -301,7 +305,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
      * Extracts the contents of a cursors Column as an int.
      *
      * @param columnName the name of the cursor column that we want to get the value from
-     * @return the value from cursor if the column exists, {@value #DEFAULT_INT} otherwise.
+     * @return the value from cursor if the column exists, {@link #DEFAULT_INT} otherwise.
      */
     @Override
     public int optInt(final String columnName) {
@@ -340,7 +344,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
      * Extracts the contents of a cursors Column as a long.
      *
      * @param columnName the name of the cursor column that we want to get the value from
-     * @return the value from cursor if the column exists, {@value #DEFAULT_LONG} otherwise.
+     * @return the value from cursor if the column exists, {@link #DEFAULT_LONG} otherwise.
      */
     @Override
     public long optLong(final String columnName) {
@@ -375,12 +379,39 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
         }
     }
 
+    @Override
+    public short optShort(final String columnName) {
+        return optShort(columnName, DEFAULT_SHORT);
+    }
+
+    @Override
+    public short optShort(final String columnName, final short fallback) {
+        final int columnNo = getColumnIndex(columnName);
+
+        if (isColumnPresent(columnName, columnNo)) {
+            return getShort(columnNo);
+        } else {
+            return fallback;
+        }
+    }
+
+    @Override
+    public Short optShortAsWrapperType(final String columnName) {
+        final int columnNo = getColumnIndex(columnName);
+
+        if (isColumnPresent(columnName, columnNo)) {
+            return getShort(columnNo);
+        } else {
+            return null;
+        }
+    }
+
     /**
      * Extracts the contents of a cursors Column as a String.
-     * If the column does not exist, it will return {@value #DEFAULT_STRING};
+     * If the column does not exist, it will return {@link #DEFAULT_STRING};
      *
      * @param columnName the name of the cursor column that we want to get the value from
-     * @return the value from cursor if the column exists, {@value #DEFAULT_STRING} otherwise.
+     * @return the value from cursor if the column exists, {@link #DEFAULT_STRING} otherwise.
      */
     @Override
     public String optString(final String columnName) {
@@ -409,5 +440,19 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
                 + getColumnCount() + ", getColumnNames()="
                 + Arrays.toString(getColumnNames()) + ", getPosition()="
                 + getPosition() + "]";
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private static Cursor getAppropriateCursor(final EasySqlCursor cursor) {
+        //
+        // Sadly getWrappedCursor is only available in API 11+
+        //
+
+        final int currentApi = android.os.Build.VERSION.SDK_INT;
+        if (currentApi >= Build.VERSION_CODES.HONEYCOMB) {
+            return cursor.getWrappedCursor();
+        } else {
+            return cursor;
+        }
     }
 }

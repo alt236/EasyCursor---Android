@@ -362,7 +362,7 @@ public class EasyObjectCursor<T> extends AbstractCursor implements EasyCursor {
         return internalOpt(ObjectType.LONG, fieldName, null);
     }
 
-    public long optShort(final String fieldName) {
+    public short optShort(final String fieldName) {
         return internalOpt(ObjectType.SHORT, fieldName, DEFAULT_SHORT);
     }
 

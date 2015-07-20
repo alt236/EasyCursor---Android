@@ -124,8 +124,8 @@ public final class ObjectConverter {
             return ((Number) obj).longValue();
         } else if (obj instanceof String) {
             return Short.valueOf(String.valueOf(obj)).longValue();
-//        } else if (obj instanceof byte[] && ((byte[]) obj).length == LONG_BYTE_SIZE) {
-//            return getByteBuffer(LONG_BYTE_SIZE).put((byte[]) obj).getLong();
+        } else if (obj instanceof byte[] && ((byte[]) obj).length == LONG_BYTE_SIZE) {
+            return getByteBuffer(LONG_BYTE_SIZE).put((byte[]) obj).getLong();
         } else {
             throw new ConversionErrorException("Unable to convert '" + getClassName(obj) + "' to long");
         }
