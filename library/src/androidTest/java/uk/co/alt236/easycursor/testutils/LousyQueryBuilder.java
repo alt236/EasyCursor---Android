@@ -1,7 +1,7 @@
 package uk.co.alt236.easycursor.testutils;
 
-import uk.co.alt236.easycursor.sqlcursor.EasySqlQueryModel;
 import uk.co.alt236.easycursor.sqlcursor.querybuilders.interfaces.SqlSelectBuilder;
+import uk.co.alt236.easycursor.sqlcursor.querymodels.SqlQueryModel;
 
 public class LousyQueryBuilder implements SqlSelectBuilder {
     private String mGroupBy;
@@ -16,8 +16,8 @@ public class LousyQueryBuilder implements SqlSelectBuilder {
     private boolean mStrict;
 
     @Override
-    public EasySqlQueryModel build() {
-        return new EasySqlQueryModel(this);
+    public SqlQueryModel build() {
+        return new SqlQueryModel(this);
     }
 
     @Override

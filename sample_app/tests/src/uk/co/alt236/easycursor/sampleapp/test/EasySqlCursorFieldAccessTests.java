@@ -9,40 +9,40 @@ import uk.co.alt236.easycursor.sampleapp.database.DbSingleton;
 import uk.co.alt236.easycursor.sampleapp.database.ExampleDatabase;
 import uk.co.alt236.easycursor.sampleapp.util.StaticModelBuilder;
 import uk.co.alt236.easycursor.sqlcursor.EasySqlCursor;
-import uk.co.alt236.easycursor.sqlcursor.EasySqlQueryModel;
+import uk.co.alt236.easycursor.sqlcursor.querymodels.SqlQueryModel;
 
 public class EasySqlCursorFieldAccessTests extends CommonTestCases {
     private final String TAG = getClass().getName();
-    private List<EasySqlQueryModel> mCombinedList;
+    private List<SqlQueryModel> mCombinedList;
     private ExampleDatabase mDb;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        final List<EasySqlQueryModel> listSelect = new ArrayList<EasySqlQueryModel>();
-        final List<EasySqlQueryModel> listModel = new ArrayList<EasySqlQueryModel>();
-        mCombinedList = new ArrayList<EasySqlQueryModel>();
+        final List<SqlQueryModel> listSelect = new ArrayList<SqlQueryModel>();
+        final List<SqlQueryModel> listModel = new ArrayList<SqlQueryModel>();
+        mCombinedList = new ArrayList<SqlQueryModel>();
         mDb = DbSingleton.getInstance(getContext());
 
-        final List<EasySqlQueryModel> tempSelectList = new ArrayList<EasySqlQueryModel>();
+        final List<SqlQueryModel> tempSelectList = new ArrayList<SqlQueryModel>();
 
         tempSelectList.add(StaticModelBuilder.getCompatQueryModel());
         tempSelectList.add(StaticModelBuilder.getCustomBuilderModel());
         tempSelectList.add(StaticModelBuilder.getDefaultSelectModel());
 
         listSelect.addAll(tempSelectList);
-        for (final EasySqlQueryModel model : tempSelectList) {
+        for (final SqlQueryModel model : tempSelectList) {
             final String json = model.toJson();
-            listSelect.add(new EasySqlQueryModel(json));
+            listSelect.add(new SqlQueryModel(json));
         }
 
-        final List<EasySqlQueryModel> tempRawList = new ArrayList<EasySqlQueryModel>();
+        final List<SqlQueryModel> tempRawList = new ArrayList<SqlQueryModel>();
         tempRawList.add(StaticModelBuilder.getRawQueryModel());
 
         listModel.addAll(tempRawList);
-        for (final EasySqlQueryModel model : tempRawList) {
+        for (final SqlQueryModel model : tempRawList) {
             final String json = model.toJson();
-            listModel.add(new EasySqlQueryModel(json));
+            listModel.add(new SqlQueryModel(json));
         }
 
         mCombinedList.addAll(listModel);

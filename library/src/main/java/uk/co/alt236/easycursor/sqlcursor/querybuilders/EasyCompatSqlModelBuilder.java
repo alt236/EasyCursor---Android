@@ -1,11 +1,13 @@
 package uk.co.alt236.easycursor.sqlcursor.querybuilders;
 
-import android.database.sqlite.SQLiteDatabase;
+import uk.co.alt236.easycursor.sqlcursor.querybuilders.interfaces.SqlRawQueryBuilder;
+import uk.co.alt236.easycursor.sqlcursor.querybuilders.interfaces.SqlSelectBuilder;
+import uk.co.alt236.easycursor.sqlcursor.querymodels.RawQueryModel;
+import uk.co.alt236.easycursor.sqlcursor.querymodels.SelectQueryModel;
+import uk.co.alt236.easycursor.sqlcursor.querymodels.SqlQueryModel;
 
-import uk.co.alt236.easycursor.sqlcursor.EasySqlQueryModel;
-
-public class EasyCompatSqlModelBuilder {
-    private int mQueryType = EasySqlQueryModel.QUERY_TYPE_UNINITIALISED;
+public class EasyCompatSqlModelBuilder implements SqlRawQueryBuilder, SqlSelectBuilder {
+    private int mQueryType = SqlQueryModel.QUERY_TYPE_UNINITIALISED;
 
     //
     // Raw Query
@@ -26,8 +28,16 @@ public class EasyCompatSqlModelBuilder {
     private String mSortOrder;
     private String mLimit;
 
-    public EasySqlQueryModel build() {
-        return new EasySqlQueryModel(this);
+    public SqlQueryModel build() {
+        if (mQueryType == SqlQueryModel.QUERY_TYPE_RAW) {
+            return new RawQueryModel((SqlRawQueryBuilder) this);
+        } else if (mQueryType == SqlQueryModel.QUERY_TYPE_MANAGED) {
+            return new SelectQueryModel((SqlSelectBuilder) this);
+        } else if (mQueryType == SqlQueryModel.QUERY_TYPE_UNINITIALISED) {
+            throw new IllegalStateException("You need to set some query parameters before calling build()!");
+        } else {
+            throw new IllegalStateException("Unknown query type: " + mQueryType);
+        }
     }
 
     /**
@@ -60,15 +70,14 @@ public class EasyCompatSqlModelBuilder {
         return mLimit;
     }
 
-
     /**
-     * Returns the Projection clause of this model.
+     * Returns the Sort Order clause of this model.
      * If no such clause is set, it return null.
      *
-     * @return the Projection clause
+     * @return the Sort Order clause
      */
-    public String[] getProjectionIn() {
-        return mProjectionIn;
+    public String getOrderBy() {
+        return mSortOrder;
     }
 
     /**
@@ -86,33 +95,13 @@ public class EasyCompatSqlModelBuilder {
     }
 
     /**
-     * Returns the Selection clause of this model.
+     * Returns the Projection clause of this model.
      * If no such clause is set, it return null.
      *
-     * @return the Selection clause
+     * @return the Projection clause
      */
-    public String getSelection() {
-        return mSelection;
-    }
-
-    /**
-     * Returns the Selection arguments of this model.
-     * If no such arguments are set, it return null.
-     *
-     * @return the Selection clause
-     */
-    public String[] getSelectionArgs() {
-        return mSelectionArgs;
-    }
-
-    /**
-     * Returns the Sort Order clause of this model.
-     * If no such clause is set, it return null.
-     *
-     * @return the Sort Order clause
-     */
-    public String getSortOrder() {
-        return mSortOrder;
+    public String[] getSelect() {
+        return mProjectionIn;
     }
 
     /**
@@ -135,6 +124,26 @@ public class EasyCompatSqlModelBuilder {
      */
     public void setTables(final String inTables) {
         mTables = inTables;
+    }
+
+    /**
+     * Returns the Selection clause of this model.
+     * If no such clause is set, it return null.
+     *
+     * @return the Selection clause
+     */
+    public String getWhere() {
+        return mSelection;
+    }
+
+    /**
+     * Returns the Selection arguments of this model.
+     * If no such arguments are set, it return null.
+     *
+     * @return the Selection clause
+     */
+    public String[] getWhereArgs() {
+        return mSelectionArgs;
     }
 
     /**
@@ -167,19 +176,6 @@ public class EasyCompatSqlModelBuilder {
 
     /**
      * When set, the selection is verified against malicious arguments.
-     * When using this class to create a statement using
-     * {@link #buildQueryString(boolean, String, String[], String, String, String, String, String)},
-     * non-numeric limits will raise an exception. If a projection map is specified, fields
-     * not in that map will be ignored.
-     * If this class is used to execute the statement directly using
-     * {@link #query(SQLiteDatabase, String[], String, String[], String, String, String)}
-     * or
-     * {@link #query(SQLiteDatabase, String[], String, String[], String, String, String, String)},
-     * additionally also parenthesis escaping selection are caught.
-     * <p/>
-     * To summarize: To get maximum protection against malicious third party apps (for example
-     * content provider consumers), make sure to do the following:
-     * <ul>
      * <li>Set this value to true</li>
      * <li>Use a projection map</li>
      * <li>Use one of the query overloads instead of getting the statement as a sql string</li>
@@ -204,11 +200,11 @@ public class EasyCompatSqlModelBuilder {
      *                      values will be bound as Strings.
      */
     public void setQueryParams(final String rawSql, final String[] selectionArgs) {
-        if (mQueryType != EasySqlQueryModel.QUERY_TYPE_UNINITIALISED) {
+        if (mQueryType != SqlQueryModel.QUERY_TYPE_UNINITIALISED) {
             throw new IllegalStateException("A Model file's query parameters can only be set once!");
         }
 
-        mQueryType = EasySqlQueryModel.QUERY_TYPE_RAW;
+        mQueryType = SqlQueryModel.QUERY_TYPE_RAW;
         mSelectionArgs = selectionArgs;
         mRawSql = rawSql;
     }
@@ -299,11 +295,11 @@ public class EasyCompatSqlModelBuilder {
      *                               the parameters more than once.
      */
     public void setQueryParams(final String[] projectionIn, final String selection, final String[] selectionArgs, final String groupBy, final String having, final String sortOrder, final String limit) {
-        if (mQueryType != EasySqlQueryModel.QUERY_TYPE_UNINITIALISED) {
+        if (mQueryType != SqlQueryModel.QUERY_TYPE_UNINITIALISED) {
             throw new IllegalStateException("A Model file's query parameters can only be set once!");
         }
 
-        mQueryType = EasySqlQueryModel.QUERY_TYPE_MANAGED;
+        mQueryType = SqlQueryModel.QUERY_TYPE_MANAGED;
 
         mProjectionIn = projectionIn;
         mSelection = selection;

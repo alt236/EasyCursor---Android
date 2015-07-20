@@ -19,8 +19,9 @@ import uk.co.alt236.easycursor.sampleapp.container.TrackInfo;
 import uk.co.alt236.easycursor.sampleapp.database.builders.LousyQueryBuilder;
 import uk.co.alt236.easycursor.sampleapp.util.Constants;
 import uk.co.alt236.easycursor.sqlcursor.EasySqlCursor;
-import uk.co.alt236.easycursor.sqlcursor.EasySqlQueryModel;
 import uk.co.alt236.easycursor.sqlcursor.querybuilders.EasyCompatSqlModelBuilder;
+import uk.co.alt236.easycursor.sqlcursor.querymodels.JsonModelConverter;
+import uk.co.alt236.easycursor.sqlcursor.querymodels.SqlQueryModel;
 
 public class ExampleDatabase extends SQLiteAssetHelper {
     private static final String DATABASE_NAME = "Chinook_Sqlite.db";
@@ -61,14 +62,14 @@ public class ExampleDatabase extends SQLiteAssetHelper {
                 null,
                 QueryConstants.DEFAULT_ORDER_BY);
 
-        final EasySqlQueryModel model = builder.build();
+        final SqlQueryModel model = builder.build();
         model.setModelComment("Default compat query");
         return model.execute(getReadableDatabase());
     }
 
     public EasyCursor doEasyCustomBuilderQuery() {
         final LousyQueryBuilder builder = new LousyQueryBuilder();
-        final EasySqlQueryModel model = builder.setSelect(QueryConstants.DEFAULT_SELECT)
+        final SqlQueryModel model = builder.setSelect(QueryConstants.DEFAULT_SELECT)
                 .setFrom(QueryConstants.DEFAULT_TABLES)
                 .setWhere(QueryConstants.DEFAULT_WHERE)
                 .setWhereArgs(QueryConstants.DEFAULT_SELECT_WHERE_PARAMS)
@@ -81,7 +82,7 @@ public class ExampleDatabase extends SQLiteAssetHelper {
     }
 
     public EasyCursor doEasyRawQuery() {
-        final EasySqlQueryModel model = new EasySqlQueryModel.RawQueryBuilder()
+        final SqlQueryModel model = new SqlQueryModel.RawQueryBuilder()
                 .setRawSql(QueryConstants.RAW_QUERY)
                 .setSelectionArgs(QueryConstants.RAW_SQL_PARAMS)
                 .setModelComment("Raw query")
@@ -91,7 +92,7 @@ public class ExampleDatabase extends SQLiteAssetHelper {
     }
 
     public EasyCursor doEasySelectQuery() {
-        final EasySqlQueryModel model = new EasySqlQueryModel.SelectQueryBuilder()
+        final SqlQueryModel model = new SqlQueryModel.SelectQueryBuilder()
                 .setDistinct(true)
                 .setSelect(QueryConstants.DEFAULT_SELECT)
                 .setTables(QueryConstants.DEFAULT_TABLES)
@@ -130,9 +131,12 @@ public class ExampleDatabase extends SQLiteAssetHelper {
             result = null;
         } else {
             try {
-                final EasySqlQueryModel model = new EasySqlQueryModel(json);
+                final SqlQueryModel model = JsonModelConverter.convert(json);
                 result = model.execute(getReadableDatabase());
             } catch (final JSONException e) {
+                e.printStackTrace();
+                result = null;
+            } catch (final IllegalStateException e) {
                 e.printStackTrace();
                 result = null;
             }

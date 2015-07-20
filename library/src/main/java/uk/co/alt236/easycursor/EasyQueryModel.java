@@ -2,7 +2,9 @@ package uk.co.alt236.easycursor;
 
 import org.json.JSONException;
 
-public interface EasyQueryModel {
+import uk.co.alt236.easycursor.sqlcursor.querybuilders.interfaces.QueryModelInfo;
+
+public interface EasyQueryModel extends QueryModelInfo {
 
     /**
      * Gets the user specified comment of this Model

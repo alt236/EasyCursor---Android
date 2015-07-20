@@ -9,6 +9,7 @@ import android.util.Log;
 import java.util.Arrays;
 
 import uk.co.alt236.easycursor.EasyCursor;
+import uk.co.alt236.easycursor.sqlcursor.querymodels.SqlQueryModel;
 
 public class EasySqlCursor extends CursorWrapper implements EasyCursor {
     public static final String DEFAULT_STRING = null;
@@ -20,7 +21,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
     public static final boolean DEFAULT_BOOLEAN = false;
     private static final String TAG = "EasyCursor";
     private final static int COLUMN_NOT_PRESENT = -1;
-    private final EasySqlQueryModel mModel;
+    private final SqlQueryModel mModel;
 
     private boolean mDebugEnabled;
 
@@ -33,7 +34,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
         this(cursor, null);
     }
 
-    protected EasySqlCursor(final Cursor cursor, final EasySqlQueryModel model) {
+    public EasySqlCursor(final Cursor cursor, final SqlQueryModel model) {
         super(cursor);
         mModel = model;
     }
@@ -118,14 +119,14 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
     }
 
     /**
-     * Gets the {@link EasySqlQueryModel} which produced this cursor (if any).
-     * If this cursor was not the produced via an {@link EasySqlQueryModel},
+     * Gets the {@link SqlQueryModel} which produced this cursor (if any).
+     * If this cursor was not the produced via an {@link SqlQueryModel},
      * the result is null;
      *
      * @return the query model
      */
     @Override
-    public EasySqlQueryModel getQueryModel() {
+    public SqlQueryModel getQueryModel() {
         return mModel;
     }
 

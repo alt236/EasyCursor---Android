@@ -1,11 +1,11 @@
 package uk.co.alt236.easycursor.testutils;
 
-import uk.co.alt236.easycursor.sqlcursor.EasySqlQueryModel;
 import uk.co.alt236.easycursor.sqlcursor.querybuilders.EasyCompatSqlModelBuilder;
+import uk.co.alt236.easycursor.sqlcursor.querymodels.SqlQueryModel;
 
 public class StaticModelBuilder {
 
-    public static EasySqlQueryModel getCompatQueryModel() {
+    public static SqlQueryModel getCompatQueryModel() {
         final EasyCompatSqlModelBuilder builder = new EasyCompatSqlModelBuilder();
         builder.setTables(QueryConstants.DEFAULT_TABLES);
         builder.setDistinct(true);
@@ -22,9 +22,9 @@ public class StaticModelBuilder {
         return builder.build();
     }
 
-    public static EasySqlQueryModel getCustomBuilderModel() {
+    public static SqlQueryModel getCustomBuilderModel() {
         final LousyQueryBuilder builder = new LousyQueryBuilder();
-        final EasySqlQueryModel model = builder
+        final SqlQueryModel model = builder
                 .setDistinct(true)
                 .setStrict(true)
                 .setSelect(QueryConstants.DEFAULT_SELECT)
@@ -40,8 +40,8 @@ public class StaticModelBuilder {
         return model;
     }
 
-    public static EasySqlQueryModel getDefaultSelectModel() {
-        final EasySqlQueryModel model = new EasySqlQueryModel.SelectQueryBuilder()
+    public static SqlQueryModel getDefaultSelectModel() {
+        final SqlQueryModel model = new SqlQueryModel.SelectQueryBuilder()
                 .setDistinct(true)
                 .setStrict(true)
                 .setSelect(QueryConstants.DEFAULT_SELECT)
@@ -57,8 +57,8 @@ public class StaticModelBuilder {
         return model;
     }
 
-    public static EasySqlQueryModel getRawQueryModel() {
-        final EasySqlQueryModel model = new EasySqlQueryModel.RawQueryBuilder()
+    public static SqlQueryModel getRawQueryModel() {
+        final SqlQueryModel model = new SqlQueryModel.RawQueryBuilder()
                 .setRawSql(QueryConstants.RAW_QUERY)
                 .setSelectionArgs(QueryConstants.RAW_SQL_PARAMS)
                 .build();
