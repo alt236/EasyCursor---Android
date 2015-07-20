@@ -14,18 +14,98 @@ import uk.co.alt236.easycursor.objectcursor.TestObject;
 public class ObjectConverterTest extends TestCase {
     private final ObjectConverter mObjectConverter = new ObjectConverter();
 
+    public void testDoubleByteArrayConversion() throws Exception {
+        final double expectedValue1 = Double.MAX_VALUE;
+        final double expectedValue2 = Double.MIN_VALUE;
+        final double expectedValue3 = Double.NaN;
+        final double expectedValue4 = Double.NEGATIVE_INFINITY;
+        final double expectedValue5 = Double.POSITIVE_INFINITY;
+
+        final byte[] byteArray1 = (byte[]) mObjectConverter.toType(ObjectType.BYTE_ARRAY, expectedValue1);
+        final byte[] byteArray2 = (byte[]) mObjectConverter.toType(ObjectType.BYTE_ARRAY, expectedValue2);
+        final byte[] byteArray3 = (byte[]) mObjectConverter.toType(ObjectType.BYTE_ARRAY, expectedValue3);
+        final byte[] byteArray4 = (byte[]) mObjectConverter.toType(ObjectType.BYTE_ARRAY, expectedValue4);
+        final byte[] byteArray5 = (byte[]) mObjectConverter.toType(ObjectType.BYTE_ARRAY, expectedValue5);
+
+        final double returnValue1 = (double) mObjectConverter.toType(ObjectType.DOUBLE, byteArray1);
+        final double returnValue2 = (double) mObjectConverter.toType(ObjectType.DOUBLE, byteArray2);
+        final double returnValue3 = (double) mObjectConverter.toType(ObjectType.DOUBLE, byteArray3);
+        final double returnValue4 = (double) mObjectConverter.toType(ObjectType.DOUBLE, byteArray4);
+        final double returnValue5 = (double) mObjectConverter.toType(ObjectType.DOUBLE, byteArray5);
+
+        assertEquals(expectedValue1, returnValue1);
+        assertEquals(expectedValue2, returnValue2);
+        assertEquals(expectedValue3, returnValue3);
+        assertEquals(expectedValue4, returnValue4);
+        assertEquals(expectedValue5, returnValue5);
+    }
+
+    public void testFloatByteArrayConversion() throws Exception {
+        final float expectedValue1 = Float.MAX_VALUE;
+        final float expectedValue2 = Float.MIN_VALUE;
+        final float expectedValue3 = Float.NaN;
+        final float expectedValue4 = Float.NEGATIVE_INFINITY;
+        final float expectedValue5 = Float.POSITIVE_INFINITY;
+
+        final byte[] byteArray1 = (byte[]) mObjectConverter.toType(ObjectType.BYTE_ARRAY, expectedValue1);
+        final byte[] byteArray2 = (byte[]) mObjectConverter.toType(ObjectType.BYTE_ARRAY, expectedValue2);
+        final byte[] byteArray3 = (byte[]) mObjectConverter.toType(ObjectType.BYTE_ARRAY, expectedValue3);
+        final byte[] byteArray4 = (byte[]) mObjectConverter.toType(ObjectType.BYTE_ARRAY, expectedValue4);
+        final byte[] byteArray5 = (byte[]) mObjectConverter.toType(ObjectType.BYTE_ARRAY, expectedValue5);
+
+        final float returnValue1 = (float) mObjectConverter.toType(ObjectType.FLOAT, byteArray1);
+        final float returnValue2 = (float) mObjectConverter.toType(ObjectType.FLOAT, byteArray2);
+        final float returnValue3 = (float) mObjectConverter.toType(ObjectType.FLOAT, byteArray3);
+        final float returnValue4 = (float) mObjectConverter.toType(ObjectType.FLOAT, byteArray4);
+        final float returnValue5 = (float) mObjectConverter.toType(ObjectType.FLOAT, byteArray5);
+
+        assertEquals(expectedValue1, returnValue1);
+        assertEquals(expectedValue2, returnValue2);
+        assertEquals(expectedValue3, returnValue3);
+        assertEquals(expectedValue4, returnValue4);
+        assertEquals(expectedValue5, returnValue5);
+    }
+
+    public void testIntByteArrayConversion() throws Exception {
+        final int expectedValue1 = Integer.MAX_VALUE;
+        final int expectedValue2 = Integer.MIN_VALUE;
+
+        final byte[] byteArray1 = (byte[]) mObjectConverter.toType(ObjectType.BYTE_ARRAY, expectedValue1);
+        final byte[] byteArray2 = (byte[]) mObjectConverter.toType(ObjectType.BYTE_ARRAY, expectedValue2);
+
+        final int returnValue1 = (int) mObjectConverter.toType(ObjectType.INTEGER, byteArray1);
+        final int returnValue2 = (int) mObjectConverter.toType(ObjectType.INTEGER, byteArray2);
+
+        assertEquals(expectedValue1, returnValue1);
+        assertEquals(expectedValue2, returnValue2);
+    }
+
     public void testLongByteArrayConversion() throws Exception {
-//        final long expectedValue1 = Long.MAX_VALUE;
-//        final long expectedValue2 = Long.MIN_VALUE;
-//
-//        final byte[] byteArray1 = (byte[]) mObjectConverter.toType(ObjectType.BYTE_ARRAY, expectedValue1);
-//        final byte[] byteArray2 = (byte[]) mObjectConverter.toType(ObjectType.BYTE_ARRAY, expectedValue2);
-//
-//        final long returnValue1 = (long) mObjectConverter.toType(ObjectType.LONG, byteArray1);
-//        final long returnValue2 = (long) mObjectConverter.toType(ObjectType.LONG, byteArray2);
-//
-//        assertEquals(expectedValue1, returnValue1);
-//        assertEquals(expectedValue2, returnValue2);
+        final long expectedValue1 = Long.MAX_VALUE;
+        final long expectedValue2 = Long.MIN_VALUE;
+
+        final byte[] byteArray1 = (byte[]) mObjectConverter.toType(ObjectType.BYTE_ARRAY, expectedValue1);
+        final byte[] byteArray2 = (byte[]) mObjectConverter.toType(ObjectType.BYTE_ARRAY, expectedValue2);
+
+        final long returnValue1 = (long) mObjectConverter.toType(ObjectType.LONG, byteArray1);
+        final long returnValue2 = (long) mObjectConverter.toType(ObjectType.LONG, byteArray2);
+
+        assertEquals(expectedValue1, returnValue1);
+        assertEquals(expectedValue2, returnValue2);
+    }
+
+    public void testShortByteArrayConversion() throws Exception {
+        final short expectedValue1 = Short.MAX_VALUE;
+        final short expectedValue2 = Short.MIN_VALUE;
+
+        final byte[] byteArray1 = (byte[]) mObjectConverter.toType(ObjectType.BYTE_ARRAY, expectedValue1);
+        final byte[] byteArray2 = (byte[]) mObjectConverter.toType(ObjectType.BYTE_ARRAY, expectedValue2);
+
+        final short returnValue1 = (short) mObjectConverter.toType(ObjectType.SHORT, byteArray1);
+        final short returnValue2 = (short) mObjectConverter.toType(ObjectType.SHORT, byteArray2);
+
+        assertEquals(expectedValue1, returnValue1);
+        assertEquals(expectedValue2, returnValue2);
     }
 
     public void testToBoolean() throws Exception {

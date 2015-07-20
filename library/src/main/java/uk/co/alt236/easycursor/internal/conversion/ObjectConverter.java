@@ -93,7 +93,11 @@ public final class ObjectConverter {
         if (obj instanceof Number) {
             return ((Number) obj).doubleValue();
         } else if (obj instanceof String) {
-            return Double.valueOf(String.valueOf(obj)).doubleValue();
+            return Double.valueOf(String.valueOf(obj));
+        } else if (obj instanceof byte[] && ((byte[]) obj).length == DOUBLE_BYTE_SIZE) {
+            final ByteBuffer buffer = getByteBuffer(DOUBLE_BYTE_SIZE).put((byte[]) obj);
+            buffer.flip();
+            return buffer.getDouble();
         } else {
             throw new ConversionErrorException("Unable to convert '" + getClassName(obj) + "' to double");
         }
@@ -103,7 +107,11 @@ public final class ObjectConverter {
         if (obj instanceof Number) {
             return ((Number) obj).floatValue();
         } else if (obj instanceof String) {
-            return Float.valueOf(String.valueOf(obj)).floatValue();
+            return Float.valueOf(String.valueOf(obj));
+        } else if (obj instanceof byte[] && ((byte[]) obj).length == FLOAT_BYTE_SIZE) {
+            final ByteBuffer buffer = getByteBuffer(FLOAT_BYTE_SIZE).put((byte[]) obj);
+            buffer.flip();
+            return buffer.getFloat();
         } else {
             throw new ConversionErrorException("Unable to convert '" + getClassName(obj) + "' to float");
         }
@@ -113,7 +121,11 @@ public final class ObjectConverter {
         if (obj instanceof Number) {
             return ((Number) obj).intValue();
         } else if (obj instanceof String) {
-            return Integer.valueOf(String.valueOf(obj)).intValue();
+            return Integer.valueOf(String.valueOf(obj));
+        } else if (obj instanceof byte[] && ((byte[]) obj).length == INT_BYTE_SIZE) {
+            final ByteBuffer buffer = getByteBuffer(INT_BYTE_SIZE).put((byte[]) obj);
+            buffer.flip();
+            return buffer.getInt();
         } else {
             throw new ConversionErrorException("Unable to convert '" + getClassName(obj) + "' to int");
         }
@@ -125,7 +137,9 @@ public final class ObjectConverter {
         } else if (obj instanceof String) {
             return Short.valueOf(String.valueOf(obj)).longValue();
         } else if (obj instanceof byte[] && ((byte[]) obj).length == LONG_BYTE_SIZE) {
-            return getByteBuffer(LONG_BYTE_SIZE).put((byte[]) obj).getLong();
+            final ByteBuffer buffer = getByteBuffer(LONG_BYTE_SIZE).put((byte[]) obj);
+            buffer.flip();
+            return buffer.getLong();
         } else {
             throw new ConversionErrorException("Unable to convert '" + getClassName(obj) + "' to long");
         }
@@ -135,7 +149,11 @@ public final class ObjectConverter {
         if (obj instanceof Number) {
             return ((Number) obj).shortValue();
         } else if (obj instanceof String) {
-            return Short.valueOf(String.valueOf(obj)).shortValue();
+            return Short.valueOf(String.valueOf(obj));
+        } else if (obj instanceof byte[] && ((byte[]) obj).length == SHORT_BYTE_SIZE) {
+            final ByteBuffer buffer = getByteBuffer(SHORT_BYTE_SIZE).put((byte[]) obj);
+            buffer.flip();
+            return buffer.getShort();
         } else {
             throw new ConversionErrorException("Unable to convert '" + getClassName(obj) + "' to short");
         }
