@@ -1,19 +1,22 @@
 package uk.co.alt236.easycursor.sqlcursor.querybuilders;
 
+import uk.co.alt236.easycursor.sqlcursor.querybuilders.interfaces.QueryModelInfo;
 import uk.co.alt236.easycursor.sqlcursor.querybuilders.interfaces.SqlRawQueryBuilder;
 import uk.co.alt236.easycursor.sqlcursor.querybuilders.interfaces.SqlSelectBuilder;
 import uk.co.alt236.easycursor.sqlcursor.querymodels.RawQueryModel;
 import uk.co.alt236.easycursor.sqlcursor.querymodels.SelectQueryModel;
 import uk.co.alt236.easycursor.sqlcursor.querymodels.SqlQueryModel;
 
-public class EasyCompatSqlModelBuilder implements SqlRawQueryBuilder, SqlSelectBuilder {
+public class CompatSqlModelBuilder implements SqlRawQueryBuilder, SqlSelectBuilder, QueryModelInfo {
+    // Model
+    protected int mModelVersion;
+    protected String mModelTag;
+    protected String mModelComment;
     private int mQueryType = SqlQueryModel.QUERY_TYPE_UNINITIALISED;
-
     //
     // Raw Query
     //
     private String mRawSql;
-
     //
     // Managed Query
     //
@@ -30,9 +33,9 @@ public class EasyCompatSqlModelBuilder implements SqlRawQueryBuilder, SqlSelectB
 
     public SqlQueryModel build() {
         if (mQueryType == SqlQueryModel.QUERY_TYPE_RAW) {
-            return new RawQueryModel((SqlRawQueryBuilder) this);
+            return new RawQueryModel(this);
         } else if (mQueryType == SqlQueryModel.QUERY_TYPE_MANAGED) {
-            return new SelectQueryModel((SqlSelectBuilder) this);
+            return new SelectQueryModel(this);
         } else if (mQueryType == SqlQueryModel.QUERY_TYPE_UNINITIALISED) {
             throw new IllegalStateException("You need to set some query parameters before calling build()!");
         } else {
@@ -70,28 +73,41 @@ public class EasyCompatSqlModelBuilder implements SqlRawQueryBuilder, SqlSelectB
         return mLimit;
     }
 
-    /**
-     * Returns the Sort Order clause of this model.
-     * If no such clause is set, it return null.
-     *
-     * @return the Sort Order clause
-     */
-    public String getOrderBy() {
-        return mSortOrder;
+    @Override
+    public String getModelComment() {
+        return mModelComment;
     }
 
     /**
-     * Gets the type of this query.
-     * The supported types are provided as QUERY_TYPE_* constants in this class
+     * Gets the user specified comment of this Model
      *
-     * @return the type of the query
+     * @return the comment
      */
-    public int getQueryType() {
-        return mQueryType;
+    public void setModelComment(final String comment) {
+        mModelComment = comment;
     }
 
-    public String getRawSql() {
-        return mRawSql;
+    @Override
+    public String getModelTag() {
+        return mModelTag;
+    }
+
+    /**
+     * Gets the user specified tag of this Model
+     *
+     * @return the tag
+     */
+    public void setModelTag(final String tag) {
+        mModelTag = tag;
+    }
+
+    @Override
+    public int getModelVersion() {
+        return mModelVersion;
+    }
+
+    public void setModelVersion(final int modelVersion) {
+        mModelVersion = modelVersion;
     }
 
     /**
@@ -100,8 +116,42 @@ public class EasyCompatSqlModelBuilder implements SqlRawQueryBuilder, SqlSelectB
      *
      * @return the Projection clause
      */
-    public String[] getSelect() {
+    public String[] getProjectionIn() {
         return mProjectionIn;
+    }
+
+    public String getRawSql() {
+        return mRawSql;
+    }
+
+    /**
+     * Returns the Selection clause of this model.
+     * If no such clause is set, it return null.
+     *
+     * @return the Selection clause
+     */
+    public String getSelection() {
+        return mSelection;
+    }
+
+    /**
+     * Returns the Selection arguments of this model.
+     * If no such arguments are set, it return null.
+     *
+     * @return the Selection clause
+     */
+    public String[] getSelectionArgs() {
+        return mSelectionArgs;
+    }
+
+    /**
+     * Returns the Sort Order clause of this model.
+     * If no such clause is set, it return null.
+     *
+     * @return the Sort Order clause
+     */
+    public String getSortOrder() {
+        return mSortOrder;
     }
 
     /**
@@ -124,26 +174,6 @@ public class EasyCompatSqlModelBuilder implements SqlRawQueryBuilder, SqlSelectB
      */
     public void setTables(final String inTables) {
         mTables = inTables;
-    }
-
-    /**
-     * Returns the Selection clause of this model.
-     * If no such clause is set, it return null.
-     *
-     * @return the Selection clause
-     */
-    public String getWhere() {
-        return mSelection;
-    }
-
-    /**
-     * Returns the Selection arguments of this model.
-     * If no such arguments are set, it return null.
-     *
-     * @return the Selection clause
-     */
-    public String[] getWhereArgs() {
-        return mSelectionArgs;
     }
 
     /**

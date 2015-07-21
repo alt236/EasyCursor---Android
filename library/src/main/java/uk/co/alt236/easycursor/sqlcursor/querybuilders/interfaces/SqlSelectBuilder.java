@@ -12,15 +12,15 @@ public interface SqlSelectBuilder {
 
     String getLimit();
 
-    String getOrderBy();
+    String[] getProjectionIn();
 
-    String[] getSelect();
+    String getSelection();
+
+    String[] getSelectionArgs();
+
+    String getSortOrder();
 
     String getTables();
-
-    String getWhere();
-
-    String[] getWhereArgs();
 
     boolean isDistinct();
 

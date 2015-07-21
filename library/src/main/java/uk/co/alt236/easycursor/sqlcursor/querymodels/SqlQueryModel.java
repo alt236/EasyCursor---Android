@@ -175,8 +175,6 @@ public abstract class SqlQueryModel implements EasyQueryModel {
     }
 
     public static class RawQueryBuilder implements SqlRawQueryBuilder, QueryModelInfo {
-        private final int queryType = QUERY_TYPE_RAW;
-
         //
         // Metadata
         //
@@ -251,7 +249,7 @@ public abstract class SqlQueryModel implements EasyQueryModel {
         }
 
         @Override
-        public String[] getWhereArgs() {
+        public String[] getSelectionArgs() {
             return selectionArgs;
         }
 
@@ -263,7 +261,6 @@ public abstract class SqlQueryModel implements EasyQueryModel {
 
 
     public static class SelectQueryBuilder implements SqlSelectBuilder, QueryModelInfo {
-        private final int queryType = QUERY_TYPE_MANAGED;
         //
         // Metadata
         //
@@ -366,17 +363,42 @@ public abstract class SqlQueryModel implements EasyQueryModel {
         }
 
         @Override
-        public String getOrderBy() {
-            return sortOrder;
+        public String[] getProjectionIn() {
+            return projectionIn;
+        }
+
+        public SelectQueryBuilder setProjectionIn(final String[] projectionIn) {
+            this.projectionIn = projectionIn;
+            return this;
         }
 
         @Override
-        public String[] getSelect() {
-            return new String[0];
+        public String getSelection() {
+            return selection;
         }
 
-        public SelectQueryBuilder setSelect(final String[] projectionIn) {
-            this.projectionIn = projectionIn;
+        public SelectQueryBuilder setSelection(final String selection) {
+            this.selection = selection;
+            return this;
+        }
+
+        @Override
+        public String[] getSelectionArgs() {
+            return selectionArgs;
+        }
+
+        public SelectQueryBuilder setSelectionArgs(final String[] args) {
+            this.selectionArgs = args;
+            return this;
+        }
+
+        @Override
+        public String getSortOrder() {
+            return sortOrder;
+        }
+
+        public SelectQueryBuilder setSortOrder(final String sortOrder) {
+            this.sortOrder = sortOrder;
             return this;
         }
 
@@ -399,28 +421,8 @@ public abstract class SqlQueryModel implements EasyQueryModel {
         }
 
         @Override
-        public String getWhere() {
-            return selection;
-        }
-
-        public SelectQueryBuilder setWhere(final String selection) {
-            this.selection = selection;
-            return this;
-        }
-
-        @Override
-        public String[] getWhereArgs() {
-            return new String[0];
-        }
-
-        public SelectQueryBuilder setWhereArgs(final String[] args) {
-            this.selectionArgs = args;
-            return this;
-        }
-
-        @Override
         public boolean isDistinct() {
-            return isDistinct();
+            return distinct;
         }
 
         /**
@@ -435,7 +437,7 @@ public abstract class SqlQueryModel implements EasyQueryModel {
 
         @Override
         public boolean isStrict() {
-            return isStrict();
+            return strict;
         }
 
         /**
@@ -453,11 +455,6 @@ public abstract class SqlQueryModel implements EasyQueryModel {
          */
         public SelectQueryBuilder setStrict(final boolean strict) {
             this.strict = strict;
-            return this;
-        }
-
-        public SelectQueryBuilder setSortOrder(final String sortOrder) {
-            this.sortOrder = sortOrder;
             return this;
         }
     }

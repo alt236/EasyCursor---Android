@@ -19,7 +19,7 @@ import uk.co.alt236.easycursor.sampleapp.container.TrackInfo;
 import uk.co.alt236.easycursor.sampleapp.database.builders.LousyQueryBuilder;
 import uk.co.alt236.easycursor.sampleapp.util.Constants;
 import uk.co.alt236.easycursor.sqlcursor.EasySqlCursor;
-import uk.co.alt236.easycursor.sqlcursor.querybuilders.EasyCompatSqlModelBuilder;
+import uk.co.alt236.easycursor.sqlcursor.querybuilders.CompatSqlModelBuilder;
 import uk.co.alt236.easycursor.sqlcursor.querymodels.JsonModelConverter;
 import uk.co.alt236.easycursor.sqlcursor.querymodels.SqlQueryModel;
 
@@ -51,7 +51,7 @@ public class ExampleDatabase extends SQLiteAssetHelper {
     }
 
     public EasyCursor doEasyCursorCompatQuery() {
-        final EasyCompatSqlModelBuilder builder = new EasyCompatSqlModelBuilder();
+        final CompatSqlModelBuilder builder = new CompatSqlModelBuilder();
         builder.setTables(QueryConstants.DEFAULT_TABLES);
         builder.setDistinct(true);
         builder.setQueryParams(
@@ -94,10 +94,10 @@ public class ExampleDatabase extends SQLiteAssetHelper {
     public EasyCursor doEasySelectQuery() {
         final SqlQueryModel model = new SqlQueryModel.SelectQueryBuilder()
                 .setDistinct(true)
-                .setSelect(QueryConstants.DEFAULT_SELECT)
+                .setProjectionIn(QueryConstants.DEFAULT_SELECT)
                 .setTables(QueryConstants.DEFAULT_TABLES)
-                .setWhere(QueryConstants.DEFAULT_WHERE)
-                .setWhereArgs(QueryConstants.DEFAULT_SELECT_WHERE_PARAMS)
+                .setSelection(QueryConstants.DEFAULT_WHERE)
+                .setSelectionArgs(QueryConstants.DEFAULT_SELECT_WHERE_PARAMS)
                 .setSortOrder(QueryConstants.DEFAULT_ORDER_BY)
                 .setModelComment("Default easy query")
                 .build();

@@ -30,7 +30,7 @@ public class RawQueryModel extends SqlQueryModel {
         super(builder instanceof QueryModelInfo ? (QueryModelInfo) builder : null,
                 QUERY_TYPE);
         mRawSql = builder.getRawSql();
-        mSelectionArgs = builder.getWhereArgs();
+        mSelectionArgs = builder.getSelectionArgs();
     }
 
     public RawQueryModel(final JsonWrapper wrapper) {

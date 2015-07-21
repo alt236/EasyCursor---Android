@@ -8,5 +8,5 @@ public interface SqlRawQueryBuilder {
 
     String getRawSql();
 
-    String[] getWhereArgs();
+    String[] getSelectionArgs();
 }

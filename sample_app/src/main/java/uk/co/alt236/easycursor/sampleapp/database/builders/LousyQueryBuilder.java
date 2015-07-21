@@ -52,48 +52,28 @@ public class LousyQueryBuilder implements SqlSelectBuilder {
     }
 
     @Override
-    public String getOrderBy() {
-        return mOrderBy;
-    }
-
-    public LousyQueryBuilder setOrderBy(final String orderBy) {
-        mOrderBy = orderBy;
-        return this;
-    }
-
-    @Override
-    public String[] getSelect() {
+    public String[] getProjectionIn() {
         return mSelect;
     }
 
-    public LousyQueryBuilder setSelect(final String[] select) {
-        mSelect = select;
-        return this;
+    @Override
+    public String getSelection() {
+        return mWhere;
+    }
+
+    @Override
+    public String[] getSelectionArgs() {
+        return mWhereArgs;
+    }
+
+    @Override
+    public String getSortOrder() {
+        return mOrderBy;
     }
 
     @Override
     public String getTables() {
         return mTables;
-    }
-
-    @Override
-    public String getWhere() {
-        return mWhere;
-    }
-
-    public LousyQueryBuilder setWhere(final String where) {
-        mWhere = where;
-        return this;
-    }
-
-    @Override
-    public String[] getWhereArgs() {
-        return mWhereArgs;
-    }
-
-    public LousyQueryBuilder setWhereArgs(final String[] whereArgs) {
-        mWhereArgs = whereArgs;
-        return this;
     }
 
     @Override
@@ -118,6 +98,26 @@ public class LousyQueryBuilder implements SqlSelectBuilder {
 
     public LousyQueryBuilder setFrom(final String tables) {
         mTables = tables;
+        return this;
+    }
+
+    public LousyQueryBuilder setOrderBy(final String orderBy) {
+        mOrderBy = orderBy;
+        return this;
+    }
+
+    public LousyQueryBuilder setSelect(final String[] select) {
+        mSelect = select;
+        return this;
+    }
+
+    public LousyQueryBuilder setWhere(final String where) {
+        mWhere = where;
+        return this;
+    }
+
+    public LousyQueryBuilder setWhereArgs(final String[] whereArgs) {
+        mWhereArgs = whereArgs;
         return this;
     }
 }

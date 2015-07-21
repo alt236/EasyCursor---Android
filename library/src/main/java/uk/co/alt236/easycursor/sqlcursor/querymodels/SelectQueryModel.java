@@ -49,10 +49,10 @@ public class SelectQueryModel extends SqlQueryModel {
         mGroupBy = builder.getGroupBy();
         mHaving = builder.getHaving();
         mLimit = builder.getLimit();
-        mProjectionIn = builder.getSelect();
-        mSelection = builder.getWhere();
-        mSelectionArgs = builder.getWhereArgs();
-        mSortOrder = builder.getOrderBy();
+        mProjectionIn = builder.getProjectionIn();
+        mSelection = builder.getSelection();
+        mSelectionArgs = builder.getSelectionArgs();
+        mSortOrder = builder.getSortOrder();
         mStrict = builder.isStrict();
         mTables = builder.getTables();
     }
