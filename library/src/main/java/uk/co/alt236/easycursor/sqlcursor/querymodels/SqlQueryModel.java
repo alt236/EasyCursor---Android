@@ -174,7 +174,7 @@ public abstract class SqlQueryModel implements EasyQueryModel {
                 '}';
     }
 
-    public static class RawQueryBuilder implements SqlRawQueryBuilder {
+    public static class RawQueryBuilder implements SqlRawQueryBuilder, QueryModelInfo {
         private final int queryType = QUERY_TYPE_RAW;
 
         //
@@ -195,6 +195,52 @@ public abstract class SqlQueryModel implements EasyQueryModel {
         }
 
         @Override
+        public String getModelComment() {
+            return modelComment;
+        }
+
+        /**
+         * Gets the user specified comment of this Model
+         *
+         * @return the comment
+         */
+        public RawQueryBuilder setModelComment(final String comment) {
+            this.modelComment = comment;
+            return this;
+        }
+
+        @Override
+        public String getModelTag() {
+            return modelTag;
+        }
+
+        /**
+         * Gets the user specified tag of this Model
+         *
+         * @return the tag
+         */
+        public RawQueryBuilder setModelTag(final String tag) {
+            this.modelTag = tag;
+            return this;
+        }
+
+        @Override
+        public int getModelVersion() {
+            return modelVersion;
+        }
+
+        /**
+         * Gets the user specified version of this Model
+         * The default value is 0
+         *
+         * @return the version of this model
+         */
+        public RawQueryBuilder setModelVersion(final int version) {
+            this.modelVersion = version;
+            return this;
+        }
+
+        @Override
         public String getRawSql() {
             return rawSql;
         }
@@ -209,37 +255,6 @@ public abstract class SqlQueryModel implements EasyQueryModel {
             return selectionArgs;
         }
 
-        /**
-         * Gets the user specified comment of this Model
-         *
-         * @return the comment
-         */
-        public RawQueryBuilder setModelComment(final String comment) {
-            this.modelComment = comment;
-            return this;
-        }
-
-        /**
-         * Gets the user specified tag of this Model
-         *
-         * @return the tag
-         */
-        public RawQueryBuilder setModelTag(final String tag) {
-            this.modelTag = tag;
-            return this;
-        }
-
-        /**
-         * Gets the user specified version of this Model
-         * The default value is 0
-         *
-         * @return the version of this model
-         */
-        public RawQueryBuilder setModelVersion(final int version) {
-            this.modelVersion = version;
-            return this;
-        }
-
         public RawQueryBuilder setSelectionArgs(final String[] args) {
             this.selectionArgs = args;
             return this;
@@ -247,7 +262,7 @@ public abstract class SqlQueryModel implements EasyQueryModel {
     }
 
 
-    public static class SelectQueryBuilder implements SqlSelectBuilder {
+    public static class SelectQueryBuilder implements SqlSelectBuilder, QueryModelInfo {
         private final int queryType = QUERY_TYPE_MANAGED;
         //
         // Metadata
@@ -301,6 +316,52 @@ public abstract class SqlQueryModel implements EasyQueryModel {
 
         public SelectQueryBuilder setLimit(final String limit) {
             this.limit = limit;
+            return this;
+        }
+
+        @Override
+        public String getModelComment() {
+            return modelComment;
+        }
+
+        /**
+         * Gets the user specified comment of this Model
+         *
+         * @return the comment
+         */
+        public SelectQueryBuilder setModelComment(final String comment) {
+            this.modelComment = comment;
+            return this;
+        }
+
+        @Override
+        public String getModelTag() {
+            return modelTag;
+        }
+
+        /**
+         * Gets the user specified tag of this Model
+         *
+         * @return the tag
+         */
+        public SelectQueryBuilder setModelTag(final String tag) {
+            this.modelTag = tag;
+            return this;
+        }
+
+        @Override
+        public int getModelVersion() {
+            return modelVersion;
+        }
+
+        /**
+         * Gets the user specified version of this Model
+         * The default value is 0
+         *
+         * @return the version of this model
+         */
+        public SelectQueryBuilder setModelVersion(final int version) {
+            this.modelVersion = version;
             return this;
         }
 
@@ -392,37 +453,6 @@ public abstract class SqlQueryModel implements EasyQueryModel {
          */
         public SelectQueryBuilder setStrict(final boolean strict) {
             this.strict = strict;
-            return this;
-        }
-
-        /**
-         * Gets the user specified comment of this Model
-         *
-         * @return the comment
-         */
-        public SelectQueryBuilder setModelComment(final String comment) {
-            this.modelComment = comment;
-            return this;
-        }
-
-        /**
-         * Gets the user specified tag of this Model
-         *
-         * @return the tag
-         */
-        public SelectQueryBuilder setModelTag(final String tag) {
-            this.modelTag = tag;
-            return this;
-        }
-
-        /**
-         * Gets the user specified version of this Model
-         * The default value is 0
-         *
-         * @return the version of this model
-         */
-        public SelectQueryBuilder setModelVersion(final int version) {
-            this.modelVersion = version;
             return this;
         }
 
