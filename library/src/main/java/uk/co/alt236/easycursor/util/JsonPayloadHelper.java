@@ -4,8 +4,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class JsonPayloadHelper {
+public final class JsonPayloadHelper {
     private static final String NULL = "null";
+
+    private JsonPayloadHelper() {
+    }
 
     public static void add(final JSONObject object, final String key, final Boolean value) throws JSONException {
         object.put(key, value);

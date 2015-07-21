@@ -1,6 +1,6 @@
 package uk.co.alt236.easycursor.sampleapp.database;
 
-public class QueryConstants {
+public final class QueryConstants {
 
     //
     // RAW QUERY
@@ -43,4 +43,7 @@ public class QueryConstants {
             + " LEFT OUTER JOIN album ON track.albumId = album.albumid"
             + " LEFT OUTER JOIN artist ON artist.artistId = album.artistid "
             + " LEFT OUTER JOIN mediatype ON track.mediatypeid = mediatype.mediatypeid";
+
+    private QueryConstants() {
+    }
 }

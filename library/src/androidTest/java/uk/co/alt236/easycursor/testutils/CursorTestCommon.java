@@ -7,7 +7,7 @@ import uk.co.alt236.easycursor.sqlcursor.EasySqlCursor;
 
 public abstract class CursorTestCommon extends TestCase {
 
-    protected void testBooleanFieldParsing(EasyCursor cursor) {
+    protected void testBooleanFieldParsing(final EasyCursor cursor) {
         // Real data
         final String NON_EXISTANT_COL = "THIS_COLUMN_DOES_NOT_EXIST";
         final String EXISTANT_COL = "hascomposer";
@@ -19,7 +19,7 @@ public abstract class CursorTestCommon extends TestCase {
         assertNull(cursor.optBooleanAsWrapperType(NON_EXISTANT_COL));
     }
 
-    protected void testDoubleFieldParsing(EasyCursor cursor) {
+    protected void testDoubleFieldParsing(final EasyCursor cursor) {
         final String NON_EXISTANT_COL = "THIS_COLUMN_DOES_NOT_EXIST";
         final String EXISTANT_COL = "meaninglessDiv";
         final double EXPECTED_VALUE = 720845.345345345;
@@ -34,7 +34,7 @@ public abstract class CursorTestCommon extends TestCase {
         assertNull(cursor.optDoubleAsWrapperType(NON_EXISTANT_COL));
     }
 
-    protected void testFloatFieldParsing(EasyCursor cursor) {
+    protected void testFloatFieldParsing(final EasyCursor cursor) {
         final String NON_EXISTANT_COL = "THIS_COLUMN_DOES_NOT_EXIST";
         final String EXISTANT_COL = "meaninglessDiv";
         final float EXPECTED_VALUE = 720845.345345345f;
@@ -47,7 +47,7 @@ public abstract class CursorTestCommon extends TestCase {
         assertNull(cursor.optFloatAsWrapperType(NON_EXISTANT_COL));
     }
 
-    protected void testIntegerFieldParsing(EasyCursor cursor) {
+    protected void testIntegerFieldParsing(final EasyCursor cursor) {
         final String NON_EXISTANT_COL = "THIS_COLUMN_DOES_NOT_EXIST";
         final String EXISTANT_COL = "_id";
         final int EXPECTED_VALUE = 14;
@@ -60,7 +60,7 @@ public abstract class CursorTestCommon extends TestCase {
         assertNull(cursor.optIntAsWrapperType(NON_EXISTANT_COL));
     }
 
-    protected void testLongFieldParsing(EasyCursor cursor) {
+    protected void testLongFieldParsing(final EasyCursor cursor) {
         final String NON_EXISTANT_COL = "THIS_COLUMN_DOES_NOT_EXIST";
         final String EXISTANT_COL = "meaninglessSum";
         final long EXPECTED_VALUE = 2400415l;
@@ -73,7 +73,7 @@ public abstract class CursorTestCommon extends TestCase {
         assertNull(cursor.optLongAsWrapperType(NON_EXISTANT_COL));
     }
 
-    protected void testStringFieldParsing(EasyCursor cursor) {
+    protected void testStringFieldParsing(final EasyCursor cursor) {
         // And now for some real data
         final String NON_EXISTANT_COL = "THIS_COLUMN_DOES_NOT_EXIST";
         final String EXISTANT_COL = "artist";

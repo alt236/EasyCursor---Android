@@ -33,7 +33,7 @@ class ObjectFieldAccessor<T> implements FieldAccessor {
     @Override
     public int getFieldIndexByName(final String name){
         if (mFieldToIndexMap.containsKey(name)) {
-            return mFieldToIndexMap.get(name).intValue();
+            return mFieldToIndexMap.get(name);
         } else {
             return -1;
         }

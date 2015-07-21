@@ -27,7 +27,7 @@ class JsonFieldAccessor implements FieldAccessor {
     @Override
     public int getFieldIndexByName(final String name){
         if (mPropertyToIndexMap.containsKey(name)) {
-            return mPropertyToIndexMap.get(name).intValue();
+            return mPropertyToIndexMap.get(name);
         } else {
             return -1;
         }

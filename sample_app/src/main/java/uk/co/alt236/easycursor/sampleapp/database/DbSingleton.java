@@ -2,7 +2,7 @@ package uk.co.alt236.easycursor.sampleapp.database;
 
 import android.content.Context;
 
-public class DbSingleton {
+public final class DbSingleton {
     private final static Object mLock = new Object();
     private static ExampleDatabase sInstance;
 

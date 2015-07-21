@@ -3,7 +3,10 @@ package uk.co.alt236.easycursor.testutils;
 import uk.co.alt236.easycursor.sqlcursor.querybuilders.EasyCompatSqlModelBuilder;
 import uk.co.alt236.easycursor.sqlcursor.querymodels.SqlQueryModel;
 
-public class StaticModelBuilder {
+public final class StaticModelBuilder {
+
+    private StaticModelBuilder() {
+    }
 
     public static SqlQueryModel getCompatQueryModel() {
         final EasyCompatSqlModelBuilder builder = new EasyCompatSqlModelBuilder();
@@ -24,7 +27,8 @@ public class StaticModelBuilder {
 
     public static SqlQueryModel getCustomBuilderModel() {
         final LousyQueryBuilder builder = new LousyQueryBuilder();
-        final SqlQueryModel model = builder
+
+        return builder
                 .setDistinct(true)
                 .setStrict(true)
                 .setSelect(QueryConstants.DEFAULT_SELECT)
@@ -36,12 +40,11 @@ public class StaticModelBuilder {
                 .setOrderBy(QueryConstants.DEFAULT_ORDER_BY)
                 .setLimit(QueryConstants.DEFAULT_SELECT_LIMIT)
                 .build();
-
-        return model;
     }
 
     public static SqlQueryModel getDefaultSelectModel() {
-        final SqlQueryModel model = new SqlQueryModel.SelectQueryBuilder()
+
+        return new SqlQueryModel.SelectQueryBuilder()
                 .setDistinct(true)
                 .setStrict(true)
                 .setSelect(QueryConstants.DEFAULT_SELECT)
@@ -53,16 +56,13 @@ public class StaticModelBuilder {
                 .setSortOrder(QueryConstants.DEFAULT_ORDER_BY)
                 .setLimit(QueryConstants.DEFAULT_SELECT_LIMIT)
                 .build();
-
-        return model;
     }
 
     public static SqlQueryModel getRawQueryModel() {
-        final SqlQueryModel model = new SqlQueryModel.RawQueryBuilder()
+
+        return new SqlQueryModel.RawQueryBuilder()
                 .setRawSql(QueryConstants.RAW_QUERY)
                 .setSelectionArgs(QueryConstants.RAW_SQL_PARAMS)
                 .build();
-
-        return model;
     }
 }

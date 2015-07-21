@@ -67,11 +67,11 @@ public abstract class SqlQueryModel implements EasyQueryModel {
             return execute(db, null);
         } catch (final InstantiationException e) {
             throw new IllegalStateException("We should never get here...", e);
-        } catch (NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             throw new IllegalStateException("We should never get here...", e);
-        } catch (IllegalAccessException e) {
+        } catch (final IllegalAccessException e) {
             throw new IllegalStateException("We should never get here...", e);
-        } catch (InvocationTargetException e) {
+        } catch (final InvocationTargetException e) {
             throw new IllegalStateException("We should never get here...", e);
         }
     }

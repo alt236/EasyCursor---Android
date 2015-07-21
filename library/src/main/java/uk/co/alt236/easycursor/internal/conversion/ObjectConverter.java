@@ -39,14 +39,6 @@ public final class ObjectConverter {
         }
     }
 
-    private String getClassName(final Object obj){
-        if(obj == null){
-            return "<null>";
-        } else {
-            return obj.getClass().getName();
-        }
-    }
-
     private String getString(final byte[] array){
         try {
             return new String(array, mEncoding);
@@ -57,9 +49,9 @@ public final class ObjectConverter {
 
     private boolean toBoolean(final Object obj) {
         if (obj instanceof Boolean) {
-            return ((Boolean) obj).booleanValue();
+            return (Boolean) obj;
         } else if (obj instanceof String) {
-            return Boolean.valueOf(String.valueOf(obj)).booleanValue();
+            return Boolean.valueOf(String.valueOf(obj));
         } else {
             throw new ConversionErrorException("Unable to convert '" + getClassName(obj) + "' to boolean");
         }
@@ -193,6 +185,14 @@ public final class ObjectConverter {
                 return toString(candidate);
             default:
                 throw new IllegalStateException("Unknown ObjectType: " + type);
+        }
+    }
+
+    private static String getClassName(final Object obj) {
+        if (obj == null) {
+            return "<null>";
+        } else {
+            return obj.getClass().getName();
         }
     }
 }

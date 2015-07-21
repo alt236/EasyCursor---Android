@@ -1,6 +1,7 @@
 package uk.co.alt236.easycursor.testutils;
 
 import uk.co.alt236.easycursor.sqlcursor.querybuilders.interfaces.SqlSelectBuilder;
+import uk.co.alt236.easycursor.sqlcursor.querymodels.SelectQueryModel;
 import uk.co.alt236.easycursor.sqlcursor.querymodels.SqlQueryModel;
 
 public class LousyQueryBuilder implements SqlSelectBuilder {
@@ -17,7 +18,7 @@ public class LousyQueryBuilder implements SqlSelectBuilder {
 
     @Override
     public SqlQueryModel build() {
-        return new SqlQueryModel(this);
+        return new SelectQueryModel(this);
     }
 
     @Override
