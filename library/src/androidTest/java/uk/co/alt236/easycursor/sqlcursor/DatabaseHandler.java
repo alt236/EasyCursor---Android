@@ -43,6 +43,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + ", int INTEGER"
                 + ", long INTEGER"
                 + ", short INTEGER"
+                + ", booleantest TEXT"
                 + ")";
 
         final ContentValues row1 = new ContentValues();
@@ -54,6 +55,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         row1.put("int", Integer.MIN_VALUE);
         row1.put("long", Long.MIN_VALUE);
         row1.put("short", Short.MIN_VALUE);
+        row1.put("booleantest", 0);
 
         final ContentValues row2 = new ContentValues();
         row2.put("bool", true);
@@ -64,6 +66,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         row2.put("int", Integer.MAX_VALUE);
         row2.put("long", Long.MAX_VALUE);
         row2.put("short", Short.MAX_VALUE);
+        row2.put("booleantest", 1);
 
         final ContentValues row3 = new ContentValues();
         row3.put("bool", (Boolean) null);
@@ -74,6 +77,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         row3.put("int", (Integer) null);
         row3.put("long", (Long) null);
         row3.put("short", (Short) null);
+        row3.put("booleantest", (Boolean) null);
 
         db.execSQL(CREATE_DATA_TABLE);
         db.insert(TABLE_DATA, null, row1);

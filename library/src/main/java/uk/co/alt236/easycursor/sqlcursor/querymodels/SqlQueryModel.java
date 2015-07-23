@@ -7,10 +7,12 @@ import android.database.sqlite.SQLiteDatabase;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import uk.co.alt236.easycursor.EasyCursor;
 import uk.co.alt236.easycursor.EasyQueryModel;
+import uk.co.alt236.easycursor.sqlcursor.BooleanLogic;
 import uk.co.alt236.easycursor.sqlcursor.EasySqlCursor;
 import uk.co.alt236.easycursor.sqlcursor.querybuilders.interfaces.QueryModelInfo;
 import uk.co.alt236.easycursor.sqlcursor.querybuilders.interfaces.SqlRawQueryBuilder;
@@ -63,8 +65,22 @@ public abstract class SqlQueryModel implements EasyQueryModel {
      * @return the {@link EasySqlCursor} containing the result of the query.
      */
     public EasyCursor execute(final SQLiteDatabase db) {
+        return execute(db, null);
+    }
+
+    /**
+     * Execute the query described by this model.
+     * <p/>
+     * If the model is initialised, or if the query model is of an unsupported type,
+     * this method will throw an IllegalStateException.
+     *
+     * @param db           the database to run the query against
+     * @param booleanLogic an Object describing the {@link BooleanLogic} for this cursor. Pass null for the {@link uk.co.alt236.easycursor.sqlcursor.DefaultBooleanLogic}
+     * @return the {@link EasySqlCursor} containing the result of the query.
+     */
+    public EasyCursor execute(final SQLiteDatabase db, final BooleanLogic booleanLogic) {
         try {
-            return execute(db, null);
+            return execute(db, null, booleanLogic);
         } catch (final InstantiationException e) {
             throw new IllegalStateException("We should never get here...", e);
         } catch (final NoSuchMethodException e) {
@@ -91,13 +107,14 @@ public abstract class SqlQueryModel implements EasyQueryModel {
      * @throws InstantiationException    if the class cannot be instantiated
      * @throws IllegalArgumentException  if an incorrect number of arguments are passed, or an argument could not be converted by a widening conversion
      */
-    public EasyCursor execute(final SQLiteDatabase db, final Class<? extends EasySqlCursor> easyCursorClass) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+    public EasyCursor execute(final SQLiteDatabase db, final Class<? extends EasySqlCursor> easyCursorClass, final BooleanLogic booleanLogic) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 
         final Cursor c = executeQuery(db);
         if (easyCursorClass == null) {
-            return new EasySqlCursor(c, this);
+            return new EasySqlCursor(c, this, booleanLogic);
         } else {
-            return easyCursorClass.getDeclaredConstructor(Cursor.class, SqlQueryModel.class).newInstance(c, this);
+            final Constructor<? extends EasySqlCursor> constructor = easyCursorClass.getDeclaredConstructor(Cursor.class, SqlQueryModel.class, BooleanLogic.class);
+            return constructor.newInstance(c, this, booleanLogic);
         }
     }
 

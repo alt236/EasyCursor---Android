@@ -3,6 +3,7 @@ package uk.co.alt236.easycursor.sqlcursor;
 import android.annotation.TargetApi;
 import android.database.Cursor;
 import android.database.CursorWrapper;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.util.Log;
 
@@ -19,8 +20,11 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
     public static final double DEFAULT_DOUBLE = 0.0d;
     public static final short DEFAULT_SHORT = 0;
     public static final boolean DEFAULT_BOOLEAN = false;
-    private static final String TAG = "EasyCursor";
+
+    private static final BooleanLogic DEFAULT_BOOLEAN_LOGIC = new DefaultBooleanLogic();
+    private static final String TAG = EasySqlCursor.class.getSimpleName();
     private final static int COLUMN_NOT_PRESENT = -1;
+    private final BooleanLogic mBooleanLogic;
     private final SqlQueryModel mModel;
 
     private boolean mDebugEnabled;
@@ -31,35 +35,49 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
      * @param cursor The EasyCursor
      */
     public EasySqlCursor(final Cursor cursor) {
-        this(cursor, null);
-    }
-
-    public EasySqlCursor(final Cursor cursor, final SqlQueryModel model) {
-        super(cursor);
-        mModel = model;
+        this(cursor, null, null);
     }
 
     /**
-     * Use this constructor to easily change EasyCursor implementations
+     * Use this constructor to easily convert any other Cursor to an EasyCursor while using a custom Boolean logic resolution
      *
-     * @param cursor The EasyCursor
+     * @param cursor       The EasyCursor
+     * @param booleanLogic The logic to use to resolve booleans. Passing null will use {@link DefaultBooleanLogic}
      */
-    public EasySqlCursor(final EasySqlCursor cursor) {
-        this(getAppropriateCursor(cursor), cursor.getQueryModel());
+    public EasySqlCursor(final Cursor cursor, final BooleanLogic booleanLogic) {
+        this(cursor, null, booleanLogic);
+    }
+
+    /**
+     * Construct an {@link EasySqlCursor}.
+     * This constructor is internally called by {@link SqlQueryModel#execute(SQLiteDatabase, BooleanLogic)}
+     * and is required to exist in any Subclasses of {@link EasySqlCursor} if you are planning to use {@link SqlQueryModel#execute(SQLiteDatabase, Class, BooleanLogic)}
+     * to execute the queries.
+     *
+     * @param cursor       The EasyCursor
+     * @param model        The {@link SqlQueryModel} used to produce this cursor
+     * @param booleanLogic The logic to use to resolve booleans. Passing null will use {@link DefaultBooleanLogic}
+     */
+    public EasySqlCursor(final Cursor cursor, final SqlQueryModel model, final BooleanLogic booleanLogic) {
+        super(cursor);
+        mModel = model;
+        if (booleanLogic == null) {
+            mBooleanLogic = DEFAULT_BOOLEAN_LOGIC;
+        } else {
+            mBooleanLogic = booleanLogic;
+        }
     }
 
     /**
      * Performs the necessary calculations to assess the value of a boolean
      * <p/>
-     * The default logic used to calculate the boolean is the following:
-     * if (value_as_int == 1) ? true : false;
+     * The default logic used to calculate the boolean is defined in {@link DefaultBooleanLogic}
      *
      * @param columnNumber the number of the column containing the value to assess
      * @return true if the value of the boolean is true, false otherwise
      */
-    protected boolean calcBoolean(final int columnNumber) {
-        final int value = getInt(columnNumber);
-        return (value == 1);
+    private boolean calcBoolean(final int columnNumber) {
+        return mBooleanLogic.isTrue(this, columnNumber);
     }
 
     /* (non-Javadoc)
@@ -74,7 +92,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
      * Returns the value of the requested column as a boolean or throws
      * IllegalArgumentException if the column doesn't exist.
      * <p/>
-     * The logic is defined in {@link #calcBoolean(int)}
+     * The default logic is defined in {@link DefaultBooleanLogic}
      *
      * @param columnName the column name
      * @return the value from cursor
