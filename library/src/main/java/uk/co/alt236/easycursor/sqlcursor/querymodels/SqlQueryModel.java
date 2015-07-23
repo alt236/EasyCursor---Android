@@ -57,7 +57,7 @@ public abstract class SqlQueryModel implements EasyQueryModel {
 
     /**
      * Execute the query described by this model.
-     * <p/>
+     * <p>
      * If the model is initialised, or if the query model is of an unsupported type,
      * this method will throw an IllegalStateException.
      *
@@ -70,7 +70,7 @@ public abstract class SqlQueryModel implements EasyQueryModel {
 
     /**
      * Execute the query described by this model.
-     * <p/>
+     * <p>
      * If the model is initialised, or if the query model is of an unsupported type,
      * this method will throw an IllegalStateException.
      *
@@ -94,17 +94,19 @@ public abstract class SqlQueryModel implements EasyQueryModel {
 
     /**
      * Execute the query described by this model.
-     * <p/>
+     * <p>
      * If the model is initialised, or if the query model is of an unsupported type,
      * this method will throw an IllegalStateException.
      *
      * @param db              the database to run the query against
      * @param easyCursorClass the Class of an EasyCursor implementation. Will use {@link EasySqlCursor} if null.
+     * @param booleanLogic an Object describing the {@link BooleanLogic} for this cursor. Pass null for the {@link uk.co.alt236.easycursor.sqlcursor.DefaultBooleanLogic}
      * @return the {@link EasySqlCursor} containing the result of the query.
      * @throws NoSuchMethodException
      * @throws InvocationTargetException if an exception was thrown by the invoked constructor
      * @throws IllegalAccessException    if this constructor is not accessible
      * @throws InstantiationException    if the class cannot be instantiated
+     * @throws NoSuchMethodException     if a method with the requested parameters cannot be found
      * @throws IllegalArgumentException  if an incorrect number of arguments are passed, or an argument could not be converted by a widening conversion
      */
     public EasyCursor execute(final SQLiteDatabase db, final Class<? extends EasySqlCursor> easyCursorClass, final BooleanLogic booleanLogic) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
@@ -467,8 +469,8 @@ public abstract class SqlQueryModel implements EasyQueryModel {
          * <li>Use one of the query overloads instead of getting the statement as a sql string</li>
          * </ul>
          * By default, this value is false.
-         * <p/>
-         * This value is ignored if you are on a device running API < 14.
+         * <p>
+         * This value is ignored if you are on a device running API lower than 14.
          */
         public SelectQueryBuilder setStrict(final boolean strict) {
             this.strict = strict;

@@ -80,8 +80,6 @@ public class CompatSqlModelBuilder implements SqlRawQueryBuilder, SqlSelectBuild
 
     /**
      * Gets the user specified comment of this Model
-     *
-     * @return the comment
      */
     public void setModelComment(final String comment) {
         mModelComment = comment;
@@ -94,8 +92,6 @@ public class CompatSqlModelBuilder implements SqlRawQueryBuilder, SqlSelectBuild
 
     /**
      * Gets the user specified tag of this Model
-     *
-     * @return the tag
      */
     public void setModelTag(final String tag) {
         mModelTag = tag;
@@ -196,7 +192,7 @@ public class CompatSqlModelBuilder implements SqlRawQueryBuilder, SqlSelectBuild
 
     /**
      * Returns whether or not this query is set to be Strict.
-     * This value is ignored if you are on a device running API < 14.
+     * This value is ignored if you are on a device running API lower than 14.
      *
      * @return the Strict setting
      */
@@ -206,13 +202,14 @@ public class CompatSqlModelBuilder implements SqlRawQueryBuilder, SqlSelectBuild
 
     /**
      * When set, the selection is verified against malicious arguments.
+     * <ul>
      * <li>Set this value to true</li>
      * <li>Use a projection map</li>
      * <li>Use one of the query overloads instead of getting the statement as a sql string</li>
      * </ul>
      * By default, this value is false.
-     * <p/>
-     * This value is ignored if you are on a device running API < 14.
+     * <p>
+     * This value is ignored if you are on a device running API lower than 14.
      */
     public void setStrict(final boolean value) {
         mStrict = value;
@@ -220,7 +217,7 @@ public class CompatSqlModelBuilder implements SqlRawQueryBuilder, SqlSelectBuild
 
     /**
      * Sets the query parameters.
-     * <p/>
+     * <p>
      * Will throw an IllegalStateException if one tries to set
      * the parameters more than once.
      *
@@ -241,7 +238,7 @@ public class CompatSqlModelBuilder implements SqlRawQueryBuilder, SqlSelectBuild
 
     /**
      * Sets the query parameters.
-     * <p/>
+     * <p>
      * Will throw an IllegalStateException if one tries to set
      * the parameters more than once.
      *
@@ -265,7 +262,7 @@ public class CompatSqlModelBuilder implements SqlRawQueryBuilder, SqlSelectBuild
 
     /**
      * Sets the query parameters.
-     * <p/>
+     * <p>
      * Will throw an IllegalStateException if one tries to set
      * the parameters more than once.
      *

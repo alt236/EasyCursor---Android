@@ -9,12 +9,14 @@ public class DefaultBooleanLogic implements BooleanLogic {
 
     /**
      * This method defines the default boolean resolution of an {@link EasySqlCursor}
-     * <p/>
+     * <p>
      * It is defined as:
-     * <code>
+     * <pre>
+     * {@code
      * final int value = cursor.getInt(columnNumber);
      * return (value == 1);
-     * <code/>
+     * }
+     * </pre>
      *
      * @param cursor       the cursor we are examining
      * @param columnNumber the column we are examining

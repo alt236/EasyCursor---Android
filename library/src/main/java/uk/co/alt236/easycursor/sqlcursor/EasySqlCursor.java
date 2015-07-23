@@ -70,7 +70,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
 
     /**
      * Performs the necessary calculations to assess the value of a boolean
-     * <p/>
+     * <p>
      * The default logic used to calculate the boolean is defined in {@link DefaultBooleanLogic}
      *
      * @param columnNumber the number of the column containing the value to assess
@@ -91,7 +91,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
     /**
      * Returns the value of the requested column as a boolean or throws
      * IllegalArgumentException if the column doesn't exist.
-     * <p/>
+     * <p>
      * The default logic is defined in {@link DefaultBooleanLogic}
      *
      * @param columnName the column name
@@ -188,7 +188,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
     /**
      * Extracts the contents of a cursors Column as a Boolean.
      * If the column does not exist, it will return null;
-     * <p/>
+     * <p>
      * The logic is defined in {@link #calcBoolean(int)}
      *
      * @param columnName the name of the cursor column that we want to get the value from
@@ -202,7 +202,7 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
     /**
      * Extracts the contents of a cursors Column as a Boolean.
      * If the column does not exist, it will return the fallback value;
-     * <p/>
+     * <p>
      * The logic is defined in {@link #calcBoolean(int)}
      *
      * @param columnName the column name
@@ -223,9 +223,9 @@ public class EasySqlCursor extends CursorWrapper implements EasyCursor {
     /**
      * Extracts the contents of a cursors Column as a Boolean.
      * If the column does not exist, it will return null.
-     * <p/>
+     * <p>
      * Use this if you want to know if the column did not exist.
-     * <p/>
+     * <p>
      * The logic is defined in {@link #calcBoolean(int)}
      *
      * @param columnName the column name

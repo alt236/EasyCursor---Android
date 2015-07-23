@@ -185,7 +185,7 @@ public class SelectQueryModel extends SqlQueryModel {
 
     /**
      * Returns whether or not this query is set to be Strict.
-     * This value is ignored if you are on a device running API < 14.
+     * This value is ignored if you are on a device running API lower than 14.
      *
      * @return the Strict setting
      */

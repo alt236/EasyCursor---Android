@@ -17,7 +17,7 @@ public interface EasyCursor extends Cursor {
     /**
      * Returns the value of the requested column as a boolean or throws
      * IllegalArgumentException if the column doesn't exist.
-     * <p/>
+     * <p>
      * The logic is implementation specific
      *
      * @param columnName the column name
@@ -106,7 +106,7 @@ public interface EasyCursor extends Cursor {
     /**
      * Extracts the contents of a cursors Column as a Boolean.
      * If the column does not exist, it will return null;
-     * <p/>
+     * <p>
      * The logic is implementation specific.
      *
      * @param columnName the name of the cursor column that we want to get the value from
@@ -117,7 +117,7 @@ public interface EasyCursor extends Cursor {
     /**
      * Extracts the contents of a cursors Column as a Boolean.
      * If the column does not exist, it will return the fallback value;
-     * <p/>
+     * <p>
      * The logic is implementation specific.
      *
      * @param columnName the column name
@@ -129,9 +129,9 @@ public interface EasyCursor extends Cursor {
     /**
      * Extracts the contents of a cursors Column as a Boolean.
      * If the column does not exist, it will return null.
-     * <p/>
+     * <p>
      * Use this if you want to know if the column did not exist.
-     * <p/>
+     * <p>
      * The logic is implementation specific.
      *
      * @param columnName the column name
@@ -160,7 +160,7 @@ public interface EasyCursor extends Cursor {
     /**
      * Extracts the contents of a cursors Column as a Double.
      * If the column does not exist, it will return null;
-     * <p/>
+     * <p>
      * Use this if you want to know if the column did not exist.
      *
      * @param columnName the column name
@@ -189,7 +189,7 @@ public interface EasyCursor extends Cursor {
     /**
      * Extracts the contents of a cursors Column as a Float.
      * If the column does not exist, it will return null;
-     * <p/>
+     * <p>
      * Use this if you want to know if the column did not exist.
      *
      * @param columnName the column name
@@ -218,7 +218,7 @@ public interface EasyCursor extends Cursor {
     /**
      * Extracts the contents of a cursors Column as an Integer.
      * If the column does not exist, it will return null;
-     * <p/>
+     * <p>
      * Use this if you want to know if the column did not exist.
      *
      * @param columnName the column name
@@ -247,7 +247,7 @@ public interface EasyCursor extends Cursor {
     /**
      * Extracts the contents of a cursors Column as a Long.
      * If the column does not exist, it will return null;
-     * <p/>
+     * <p>
      * Use this if you want to know if the column did not exist.
      *
      * @param columnName the column name
@@ -276,7 +276,7 @@ public interface EasyCursor extends Cursor {
     /**
      * Extracts the contents of a cursors Column as a Short.
      * If the column does not exist, it will return null;
-     * <p/>
+     * <p>
      * Use this if you want to know if the column did not exist.
      *
      * @param columnName the column name
@@ -296,7 +296,7 @@ public interface EasyCursor extends Cursor {
     /**
      * Extracts the contents of a cursors Column as a String.
      * If the column does not exist, it will return the fallback value;
-     * <p/>
+     * <p>
      * Note that this only checks if the column exists. If your fallback is not null,
      * you can still get a null back if the column content is null.
      *
