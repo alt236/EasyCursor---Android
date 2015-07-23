@@ -85,7 +85,11 @@ public final class ObjectConverter {
         if (obj instanceof Number) {
             return ((Number) obj).doubleValue();
         } else if (obj instanceof String) {
-            return Double.valueOf(String.valueOf(obj));
+            try {
+                return Double.valueOf(String.valueOf(obj));
+            } catch (final NumberFormatException e) {
+                throw new ConversionErrorException(e);
+            }
         } else if (obj instanceof byte[] && ((byte[]) obj).length == DOUBLE_BYTE_SIZE) {
             final ByteBuffer buffer = getByteBuffer(DOUBLE_BYTE_SIZE).put((byte[]) obj);
             buffer.flip();
@@ -99,7 +103,11 @@ public final class ObjectConverter {
         if (obj instanceof Number) {
             return ((Number) obj).floatValue();
         } else if (obj instanceof String) {
-            return Float.valueOf(String.valueOf(obj));
+            try {
+                return Float.valueOf(String.valueOf(obj));
+            } catch (final NumberFormatException e) {
+                throw new ConversionErrorException(e);
+            }
         } else if (obj instanceof byte[] && ((byte[]) obj).length == FLOAT_BYTE_SIZE) {
             final ByteBuffer buffer = getByteBuffer(FLOAT_BYTE_SIZE).put((byte[]) obj);
             buffer.flip();
@@ -113,7 +121,11 @@ public final class ObjectConverter {
         if (obj instanceof Number) {
             return ((Number) obj).intValue();
         } else if (obj instanceof String) {
-            return Integer.valueOf(String.valueOf(obj));
+            try {
+                return Integer.valueOf(String.valueOf(obj));
+            } catch (final NumberFormatException e) {
+                throw new ConversionErrorException(e);
+            }
         } else if (obj instanceof byte[] && ((byte[]) obj).length == INT_BYTE_SIZE) {
             final ByteBuffer buffer = getByteBuffer(INT_BYTE_SIZE).put((byte[]) obj);
             buffer.flip();
@@ -127,7 +139,11 @@ public final class ObjectConverter {
         if (obj instanceof Number) {
             return ((Number) obj).longValue();
         } else if (obj instanceof String) {
-            return Short.valueOf(String.valueOf(obj)).longValue();
+            try {
+                return Long.valueOf(String.valueOf(obj));
+            } catch (final NumberFormatException e) {
+                throw new ConversionErrorException(e);
+            }
         } else if (obj instanceof byte[] && ((byte[]) obj).length == LONG_BYTE_SIZE) {
             final ByteBuffer buffer = getByteBuffer(LONG_BYTE_SIZE).put((byte[]) obj);
             buffer.flip();
@@ -141,7 +157,11 @@ public final class ObjectConverter {
         if (obj instanceof Number) {
             return ((Number) obj).shortValue();
         } else if (obj instanceof String) {
-            return Short.valueOf(String.valueOf(obj));
+            try {
+                return Short.valueOf(String.valueOf(obj));
+            } catch (final NumberFormatException e) {
+                throw new ConversionErrorException(e);
+            }
         } else if (obj instanceof byte[] && ((byte[]) obj).length == SHORT_BYTE_SIZE) {
             final ByteBuffer buffer = getByteBuffer(SHORT_BYTE_SIZE).put((byte[]) obj);
             buffer.flip();
