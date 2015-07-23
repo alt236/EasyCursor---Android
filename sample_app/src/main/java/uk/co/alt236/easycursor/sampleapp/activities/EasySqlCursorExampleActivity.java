@@ -75,7 +75,7 @@ public class EasySqlCursorExampleActivity extends FragmentActivity implements Lo
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cursor_selection);
-        ListView mListView = (ListView) findViewById(android.R.id.list);
+        final ListView mListView = (ListView) findViewById(android.R.id.list);
         mListView.setEmptyView(findViewById(android.R.id.empty));
         mSaveQueryButton = (Button) findViewById(R.id.buttonSave);
         mSpinner = (Spinner) findViewById(R.id.spinner);
@@ -96,8 +96,7 @@ public class EasySqlCursorExampleActivity extends FragmentActivity implements Lo
 
     @Override
     public Loader<Cursor> onCreateLoader(final int arg0, final Bundle arg1) {
-        Loader<Cursor> mLoader = new DatabaseLoader(this, arg1.getInt(EXTRA_QUERY_TYPE, -2));
-        return mLoader;
+        return new DatabaseLoader(this, arg1.getInt(EXTRA_QUERY_TYPE, -2));
     }
 
     public void onExecuteClick(final View v) {

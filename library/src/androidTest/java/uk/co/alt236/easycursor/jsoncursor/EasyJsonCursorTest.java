@@ -3,6 +3,7 @@ package uk.co.alt236.easycursor.jsoncursor;
 import junit.framework.TestCase;
 
 import uk.co.alt236.easycursor.EasyCursor;
+
 /**
  *
  */

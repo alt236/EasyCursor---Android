@@ -42,7 +42,7 @@ public class EasyJsonCursorExampleActivity extends FragmentActivity implements L
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cursor_selection);
-        ListView mListView = (ListView) findViewById(android.R.id.list);
+        final ListView mListView = (ListView) findViewById(android.R.id.list);
         mListView.setEmptyView(findViewById(android.R.id.empty));
         mSaveQueryButton = (Button) findViewById(R.id.buttonSave);
         findViewById(R.id.spinner_container).setVisibility(View.GONE);

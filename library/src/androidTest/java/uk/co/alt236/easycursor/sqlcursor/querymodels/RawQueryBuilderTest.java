@@ -11,7 +11,7 @@ import uk.co.alt236.easycursor.EasyQueryModel;
  */
 public class RawQueryBuilderTest extends TestCase {
 
-    public void testFields() throws Exception{
+    public void testFields() throws Exception {
         final String sql = "RAW_SQL";
         final String[] args = {"a", "b"};
 
@@ -30,7 +30,7 @@ public class RawQueryBuilderTest extends TestCase {
         assertEquals(null, model2.getRawSql());
     }
 
-    public void testFieldsUnset() throws Exception{
+    public void testFieldsUnset() throws Exception {
         final RawQueryModel model = (RawQueryModel) new SqlQueryModel.RawQueryBuilder()
                 .build();
 
@@ -38,7 +38,7 @@ public class RawQueryBuilderTest extends TestCase {
         assertEquals(null, model.getRawSql());
     }
 
-    public void testJson() throws Exception{
+    public void testJson() throws Exception {
         final String comment = "comment";
         final String tag = "tag";
         final int version = 22;
@@ -64,7 +64,7 @@ public class RawQueryBuilderTest extends TestCase {
         assertEquals(model.getRawSql(), model2.getRawSql());
     }
 
-    public void testModelInfo() throws Exception{
+    public void testModelInfo() throws Exception {
         final String comment = "comment";
         final String tag = "tag";
         final int version = 22;
@@ -93,7 +93,7 @@ public class RawQueryBuilderTest extends TestCase {
         assertEquals(0, model2.getModelVersion());
     }
 
-    public void testModelInfoUnset() throws Exception{
+    public void testModelInfoUnset() throws Exception {
         final EasyQueryModel model1 = new SqlQueryModel.RawQueryBuilder()
                 .build();
 

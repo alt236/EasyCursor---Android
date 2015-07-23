@@ -119,14 +119,14 @@ public class ObjectConverterTest extends TestCase {
         try {
             assertFalse((boolean) mObjectConverter.toType(ObjectType.BOOLEAN, 1));
             fail("this should have blown");
-        } catch (final ConversionErrorException e){
+        } catch (final ConversionErrorException e) {
             // Expected
         }
 
         try {
             assertFalse((boolean) mObjectConverter.toType(ObjectType.BOOLEAN, null));
             fail("this should have blown");
-        } catch (final ConversionErrorException e){
+        } catch (final ConversionErrorException e) {
             // Expected
         }
     }
@@ -134,7 +134,7 @@ public class ObjectConverterTest extends TestCase {
     public void testToByteArray() throws Exception {
         assertNull(mObjectConverter.toType(ObjectType.BYTE_ARRAY, null));
 
-        final byte[] array = new byte[]{1,2,3, Byte.MAX_VALUE, Byte.MIN_VALUE};
+        final byte[] array = new byte[]{1, 2, 3, Byte.MAX_VALUE, Byte.MIN_VALUE};
         assertTrue(Arrays.equals(
                 array,
                 (byte[]) mObjectConverter.toType(ObjectType.BYTE_ARRAY, array)));
@@ -146,7 +146,7 @@ public class ObjectConverterTest extends TestCase {
         try {
             mObjectConverter.toType(ObjectType.BYTE_ARRAY, new TestObject(1));
             fail("this should have blown");
-        } catch (final ConversionErrorException e){
+        } catch (final ConversionErrorException e) {
             // Expected
         }
     }
@@ -162,14 +162,14 @@ public class ObjectConverterTest extends TestCase {
         try {
             mObjectConverter.toType(ObjectType.DOUBLE, false);
             fail("this should have blown");
-        } catch (final ConversionErrorException e){
+        } catch (final ConversionErrorException e) {
             // Expected
         }
 
         try {
             mObjectConverter.toType(ObjectType.DOUBLE, null);
             fail("this should have blown");
-        } catch (final ConversionErrorException e){
+        } catch (final ConversionErrorException e) {
             // Expected
         }
     }
@@ -185,14 +185,14 @@ public class ObjectConverterTest extends TestCase {
         try {
             mObjectConverter.toType(ObjectType.FLOAT, false);
             fail("this should have blown");
-        } catch (final ConversionErrorException e){
+        } catch (final ConversionErrorException e) {
             // Expected
         }
 
         try {
             mObjectConverter.toType(ObjectType.FLOAT, null);
             fail("this should have blown");
-        } catch (final ConversionErrorException e){
+        } catch (final ConversionErrorException e) {
             // Expected
         }
     }
@@ -207,14 +207,14 @@ public class ObjectConverterTest extends TestCase {
         try {
             mObjectConverter.toType(ObjectType.INTEGER, false);
             fail("this should have blown");
-        } catch (final ConversionErrorException e){
+        } catch (final ConversionErrorException e) {
             // Expected
         }
 
         try {
             mObjectConverter.toType(ObjectType.INTEGER, null);
             fail("this should have blown");
-        } catch (final ConversionErrorException e){
+        } catch (final ConversionErrorException e) {
             // Expected
         }
     }
@@ -229,14 +229,14 @@ public class ObjectConverterTest extends TestCase {
         try {
             mObjectConverter.toType(ObjectType.LONG, false);
             fail("this should have blown");
-        } catch (final ConversionErrorException e){
+        } catch (final ConversionErrorException e) {
             // Expected
         }
 
         try {
             mObjectConverter.toType(ObjectType.LONG, null);
             fail("this should have blown");
-        } catch (final ConversionErrorException e){
+        } catch (final ConversionErrorException e) {
             // Expected
         }
     }
@@ -251,14 +251,14 @@ public class ObjectConverterTest extends TestCase {
         try {
             mObjectConverter.toType(ObjectType.SHORT, false);
             fail("this should have blown");
-        } catch (final ConversionErrorException e){
+        } catch (final ConversionErrorException e) {
             // Expected
         }
 
         try {
             mObjectConverter.toType(ObjectType.SHORT, null);
             fail("this should have blown");
-        } catch (final ConversionErrorException e){
+        } catch (final ConversionErrorException e) {
             // Expected
         }
     }

@@ -41,7 +41,7 @@ public class EasyObjectCursorExampleActivity extends FragmentActivity implements
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cursor_selection);
-        ListView mListView = (ListView) findViewById(android.R.id.list);
+        final ListView mListView = (ListView) findViewById(android.R.id.list);
         mListView.setEmptyView(findViewById(android.R.id.empty));
         mSaveQueryButton = (Button) findViewById(R.id.buttonSave);
         findViewById(R.id.spinner_container).setVisibility(View.GONE);
@@ -56,8 +56,7 @@ public class EasyObjectCursorExampleActivity extends FragmentActivity implements
 
     @Override
     public Loader<Cursor> onCreateLoader(final int arg0, final Bundle arg1) {
-        Loader<Cursor> mLoader = new ObjectLoader(this);
-        return mLoader;
+        return new ObjectLoader(this);
     }
 
     public void onExecuteClick(final View v) {

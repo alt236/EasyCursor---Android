@@ -100,7 +100,7 @@ public abstract class SqlQueryModel implements EasyQueryModel {
      *
      * @param db              the database to run the query against
      * @param easyCursorClass the Class of an EasyCursor implementation. Will use {@link EasySqlCursor} if null.
-     * @param booleanLogic an Object describing the {@link BooleanLogic} for this cursor. Pass null for the {@link uk.co.alt236.easycursor.sqlcursor.DefaultBooleanLogic}
+     * @param booleanLogic    an Object describing the {@link BooleanLogic} for this cursor. Pass null for the {@link uk.co.alt236.easycursor.sqlcursor.DefaultBooleanLogic}
      * @return the {@link EasySqlCursor} containing the result of the query.
      * @throws NoSuchMethodException
      * @throws InvocationTargetException if an exception was thrown by the invoked constructor

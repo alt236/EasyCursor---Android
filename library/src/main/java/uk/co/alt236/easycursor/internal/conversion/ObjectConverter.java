@@ -18,7 +18,7 @@ public final class ObjectConverter {
     private final String mEncoding;
     private final ByteOrder mByteOrder;
 
-    public ObjectConverter(){
+    public ObjectConverter() {
         this(UTF_8, ByteOrder.BIG_ENDIAN);
     }
 
@@ -31,18 +31,18 @@ public final class ObjectConverter {
         return ByteBuffer.allocate(size).order(mByteOrder);
     }
 
-    private byte[] getBytes(final String string){
+    private byte[] getBytes(final String string) {
         try {
             return string.getBytes(mEncoding);
-        }catch (final UnsupportedEncodingException e){
+        } catch (final UnsupportedEncodingException e) {
             throw new ConversionErrorException(e);
         }
     }
 
-    private String getString(final byte[] array){
+    private String getString(final byte[] array) {
         try {
             return new String(array, mEncoding);
-        }catch (final UnsupportedEncodingException e){
+        } catch (final UnsupportedEncodingException e) {
             throw new ConversionErrorException(e);
         }
     }
@@ -176,7 +176,7 @@ public final class ObjectConverter {
             return null;
         }
 
-        if(obj instanceof String){
+        if (obj instanceof String) {
             return (String) obj;
         } else if (obj instanceof byte[]) {
             return getString((byte[]) obj);

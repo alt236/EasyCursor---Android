@@ -20,7 +20,7 @@ public class DefaultBooleanLogic implements BooleanLogic {
      *
      * @param cursor       the cursor we are examining
      * @param columnNumber the column we are examining
-     * @return
+     * @return whether the contents of the specified column of the cursor represent TRUE
      */
     @Override
     public boolean isTrue(final EasyCursor cursor, final int columnNumber) {

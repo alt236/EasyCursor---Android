@@ -22,7 +22,7 @@ class ObjectFieldAccessor<T> implements FieldAccessor {
     private final List<Method> mMethodList;
     private final List<String> mFieldNameList;
 
-    public ObjectFieldAccessor(final Class<T> clazz){
+    public ObjectFieldAccessor(final Class<T> clazz) {
         mFieldToMethodMap = Collections.synchronizedMap(new HashMap<String, Method>());
         mMethodList = new ArrayList<>();
         mFieldToIndexMap = new HashMap<>();
@@ -31,7 +31,7 @@ class ObjectFieldAccessor<T> implements FieldAccessor {
     }
 
     @Override
-    public int getFieldIndexByName(final String name){
+    public int getFieldIndexByName(final String name) {
         if (mFieldToIndexMap.containsKey(name)) {
             return mFieldToIndexMap.get(name);
         } else {
@@ -40,7 +40,7 @@ class ObjectFieldAccessor<T> implements FieldAccessor {
     }
 
     @Override
-    public String getFieldNameByIndex(final int index){
+    public String getFieldNameByIndex(final int index) {
         return mFieldNameList.get(index);
     }
 
@@ -72,11 +72,11 @@ class ObjectFieldAccessor<T> implements FieldAccessor {
         }
     }
 
-    public Method getMethod(final int index){
+    public Method getMethod(final int index) {
         return mMethodList.get(index);
     }
 
-    public List<Method> getMethodList(){
+    public List<Method> getMethodList() {
         return mMethodList;
     }
 

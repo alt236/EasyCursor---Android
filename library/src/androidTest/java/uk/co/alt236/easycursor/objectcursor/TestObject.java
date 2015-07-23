@@ -21,12 +21,12 @@ public class TestObject {
 
         mString = UUID.randomUUID().toString();
         mByte = mString.getBytes();
-        mBool =  random.nextBoolean();
-        mLong =  random.nextLong();
-        mInt =  random.nextInt();
-        mDouble =  random.nextDouble();
-        mFloat =  random.nextFloat();
-        mShort =  (short) random.nextInt(Short.MAX_VALUE + 1);
+        mBool = random.nextBoolean();
+        mLong = random.nextLong();
+        mInt = random.nextInt();
+        mDouble = random.nextDouble();
+        mFloat = random.nextFloat();
+        mShort = (short) random.nextInt(Short.MAX_VALUE + 1);
     }
 
     public TestObject(final String mString,

@@ -65,7 +65,7 @@ public final class TestObjectCursorBuilder {
         return Collections.unmodifiableList(list);
     }
 
-    private static byte[] toByteArray(final String string){
+    private static byte[] toByteArray(final String string) {
         try {
             return string.getBytes("UTF-8");
         } catch (final Exception e) {
