@@ -1,6 +1,8 @@
 #EasyCursor
 
-For those who find statements like `cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME));` or `cursor.getColumnIndex(COLUMN)==-1 ? value=FALLBACK : value=cursor.getString(COLUMN);`a bit too arcane and verbose.
+For those who find statements like `cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME));`
+or `cursor.getColumnIndex(COLUMN)==-1 ? value=FALLBACK : value=cursor.getString(COLUMN);`
+a bit too arcane and verbose.
 
 Also, for those that have to maintain both a CursorAdaptor and an ArrayAdaptor for the same data from different sources.
 
@@ -14,11 +16,15 @@ There are 3 types of EasyCursors:
 
 1. A number of code simplification functions such as `cursor.getString(COLUMN_NAME)` to reduce verbosity.
 2. A way of accessing optional columns/fields such as `cursor.optLong(COLUMN_NAME)` and `cursor.optLong(COLUMN_NAME, FALLBACK_VALUE)`.
-3. (Optionally) A way to store the way the cursor was constructed so that it can be stored for later re-creation. Currently the library only implements this for the EasySqlCursor but it can be build for the others as well.
+3. (Optionally) A way to store the way the cursor was constructed so that it can be stored for later re-creation.
+Currently the library only implements this for the EasySqlCursor but it can be build for the others as well.
 
 **EasySqlCursors** also offer:
 
-1. A way to access booleans directly (i.e. `cursor.getBoolean()`/`cursor.optBoolean()`). The default implementation of EasySqlCursor assumes that `true==1` and `false!=1` where 1 is a number, but it can be overridden by subclassing.
+1. A way to access booleans directly (i.e. `cursor.getBoolean()`/`cursor.optBoolean()`). The default
+implementation of EasySqlCursor is defined in `DefaultBooleanLogic.java` and assumes that `true==1` and
+`false!=1` where 1 is a number, but it can be changed by passing a custom BooleanLogic implementation
+in the constructor.
 
 
 ##Getting Started Guide
@@ -51,9 +57,14 @@ Any JSON array can be converted to a cursor like this:
 ```
 Notes and Caveats:
 
-* The "columns" array for the "getColumnIndexOrThrow() / getColumnIndex()" methods is calculated based on the JSON fields of the first array item. This means that if the other items have more, you will not be able to access them using any of the getXXX methods - you will get an EasyJsonException - and if they have less, you will also get an EasyJsonException. To access those fields you will need to use the optXXX methods.
+* The "columns" array for the "getColumnIndexOrThrow() / getColumnIndex()" methods is calculated
+based on the JSON fields of the first array item. This means that if the other items have more,
+you will not be able to access them using any of the getXXX methods - you will get an IllegalArgumentException.
+To access those fields you will need to use the optXXX methods.
 
-* EasyJsonCursor is internally using org.json. Normally, org.json getXXX methods throw checked JsonExceptions but in order to keep the EasyCursor API consistent these exceptions are caught (when thrown from getXXX methods) and re-thrown as runtime EasyJsonExceptions.
+* EasyJsonCursor is internally using org.json. Normally, org.json getXXX methods throw checked
+JsonExceptions but in order to keep the EasyCursor API consistent these exceptions are caught
+(when thrown from getXXX methods) and re-thrown as runtime IllegalArgumentExceptions or ConversionErrorExceptions.
 
 * getBytes()/optBytes() is not implemented and will throw an UnsupportedOperationException when called.
 
@@ -253,7 +264,7 @@ In addition you get the following functions for booleans, which work the same as
 * `easycursor.optBoolean(String columnName, boolean fallback)`
 * `easycursor.optBooleanAsWrapperType(String columnName)`
 
-The logic behind a boolean is as follows: `true==1` and `false!=1` where 1 is a number.
+The logic behind a boolean is as follows: `true==1` and `false!=1` is defined in `DefaultBooleanLogic.java`.
 
 ###Accessing an EasyCursor's EasyQueryModel, saving it and replaying
 If the cursor has been generated via an EasyQueryModel, then you can access the model like this: 
@@ -288,7 +299,8 @@ The following snippet will get the Model JSON of a cursor, save it in local pref
   final EasyCursor eCursor = model.execute(getReadableDatabase());
 ```  		
 ###Keeping track of an EasyQueryModel
-In order to keep track of an EasyQueryModel file and help in maintaining compatibility of the model to the underlying DB (if your schema can change), you can use the following functions.
+In order to keep track of an EasyQueryModel file and help in maintaining compatibility of the model
+to the underlying DB (if your schema can change), you can use the following functions.
 
 * `setModelComment(String comment)/String getModelComment()`
 * `setModelTag(String tag)/ String getModelTag()`
@@ -297,7 +309,8 @@ In order to keep track of an EasyQueryModel file and help in maintaining compati
 There is no business logic behind these functions -- it is up to each user to keep a compatibility matrix.
 
 ##Extending the implementation of EasySqlCursor
-If you need to extend the base implementation of EasySqlCursor, for example because you treat booleans differently, you can use the following syntax:
+If you need to extend the base implementation of EasySqlCursor, for example because you treat
+booleans differently, you can use the following syntax:
 
 ```
 final EasyCursor cursor = model.execute(getReadableDatabase(), MyExtendedEasyCursor.class);
