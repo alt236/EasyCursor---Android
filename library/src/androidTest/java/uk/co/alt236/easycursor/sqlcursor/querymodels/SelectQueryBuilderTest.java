@@ -100,7 +100,7 @@ public class SelectQueryBuilderTest extends TestCase {
                 .build();
 
         final String json = model.toJson();
-        final SelectQueryModel model2 = (SelectQueryModel) JsonModelConverter.convert(json);
+        final SelectQueryModel model2 = (SelectQueryModel) SqlJsonModelConverter.convert(json);
 
         assertEquals(model.isDistinct(), model2.isDistinct());
         assertEquals(model.getGroupBy(), model2.getGroupBy());

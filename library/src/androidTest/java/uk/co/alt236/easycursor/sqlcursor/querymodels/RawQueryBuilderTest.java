@@ -55,7 +55,7 @@ public class RawQueryBuilderTest extends TestCase {
 
         final String json = model.toJson();
 
-        final RawQueryModel model2 = (RawQueryModel) JsonModelConverter.convert(json);
+        final RawQueryModel model2 = (RawQueryModel) SqlJsonModelConverter.convert(json);
 
         assertEquals(model.getModelComment(), model2.getModelComment());
         assertEquals(model.getModelTag(), model2.getModelTag());

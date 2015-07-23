@@ -6,9 +6,9 @@ import org.json.JSONObject;
 /**
  *
  */
-public final class JsonModelConverter {
+public final class SqlJsonModelConverter {
 
-    private JsonModelConverter() {
+    private SqlJsonModelConverter() {
         // no instances
     }
 

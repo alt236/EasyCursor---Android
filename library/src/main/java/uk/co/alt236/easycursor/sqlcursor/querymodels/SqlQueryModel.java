@@ -154,7 +154,7 @@ public abstract class SqlQueryModel implements EasyQueryModel {
     /**
      * Will return the JSON representation of this QueryModel.
      * It can be converted back into a QueryModel object using the
-     * {@link JsonModelConverter#convert(String)} method.
+     * {@link SqlJsonModelConverter#convert(String)} method.
      *
      * @return the resulting JSON String
      * @throws IllegalStateException if one tries to create

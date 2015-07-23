@@ -20,7 +20,7 @@ import uk.co.alt236.easycursor.sampleapp.database.builders.LousyQueryBuilder;
 import uk.co.alt236.easycursor.sampleapp.util.Constants;
 import uk.co.alt236.easycursor.sqlcursor.EasySqlCursor;
 import uk.co.alt236.easycursor.sqlcursor.querybuilders.CompatSqlModelBuilder;
-import uk.co.alt236.easycursor.sqlcursor.querymodels.JsonModelConverter;
+import uk.co.alt236.easycursor.sqlcursor.querymodels.SqlJsonModelConverter;
 import uk.co.alt236.easycursor.sqlcursor.querymodels.SqlQueryModel;
 
 public class ExampleDatabase extends SQLiteAssetHelper {
@@ -131,7 +131,7 @@ public class ExampleDatabase extends SQLiteAssetHelper {
             result = null;
         } else {
             try {
-                final SqlQueryModel model = JsonModelConverter.convert(json);
+                final SqlQueryModel model = SqlJsonModelConverter.convert(json);
                 result = model.execute(getReadableDatabase());
             } catch (final JSONException e) {
                 e.printStackTrace();

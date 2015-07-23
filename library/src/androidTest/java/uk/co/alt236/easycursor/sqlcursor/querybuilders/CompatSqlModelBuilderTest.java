@@ -5,8 +5,8 @@ import junit.framework.TestCase;
 import java.util.Arrays;
 
 import uk.co.alt236.easycursor.EasyQueryModel;
-import uk.co.alt236.easycursor.sqlcursor.querymodels.JsonModelConverter;
 import uk.co.alt236.easycursor.sqlcursor.querymodels.SelectQueryModel;
+import uk.co.alt236.easycursor.sqlcursor.querymodels.SqlJsonModelConverter;
 
 /**
  *
@@ -75,7 +75,7 @@ public class CompatSqlModelBuilderTest extends TestCase {
         final SelectQueryModel model1 = (SelectQueryModel) builder1.build();
 
         final String json = model1.toJson();
-        final SelectQueryModel model2 = (SelectQueryModel) JsonModelConverter.convert(json);
+        final SelectQueryModel model2 = (SelectQueryModel) SqlJsonModelConverter.convert(json);
 
         assertEquals(model1.isDistinct(), model2.isDistinct());
         assertEquals(model1.getGroupBy(), model2.getGroupBy());
