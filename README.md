@@ -29,6 +29,23 @@ in the constructor.
 
 ##Getting Started Guide
 
+## Including the Library in Your Project
+
+This project is available as an artifact for use with Gradle. To use that, add the following blocks to your build.gradle file:
+```
+	repositories {
+		maven {
+			url "https://dl.bintray.com/alt236/maven"
+		}
+	}
+
+	dependencies {
+		compile 'uk.co.alt236:easycursor-android:1.0.0'
+	}
+```
+If you *really* need a Jar file, fork the project and execute `./gradlew clean build generateRelease` at the root of the project.
+This will create a zip file under `<PROJECT_ROOT>/library/build/` the Jar can be found inside.
+
 ###EasySqlCursors
 This is the way to convert boring old cursors to an EasyCursor:
 
@@ -116,23 +133,6 @@ Notes and Caveats:
   5. Float
   6. Double
   7. Short
-
-## Including the Library in Your Project
-
-This project is available as an artifact for use with Gradle. To use that, add the following blocks to your build.gradle file:
-```
-	repositories {
-		maven {
-			url "https://dl.bintray.com/alt236/maven"
-		}
-	}
-
-	dependencies {
-		compile 'uk.co.alt236:easycursor-android:1.0.0'
-	}
-```
-If you *really* need a Jar file, fork the project and execute `./gradlew clean build generateRelease` at the root of the project.
-This will create a zip file under `<PROJECT_ROOT>/library/build/` the Jar can be found inside.
 
 &nbsp;
 &nbsp;
