@@ -117,14 +117,22 @@ Notes and Caveats:
   6. Double
   7. Short
 
-##Installation
-To install:
+## Including the Library in Your Project
 
-Download a copy of the EasyCursor library and reference it in your project. 
-Alternatively you can produce a JAR file and use that (see Jarification below).
+This project is available as an artifact for use with Gradle. To use that, add the following blocks to your build.gradle file:
+```
+	repositories {
+		maven {
+			url "https://dl.bintray.com/alt236/maven"
+		}
+	}
 
-##Jarification
-Type `ant` at the root of the Library Project to produce a Jar file. This will also produce the Javadoc Jar.
+	dependencies {
+		compile 'uk.co.alt236:easycursor-android:1.0.0'
+	}
+```
+If you *really* need a Jar file, fork the project and execute `./gradlew clean build generateRelease` at the root of the project.
+This will create a zip file under `<PROJECT_ROOT>/library/build/` the Jar can be found inside.
 
 &nbsp;
 &nbsp;

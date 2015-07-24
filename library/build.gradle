@@ -17,7 +17,7 @@ dependencies {
 
 ext {
     PUBLISH_GROUP_ID = 'uk.co.alt236'
-    PUBLISH_ARTIFACT_ID = 'easycursor'
+    PUBLISH_ARTIFACT_ID = 'easycursor-android'
     PUBLISH_VERSION = "${semanticVersion}"
 }
 
