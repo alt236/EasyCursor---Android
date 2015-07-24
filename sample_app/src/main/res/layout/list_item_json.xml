@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"/>
+
+    <TextView
+        android:id="@+id/gender"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/name"
+        android:paddingLeft="5dp"/>
+
+    <TextView
+        android:id="@+id/age"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/gender"
+        android:paddingLeft="5dp"/>
+
+    <TextView
+        android:id="@+id/guid"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/age"
+        android:paddingLeft="5dp"/>
+
+    <TextView
+        android:id="@+id/about"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/guid"
+        android:paddingLeft="5dp"/>
+
+</RelativeLayout>
