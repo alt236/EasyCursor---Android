@@ -28,3 +28,5 @@ test:
     - find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
     - mkdir -p $CIRCLE_TEST_REPORTS/androidTests/
     - find . -type f -regex ".*/build/outputs/androidTest-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/androidTests/ \;
+    - mkdir -p $CIRCLE_TEST_REPORTS/reports/
+    - find . -type f -regex ".*/build/reports/.*" -exec cp --parents {} $CIRCLE_TEST_REPORTS/reports/ \;
