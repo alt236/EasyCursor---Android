@@ -19,17 +19,25 @@
 
 package uk.co.alt236.easycursor.sqlcursor.querymodels;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.util.Arrays;
 
 import uk.co.alt236.easycursor.EasyQueryModel;
 
-/**
- *
- */
-public class RawQueryBuilderTest extends TestCase {
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+
+@RunWith(RobolectricTestRunner.class)
+@Config(manifest = Config.NONE)
+public class RawQueryBuilderTest {
+
+    @Test
     public void testFields() throws Exception {
         final String sql = "RAW_SQL";
         final String[] args = {"a", "b"};
@@ -39,16 +47,17 @@ public class RawQueryBuilderTest extends TestCase {
                 .setRawSql(sql)
                 .build();
 
-        assertEquals(args, model.getSelectionArgs());
+        assertArrayEquals(args, model.getSelectionArgs());
         assertEquals(sql, model.getRawSql());
 
         final RawQueryModel model2 = (RawQueryModel) new SqlQueryModel.RawQueryBuilder()
                 .build();
 
-        assertEquals(null, model2.getSelectionArgs());
+        assertArrayEquals(null, model2.getSelectionArgs());
         assertEquals(null, model2.getRawSql());
     }
 
+    @Test
     public void testFieldsUnset() throws Exception {
         final RawQueryModel model = (RawQueryModel) new SqlQueryModel.RawQueryBuilder()
                 .build();
@@ -57,6 +66,7 @@ public class RawQueryBuilderTest extends TestCase {
         assertEquals(null, model.getRawSql());
     }
 
+    @Test
     public void testJson() throws Exception {
         final String comment = "comment";
         final String tag = "tag";
@@ -83,6 +93,7 @@ public class RawQueryBuilderTest extends TestCase {
         assertEquals(model.getRawSql(), model2.getRawSql());
     }
 
+    @Test
     public void testModelInfo() throws Exception {
         final String comment = "comment";
         final String tag = "tag";
@@ -112,6 +123,7 @@ public class RawQueryBuilderTest extends TestCase {
         assertEquals(0, model2.getModelVersion());
     }
 
+    @Test
     public void testModelInfoUnset() throws Exception {
         final EasyQueryModel model1 = new SqlQueryModel.RawQueryBuilder()
                 .build();

@@ -19,7 +19,10 @@
 
 package uk.co.alt236.easycursor.sqlcursor.querybuilders;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.util.Arrays;
 
@@ -27,10 +30,17 @@ import uk.co.alt236.easycursor.EasyQueryModel;
 import uk.co.alt236.easycursor.sqlcursor.querymodels.SelectQueryModel;
 import uk.co.alt236.easycursor.sqlcursor.querymodels.SqlJsonModelConverter;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 /**
  *
  */
-public class CompatSqlModelBuilderTest extends TestCase {
+@RunWith(RobolectricTestRunner.class)
+@Config(manifest = Config.NONE)
+public class CompatSqlModelBuilderTest {
+
+    @Test
     public void testFields() throws Exception {
         final String[] projectionIn = {"a", "b"};
         final String[] selectArgs = {"a", "b", "c"};
@@ -72,16 +82,12 @@ public class CompatSqlModelBuilderTest extends TestCase {
         assertTrue(Arrays.equals(null, model2.getSelectionArgs()));
     }
 
+    @Test(expected = IllegalStateException.class)
     public void testFieldsUnset() {
-
-        try {
-            new CompatSqlModelBuilder().build();
-            fail("This should have thrown an exception");
-        } catch (final IllegalStateException e) {
-            // Expected
-        }
+        new CompatSqlModelBuilder().build();
     }
 
+    @Test
     public void testJson() throws Exception {
         final String[] projectionIn = {"a", "b"};
         final String[] selectArgs = {"a", "b", "c"};
@@ -108,6 +114,7 @@ public class CompatSqlModelBuilderTest extends TestCase {
         assertTrue(Arrays.equals(model1.getSelectionArgs(), model2.getSelectionArgs()));
     }
 
+    @Test
     public void testModelInfo() {
         final String comment = "comment";
         final String tag = "tag";
