@@ -1,6 +1,6 @@
 /*
  * ***************************************************************************
- * Copyright 2015 Alexandros Schillings
+ * Copyright 2017 Alexandros Schillings
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,25 +19,34 @@
 
 package uk.co.alt236.easycursor.sqlcursor;
 
-import android.test.AndroidTestCase;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
 
 import uk.co.alt236.easycursor.EasyCursor;
 import uk.co.alt236.easycursor.sqlcursor.querymodels.SqlQueryModel;
 
-/**
- *
- */
-public class EasySqlCursorTest2 extends AndroidTestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+
+@RunWith(RobolectricTestRunner.class)
+@Config(manifest = Config.NONE)
+public class EasySqlCursorTest2 {
     private DatabaseHandler mHandler;
 
-    @Override
+    @Before
     public void setUp() {
-        if (mHandler == null) {
-            mHandler = new DatabaseHandler(getContext());
-            mHandler.getWritableDatabase();
-        }
+        mHandler = new DatabaseHandler(RuntimeEnvironment.application);
+        mHandler.getWritableDatabase();
     }
 
+    @Test
     public void test1() throws Exception {
         final SqlQueryModel model = new SqlQueryModel.RawQueryBuilder()
                 .setRawSql("SELECT * FROM data")
@@ -49,6 +58,7 @@ public class EasySqlCursorTest2 extends AndroidTestCase {
         cursor.close();
     }
 
+    @Test
     public void test2() throws Exception {
         final SqlQueryModel model = new SqlQueryModel.RawQueryBuilder()
                 .setRawSql("SELECT * FROM data")
@@ -60,6 +70,7 @@ public class EasySqlCursorTest2 extends AndroidTestCase {
         cursor.close();
     }
 
+    @Test
     public void test3() throws Exception {
         final SqlQueryModel model = new SqlQueryModel.RawQueryBuilder()
                 .setRawSql("SELECT * FROM data")

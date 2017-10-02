@@ -52,6 +52,10 @@ android {
     }
 }
 
+dependencies {
+    testCompile "org.robolectric:robolectric:3.3.2"
+}
+
 // Script from https://github.com/blundell/release-android-library
 // execute: ./gradlew clean build generateRelease
 apply from: 'https://raw.githubusercontent.com/ArthurHub/release-android-library/master/android-release-jar.gradle'

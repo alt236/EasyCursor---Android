@@ -19,17 +19,23 @@
 
 package uk.co.alt236.easycursor.sqlcursor.querymodels;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.util.Arrays;
 
 import uk.co.alt236.easycursor.EasyQueryModel;
 
-/**
- *
- */
-public class SelectQueryBuilderTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+@RunWith(RobolectricTestRunner.class)
+@Config(manifest = Config.NONE)
+public class SelectQueryBuilderTest {
+
+    @Test
     public void testFields() throws Exception {
         final String[] projectionIn = {"a", "b"};
         final String[] selectionArgs = {"a", "b", "c"};
@@ -84,6 +90,7 @@ public class SelectQueryBuilderTest extends TestCase {
         assertTrue(Arrays.equals(null, model2.getSelectionArgs()));
     }
 
+    @Test
     public void testFieldsUnset() {
         final SelectQueryModel model1 = (SelectQueryModel) new SqlQueryModel.SelectQueryBuilder()
                 .build();
@@ -133,6 +140,7 @@ public class SelectQueryBuilderTest extends TestCase {
         assertTrue(Arrays.equals(model.getSelectionArgs(), model2.getSelectionArgs()));
     }
 
+    @Test
     public void testModelInfo() {
         final String comment = "comment";
         final String tag = "tag";
@@ -159,6 +167,7 @@ public class SelectQueryBuilderTest extends TestCase {
         assertEquals(0, model2.getModelVersion());
     }
 
+    @Test
     public void testModelInfoUnset() throws Exception {
         final EasyQueryModel model1 = new SqlQueryModel.SelectQueryBuilder()
                 .build();
