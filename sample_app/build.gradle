@@ -16,8 +16,8 @@ repositories {
 }
 
 dependencies {
-    compile 'com.google.code.gson:gson:2.3'
-    compile 'com.android.support:appcompat-v7:22.2.0'
+    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.android.support:appcompat-v7:25.3.1'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':library')
 }
