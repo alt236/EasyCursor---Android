@@ -1,8 +1,8 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 ext.minSdkVersion = 9
-ext.compileSdkVersion = 22
-ext.targetSdkVersion = 22
+ext.compileSdkVersion = 25
+ext.targetSdkVersion = 25
 ext.buildToolsVersion = '25.0.2'
 
 // Dependency Versions
@@ -15,7 +15,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.2'
+        classpath 'com.android.tools.build:gradle:2.3.3'
     }
 }
 
