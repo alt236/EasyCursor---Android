@@ -28,7 +28,7 @@ import uk.co.alt236.easycursor.EasyCursor;
 /**
  *
  */
-public final class TestJsonCursorBuilder {
+/*package*/ final class TestJsonCursorBuilder {
 
     private TestJsonCursorBuilder() {
     }

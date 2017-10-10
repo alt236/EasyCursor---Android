@@ -17,31 +17,47 @@
  *
  */
 
-package uk.co.alt236.easycursor.sqlcursor;
+package uk.co.alt236.easycursor;
 
-import org.junit.After;
-import org.junit.Before;
-import org.robolectric.RuntimeEnvironment;
+import org.junit.Test;
 
-import uk.co.alt236.easycursor.CommonCursorTests;
-import uk.co.alt236.easycursor.EasyCursor;
+public interface EasyCursorTests {
+    @Test
+    void parsesBooleanFieldsThatExistAndHaveValues();
 
-/**
- *
- */
-public class EasySqlCursorTest extends CommonCursorTests {
-    private DatabaseHandler mHandler;
-    private EasyCursor mSut;
+    @Test
+    void parsesBooleanFieldsThatExistAndHaveNullValues();
 
-    @Before
-    public void setUp() {
-        mHandler = new DatabaseHandler(RuntimeEnvironment.application);
-        mSut = new EasySqlCursor(mHandler.getReadableDatabase().rawQuery("SELECT * FROM DATA", null));
-        setCursor(mSut);
-    }
+    @Test
+    void parsesBooleanFieldsThatDoNotExist();
 
-    @After
-    public void tearDown() {
-        mSut.close();
-    }
+    @Test
+    void throwsExceptionOnBooleanFieldsWhenGettingANullValue();
+
+    @Test
+    void testDoubleFieldParsing();
+
+    @Test
+    void testFieldIndexes();
+
+    @Test
+    void testFloatFieldParsing();
+
+    @Test
+    void testIndexFetching();
+
+    @Test
+    void testIntegerFieldParsing();
+
+    @Test
+    void testLongFieldParsing();
+
+    @Test
+    void testNullCheck();
+
+    @Test
+    void testShortFieldParsing();
+
+    @Test
+    void testStringFieldParsing();
 }
