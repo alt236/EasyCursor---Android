@@ -23,8 +23,6 @@ import java.util.Random;
 import java.util.UUID;
 
 public class TestObject {
-
-
     private final String mString;
     private final Boolean mBool;
     private final byte[] mByte;

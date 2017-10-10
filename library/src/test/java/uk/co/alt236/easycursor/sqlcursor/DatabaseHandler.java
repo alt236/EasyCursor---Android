@@ -29,7 +29,7 @@ import java.util.List;
 
 import uk.co.alt236.easycursor.objectcursor.TestObject;
 
-public class DatabaseHandler extends SQLiteOpenHelper {
+/*package*/ class DatabaseHandler extends SQLiteOpenHelper {
     // All Static variables
     // Database Version
     private static final int DATABASE_VERSION = 1;

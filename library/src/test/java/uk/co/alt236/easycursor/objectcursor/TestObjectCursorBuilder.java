@@ -28,7 +28,7 @@ import uk.co.alt236.easycursor.EasyCursor;
 /**
  *
  */
-public final class TestObjectCursorBuilder {
+/*package*/ final class TestObjectCursorBuilder {
 
     private TestObjectCursorBuilder() {
     }
