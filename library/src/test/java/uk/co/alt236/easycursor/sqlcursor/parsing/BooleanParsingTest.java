@@ -17,26 +17,22 @@
  *
  */
 
-package uk.co.alt236.easycursor.sqlcursor;
+package uk.co.alt236.easycursor.sqlcursor.parsing;
 
 import org.junit.After;
 import org.junit.Before;
-import org.robolectric.RuntimeEnvironment;
 
-import uk.co.alt236.easycursor.CommonCursorTests;
 import uk.co.alt236.easycursor.EasyCursor;
+import uk.co.alt236.easycursor.common.parsing.BaseBooleanParsingTest;
+import uk.co.alt236.easycursor.sqlcursor.factory.EasySqlCursorBuilder;
 
-/**
- *
- */
-public class EasySqlCursorTest extends CommonCursorTests {
-    private DatabaseHandler mHandler;
+public class BooleanParsingTest extends BaseBooleanParsingTest {
+
     private EasyCursor mSut;
 
     @Before
     public void setUp() {
-        mHandler = new DatabaseHandler(RuntimeEnvironment.application);
-        mSut = new EasySqlCursor(mHandler.getReadableDatabase().rawQuery("SELECT * FROM DATA", null));
+        mSut = EasySqlCursorBuilder.getCursor();
         setCursor(mSut);
     }
 

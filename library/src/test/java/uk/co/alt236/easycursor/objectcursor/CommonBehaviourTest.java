@@ -1,6 +1,6 @@
 /*
  * ***************************************************************************
- * Copyright 2015 Alexandros Schillings
+ * Copyright 2017 Alexandros Schillings
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,22 +19,14 @@
 
 package uk.co.alt236.easycursor.objectcursor;
 
-import android.util.Log;
-
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
-
-import java.lang.reflect.Method;
-import java.util.List;
 
 import uk.co.alt236.easycursor.EasyCursor;
 import uk.co.alt236.easycursor.common.BaseBehaviourTest;
 import uk.co.alt236.easycursor.objectcursor.factory.TestObjectCursorBuilder;
 
-import static org.junit.Assert.assertEquals;
-
-public class EasyObjectCursorTest extends BaseBehaviourTest {
-    private final String TAG = getClass().getName();
+public class CommonBehaviourTest extends BaseBehaviourTest {
 
     private EasyCursor mSut;
 
@@ -44,31 +36,8 @@ public class EasyObjectCursorTest extends BaseBehaviourTest {
         setCursor(mSut);
     }
 
-    @Test
-    public void testAliasing() {
-        final EasyCursor cursor = TestObjectCursorBuilder.getCursor("int");
-
-        final int intIndex = cursor.getColumnIndex("int");
-        final int idIndex = cursor.getColumnIndex("_id");
-        assertEquals(intIndex, idIndex);
-    }
-
-
-
-    @Test
-    public void testMethodSet() {
-        final List<Method> methods = ((EasyObjectCursor<?>) mSut).getMethods();
-
-        for (final Method method : methods) {
-            Log.v(TAG, "Has method: " + method.getName());
-            assertEquals(0, method.getParameterTypes().length);
-        }
-
-        final String[] cols = mSut.getColumnNames();
-        for (final String col : cols) {
-            Log.v(TAG, "Column name: " + col);
-        }
-
+    @After
+    public void tearDown() {
         mSut.close();
     }
 }

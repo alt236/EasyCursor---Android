@@ -1,6 +1,6 @@
 /*
  * ***************************************************************************
- * Copyright 2015 Alexandros Schillings
+ * Copyright 2017 Alexandros Schillings
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,27 @@
  *
  */
 
-package uk.co.alt236.easycursor.sqlcursor;
+package uk.co.alt236.easycursor.jsoncursor.parsing;
 
-import android.database.Cursor;
+import org.junit.After;
+import org.junit.Before;
 
-import uk.co.alt236.easycursor.sqlcursor.querymodels.SqlQueryModel;
+import uk.co.alt236.easycursor.EasyCursor;
+import uk.co.alt236.easycursor.common.parsing.BaseIntegerParsingTests;
+import uk.co.alt236.easycursor.jsoncursor.factory.TestJsonCursorBuilder;
 
-/**
- *
- */
-public class ExtendedEasySqlCursor extends EasySqlCursor {
-    public ExtendedEasySqlCursor(final Cursor cursor, final SqlQueryModel model, final BooleanLogic booleanLogic) {
-        super(cursor, model, booleanLogic);
+public class IntParsingTest extends BaseIntegerParsingTests {
+
+    private EasyCursor mSut;
+
+    @Before
+    public void setUp() {
+        mSut = TestJsonCursorBuilder.getCursor();
+        setCursor(mSut);
+    }
+
+    @After
+    public void tearDown() {
+        mSut.close();
     }
 }

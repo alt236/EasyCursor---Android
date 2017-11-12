@@ -1,6 +1,6 @@
 /*
  * ***************************************************************************
- * Copyright 2015 Alexandros Schillings
+ * Copyright 2017 Alexandros Schillings
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,19 @@
  *
  */
 
-package uk.co.alt236.easycursor.objectcursor;
+package uk.co.alt236.easycursor.objectcursor.factory;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import uk.co.alt236.easycursor.EasyCursor;
+import uk.co.alt236.easycursor.objectcursor.EasyObjectCursor;
 
 /**
  *
  */
-/*package*/ final class TestObjectCursorBuilder {
+public final class TestObjectCursorBuilder {
 
     private TestObjectCursorBuilder() {
     }

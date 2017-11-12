@@ -25,7 +25,7 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 
 import uk.co.alt236.easycursor.exceptions.ConversionErrorException;
-import uk.co.alt236.easycursor.objectcursor.TestObject;
+import uk.co.alt236.easycursor.objectcursor.factory.TestObject;
 
 /**
  *

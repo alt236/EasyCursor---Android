@@ -17,47 +17,27 @@
  *
  */
 
-package uk.co.alt236.easycursor;
+package uk.co.alt236.easycursor.jsoncursor.parsing;
 
-import org.junit.Test;
+import org.junit.After;
+import org.junit.Before;
 
-public interface EasyCursorTests {
-    @Test
-    void parsesBooleanFieldsThatExistAndHaveValues();
+import uk.co.alt236.easycursor.EasyCursor;
+import uk.co.alt236.easycursor.common.parsing.BaseFloatParsingTests;
+import uk.co.alt236.easycursor.jsoncursor.factory.TestJsonCursorBuilder;
 
-    @Test
-    void parsesBooleanFieldsThatExistAndHaveNullValues();
+public class FloatParsingTest extends BaseFloatParsingTests {
 
-    @Test
-    void parsesBooleanFieldsThatDoNotExist();
+    private EasyCursor mSut;
 
-    @Test
-    void throwsExceptionOnBooleanFieldsWhenGettingANullValue();
+    @Before
+    public void setUp() {
+        mSut = TestJsonCursorBuilder.getCursor();
+        setCursor(mSut);
+    }
 
-    @Test
-    void testDoubleFieldParsing();
-
-    @Test
-    void testFieldIndexes();
-
-    @Test
-    void testFloatFieldParsing();
-
-    @Test
-    void testIndexFetching();
-
-    @Test
-    void testIntegerFieldParsing();
-
-    @Test
-    void testLongFieldParsing();
-
-    @Test
-    void testNullCheck();
-
-    @Test
-    void testShortFieldParsing();
-
-    @Test
-    void testStringFieldParsing();
+    @After
+    public void tearDown() {
+        mSut.close();
+    }
 }

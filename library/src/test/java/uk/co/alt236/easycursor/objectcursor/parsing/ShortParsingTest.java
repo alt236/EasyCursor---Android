@@ -1,6 +1,6 @@
 /*
  * ***************************************************************************
- * Copyright 2015 Alexandros Schillings
+ * Copyright 2017 Alexandros Schillings
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,36 +17,27 @@
  *
  */
 
-package uk.co.alt236.easycursor.jsoncursor;
+package uk.co.alt236.easycursor.objectcursor.parsing;
 
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 import uk.co.alt236.easycursor.EasyCursor;
-import uk.co.alt236.easycursor.common.root.BaseRobolectricTest;
-import uk.co.alt236.easycursor.jsoncursor.factory.TestJsonCursorBuilder;
+import uk.co.alt236.easycursor.common.parsing.BaseShortParsingTests;
+import uk.co.alt236.easycursor.objectcursor.factory.TestObjectCursorBuilder;
 
-import static org.junit.Assert.assertEquals;
-
-/**
- *
- */
-public class EasyJsonCursorTest extends BaseRobolectricTest {
+public class ShortParsingTest extends BaseShortParsingTests {
 
     private EasyCursor mSut;
 
     @Before
     public void setUp() {
-        mSut = TestJsonCursorBuilder.getCursor();
+        mSut = TestObjectCursorBuilder.getCursor();
+        setCursor(mSut);
     }
 
-    @Test
-    public void testAliasing() {
-        final EasyCursor cursor = TestJsonCursorBuilder.getCursor("int");
-
-        final int intIndex = cursor.getColumnIndex("int");
-        final int idIndex = cursor.getColumnIndex("_id");
-        assertEquals(intIndex, idIndex);
+    @After
+    public void tearDown() {
+        mSut.close();
     }
-
 }
