@@ -1,4 +1,4 @@
-#EasyCursor
+# EasyCursor
 
 For those who find statements like `cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME));`
 or `cursor.getColumnIndex(COLUMN)==-1 ? value=FALLBACK : value=cursor.getString(COLUMN);`
@@ -27,9 +27,9 @@ implementation of EasySqlCursor is defined in `DefaultBooleanLogic.java` and ass
 in the constructor.
 
 
-##Getting Started Guide
+## Getting Started Guide
 
-## Including the Library in Your Project
+### Including the Library in Your Project
 
 This project is available as an artifact for use with Gradle. To use that, add the following blocks to your build.gradle file:
 ```
@@ -46,10 +46,10 @@ This project is available as an artifact for use with Gradle. To use that, add t
 If you *really* need a Jar file, fork the project and execute `./gradlew clean build generateRelease` at the root of the project.
 This will create a zip file under `<PROJECT_ROOT>/library/build/` the Jar can be found inside.
 
-###EasySqlCursors
+### EasySqlCursors
 This is the way to convert boring old cursors to an EasyCursor:
 
-```
+```java
 final Cursor cursor = builder.query(...);
     
 cursor.moveToFirst();
@@ -61,10 +61,10 @@ Notes and Caveats:
 
 * Look [here](#easysqlcursor_full) for a more in-depth explanation on how EasySqlCursors work.
 
-###EasyJsonCursors
+### EasyJsonCursors
 Any JSON array can be converted to a cursor like this:
 
-```
+```java
   final JSONArray jArray = ... // Any Json Array.
 
   // If the JSONObjects in the JSONArray do not have an android-valid "_id" field,
@@ -91,14 +91,13 @@ JsonExceptions but in order to keep the EasyCursor API consistent these exceptio
   3. `optJsonObject(String name)`
   4. `optJsonArray(String name)`
        
-###EasyObjectCursors
+### EasyObjectCursors
 
-```
+```java
   final List<WhateverObject> data = ... // somehow get an object list
 
   // If the Objects in the list do not have "get_Id()" getter method, 
   // you can setup an alias. The alias below will match a "getId()" method.
-
   final String _idAlias = "id"; 
   final EasyCursor cursor = new EasyObjectCursor<WhateverObject>(WhateverObject.class, data, _idAlias);
 ```
@@ -135,17 +134,15 @@ Notes and Caveats:
   7. Short
 
 &nbsp;
-&nbsp;
-&nbsp;
 
-##<a name="easysqlcursor_full"></a>EasySqlCursors In Depth
-###Creation
-####1. Using one of the included Builders EasyQueryModel
+## <a name="easysqlcursor_full"></a>EasySqlCursors In Depth
+### Creation
+#### 1. Using one of the included Builders EasyQueryModel
 
 This is the "native" way of using EasyCursor.
 
 For a normal Select Query:
-```
+```java
   final SqlQueryModel model = new SqlQueryModel.SelectQueryBuilder()
     .setDistinct(true)
     .setProjectionIn("track.trackId AS _id", "artist.name AS artist", "album.title AS album", "mediatype.name AS media")
@@ -160,7 +157,7 @@ For a normal Select Query:
 ```
 
 For a raw SQL query:
-```
+```java
   private static final String RAW_QUERY =
     "SELECT track.trackId AS _id, artist.name AS artist, album.title AS album, track.name AS track, mediatype.name AS media, track.composer AS composer, (ifnull(track.composer, 0)>0) AS hascomposer, SUM(track.Milliseconds) AS meaninglessSum, SUM(track.Milliseconds)/3.33 AS meaninglessDiv"
     + " FROM track"
@@ -181,11 +178,11 @@ For a raw SQL query:
 
   final EasyCursor eCursor = model.execute(db.getReadableDatabase());
 ```
-####2. Using an QueryBuilder Interface
+#### 2. Using an QueryBuilder Interface
 
 You can define a class implementing either the `SqlSelectBuilder` or `SqlRawQueryBuilder` interfaces and do the following:
 This way you can write, or re-use, your own builders. The following example reads a little bit more like a "standard" SQL statement:
-```
+```java
   final LousyQueryBuilder builder = new LousyQueryBuilder();
 
   final SqlQueryModel model = builder
@@ -200,11 +197,11 @@ This way you can write, or re-use, your own builders. The following example read
       
   final EasyCursor eCursor = model.execute(db.getReadableDatabase());
 ```
-####3. The Backwards Compatible way
+#### 3. The Backwards Compatible way
 
 You can convert an existing Cursor to an EasyCursor by wrapping it like this:
 
-```
+```java
   // Android build-in query builder.
   final SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 
@@ -227,10 +224,10 @@ You can convert an existing Cursor to an EasyCursor by wrapping it like this:
 
 But, as you did not use an SqlQueryModel, you will not be able to access the JSON representation of the query.
 
-####4. The "Compatibility" way
+#### 4. The "Compatibility" way
 By compatibility I mean that the API is similar to a SQLiteQueryBuilder.
 
-```
+```java
   final EasyCompatSqlModelBuilder builder = new EasyCompatSqlModelBuilder();
 
   builder.setTables(QueryConstants.DEFAULT_TABLES);
@@ -252,7 +249,7 @@ By compatibility I mean that the API is similar to a SQLiteQueryBuilder.
 
 The `setQueryParams()` method has an identical signature to `SQLiteQueryBuilder.query()` minus the database instance parameter.
 
-###Things you can do with an EasyCursor
+### Things you can do with an EasyCursor
 An EasyCursor offers (apart from the usual Cursor methods) the following:
 
 * `easycursor.getXXX(String columnName)` : Which is shorthand for `easycursor.getXXX(easycursor.getColumnIndexOrThrow(COLUMN_NAME))`.
@@ -264,7 +261,7 @@ Where XXX is the usual data types (long, int, String, etc.).
 
 Not all functions are available for all datatypes though, as some are meaningless (`getStringAsWrapperType()` for example).
 
-###Booleans
+### Booleans
 In addition you get the following functions for booleans, which work the same as the ones above:
 
 * `easycursor.getBoolean(String columnName)`
@@ -274,22 +271,23 @@ In addition you get the following functions for booleans, which work the same as
 
 The logic behind a boolean is as follows: `true==1` and `false!=1` is defined in `DefaultBooleanLogic.java`.
 
-###Accessing an EasyCursor's EasyQueryModel, saving it and replaying
+### Accessing an EasyCursor's EasyQueryModel, saving it and replaying
 If the cursor has been generated via an EasyQueryModel, then you can access the model like this: 
 
-```
+```java
   final SqlQueryModel model = easycursor.getQueryModel()`
 ```
 
 The model can then be converted to a JSON string via its `model.toJson()` function.
 
 To re-create the model, you can do the following:
-```
+
+```java
   final SqlQueryModel model = SqlJsonModelConverter.convert(jsonString);
 ```
 
 The following snippet will get the Model JSON of a cursor, save it in local prefs, read it back and re-query:
-```
+```java
   // Get the JSON of a cursor model
   final String jsonOut = oldCursor.getQueryModel().toJson();
 
@@ -306,7 +304,7 @@ The following snippet will get the Model JSON of a cursor, save it in local pref
   final SqlQueryModel model = SqlJsonModelConverter.convert(jsonString);
   final EasyCursor eCursor = model.execute(getReadableDatabase());
 ```  		
-###Keeping track of an EasyQueryModel
+### Keeping track of an EasyQueryModel
 In order to keep track of an EasyQueryModel file and help in maintaining compatibility of the model
 to the underlying DB (if your schema can change), you can use the following functions.
 
@@ -316,38 +314,31 @@ to the underlying DB (if your schema can change), you can use the following func
 
 There is no business logic behind these functions -- it is up to each user to keep a compatibility matrix.
 
-##Extending the implementation of EasySqlCursor
+## Extending the implementation of EasySqlCursor
 If you need to extend the base implementation of EasySqlCursor, for example because you treat
 booleans differently, you can use the following syntax:
 
-```
+```java
 final EasyCursor cursor = model.execute(getReadableDatabase(), MyExtendedEasyCursor.class);
 ```
 
-##Things to remember
+## Things to remember
 1. An EasyCursor directly extends the default Cursor interface, so you can pass it around as a standard Cursor.
 2. When using an SqlQueryModel, the resulting Cursor is automatically moved to the first position.
 3. When you call execute() on an SqlQueryModel it still internally uses a standard Android SQLiteQueryBuilder, which will throw any usual exceptions.
 4. When you call execute() on an SqlQueryModel the execution happens on the same thread it was called in.
 
-##Changelog
+## Changelog
 * v0.1.0 First public release
 * v0.1.1 Fixed a crash caused by not properly handing null arrays in JsonPayloadHelper 
 * v1.0.0 API tidy, proper release.
 
-##Permission Explanation
-* No permissions required
-	
-##Sample App Screenshots
-*TODO*
-
-##Links
+## Links
 * Github: [https://github.com/alt236/EasyCursor---Android]()
 
-##Credits
+## Credits
 Author: [Alexandros Schillings](https://github.com/alt236).
 
 The code in this project is licensed under the Apache Software License 2.0.
 
-Copyright (c) 2013 Alexandros Schillings.
-
+Copyright (c) 2017 Alexandros Schillings.
