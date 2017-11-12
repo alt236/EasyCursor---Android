@@ -1,6 +1,6 @@
 /*
  * ***************************************************************************
- * Copyright 2015 Alexandros Schillings
+ * Copyright 2017 Alexandros Schillings
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
  *
  */
 
-package uk.co.alt236.easycursor.sqlcursor;
+package uk.co.alt236.easycursor.sqlcursor.factory;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -27,9 +27,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-import uk.co.alt236.easycursor.objectcursor.TestObject;
+import uk.co.alt236.easycursor.objectcursor.factory.TestObject;
 
-/*package*/ class DatabaseHandler extends SQLiteOpenHelper {
+public class DatabaseHandler extends SQLiteOpenHelper {
     // All Static variables
     // Database Version
     private static final int DATABASE_VERSION = 1;

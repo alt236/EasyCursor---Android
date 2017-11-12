@@ -1,6 +1,6 @@
 /*
  * ***************************************************************************
- * Copyright 2015 Alexandros Schillings
+ * Copyright 2017 Alexandros Schillings
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,36 +17,22 @@
  *
  */
 
-package uk.co.alt236.easycursor.jsoncursor;
+package uk.co.alt236.easycursor.common.parsing;
 
-import org.junit.Before;
 import org.junit.Test;
 
-import uk.co.alt236.easycursor.EasyCursor;
 import uk.co.alt236.easycursor.common.root.BaseRobolectricTest;
-import uk.co.alt236.easycursor.jsoncursor.factory.TestJsonCursorBuilder;
 
-import static org.junit.Assert.assertEquals;
-
-/**
- *
- */
-public class EasyJsonCursorTest extends BaseRobolectricTest {
-
-    private EasyCursor mSut;
-
-    @Before
-    public void setUp() {
-        mSut = TestJsonCursorBuilder.getCursor();
-    }
+public abstract class BaseParsingTests extends BaseRobolectricTest {
+    @Test
+    public abstract void parsesFieldsThatExistAndHaveValues();
 
     @Test
-    public void testAliasing() {
-        final EasyCursor cursor = TestJsonCursorBuilder.getCursor("int");
+    public abstract void parsesFieldsThatExistAndHaveNullValues();
 
-        final int intIndex = cursor.getColumnIndex("int");
-        final int idIndex = cursor.getColumnIndex("_id");
-        assertEquals(intIndex, idIndex);
-    }
+    @Test
+    public abstract void parsesFieldsThatDoNotExist();
 
+    @Test(expected = IllegalArgumentException.class)
+    public abstract void throwsExceptionOnFieldsWhenGettingANullValue();
 }
