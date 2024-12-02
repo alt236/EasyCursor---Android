@@ -1,0 +1,20 @@
+version: 2.1
+
+##
+## REFERENCES
+################################################################
+references:
+
+jobs:
+  test:
+    docker:
+      - image: cimg/android:2024.11
+    steps:
+      - checkout
+      - run: ./gradlew clean test -PdisablePreDex --no-daemon
+
+# Orchestrate our job run sequence
+workflows:
+  test_and_deploy:
+    jobs:
+      - test
