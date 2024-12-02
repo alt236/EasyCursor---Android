@@ -25,6 +25,9 @@ import uk.co.alt236.easycursor.sqlcursor.EasySqlCursor;
 
 public final class EasySqlCursorBuilder {
 
+    private EasySqlCursorBuilder() {
+    }
+
     public static EasySqlCursor getCursor() {
         final DatabaseHandler handler = new DatabaseHandler(RuntimeEnvironment.application);
         return new EasySqlCursor(handler.getReadableDatabase().rawQuery("SELECT * FROM DATA", null));

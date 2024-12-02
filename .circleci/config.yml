@@ -1,0 +1,32 @@
+version: 2.1
+
+##
+## REFERENCES
+################################################################
+references:
+
+jobs:
+  test:
+    docker:
+      - image: cimg/android:2024.11
+    steps:
+      - checkout
+      - restore_cache:
+          key: jars-{{ checksum "gradle/libs.versions.toml" }}-{{ checksum "build.gradle" }}
+      - run:
+          name: Download Dependencies
+          command: ./gradlew androidDependencies
+      - run:
+          name: Running Unit Tests
+          command: ./gradlew clean test -PdisablePreDex
+      - save_cache:
+          paths:
+            - ~/.gradle
+            - ~/.m2
+          key: jars-{{ checksum "gradle/libs.versions.toml" }}-{{ checksum "build.gradle" }}
+
+# Orchestrate our job run sequence
+workflows:
+  test_and_deploy:
+    jobs:
+      - test

@@ -16,22 +16,22 @@ repositories {
 }
 
 dependencies {
-    compile 'com.google.code.gson:gson:2.7'
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':library')
+    implementation libs.gson
+    implementation libs.android.appcompat.v7
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(':library')
 }
 
 android {
-    compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion rootProject.buildToolsVersion
+    compileSdk rootProject.compileSdkVersion
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     defaultConfig {
+        namespace = "uk.co.alt236.easycursor.sampleapp"
         minSdkVersion minSdkRed
         targetSdkVersion targetSdk
         versionCode androidVersionCode

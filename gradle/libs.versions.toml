@@ -1,0 +1,20 @@
+[versions]
+android-appcompat-v7 = "28.0.0"
+gradle-android = "8.7.2"
+gson = "2.11.0"
+junit4 = "4.13.2"
+mockito = "5.14.2"
+robolectric = "4.13"
+test-logger = "4.0.0"
+
+[libraries]
+android-build-tools-gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle-android" }
+android-appcompat-v7 = { module = "com.android.support:appcompat-v7", version.ref = "android-appcompat-v7" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+
+mockito = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+junit4 = { module = "junit:junit", version.ref = "junit4" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
+
+[plugins]
+test-logger = { id = "com.adarshr.test-logger", version.ref = "test-logger" }
