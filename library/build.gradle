@@ -1,4 +1,8 @@
-apply plugin: 'com.android.library'
+plugins {
+    id 'com.android.library'
+    alias(libs.plugins.test.logger)
+}
+
 
 final int versionMajor = 2
 final int versionMinor = 0
