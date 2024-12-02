@@ -24,6 +24,6 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest = Config.NONE, sdk = {16, 17, 18, 19, 21, 22, 23, 24, 25})
+@Config(manifest = Config.NONE, sdk = {22, 23, 24, 25})
 public abstract class BaseRobolectricTest {
 }
