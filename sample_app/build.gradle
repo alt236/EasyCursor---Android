@@ -26,8 +26,8 @@ android {
     compileSdk rootProject.compileSdkVersion
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility rootProject.javaSourceCompatibility
+        targetCompatibility rootProject.javaTargetCompatibility
     }
 
     defaultConfig {
