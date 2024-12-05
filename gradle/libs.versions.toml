@@ -6,6 +6,7 @@ junit4 = "4.13.2"
 mockito = "5.14.2"
 robolectric = "4.13"
 test-logger = "4.0.0"
+vanniktech-maven-publish = "0.30.0"
 
 [libraries]
 android-build-tools-gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle-android" }
@@ -18,3 +19,4 @@ robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectr
 
 [plugins]
 test-logger = { id = "com.adarshr.test-logger", version.ref = "test-logger" }
+vanniktech-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "vanniktech-maven-publish" }

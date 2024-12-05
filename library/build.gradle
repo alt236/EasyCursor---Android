@@ -1,8 +1,10 @@
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
     id 'com.android.library'
     alias(libs.plugins.test.logger)
+    alias(libs.plugins.vanniktech.maven.publish)
 }
-
 
 final int versionMajor = 2
 final int versionMinor = 0
@@ -13,25 +15,28 @@ final int targetSdk = rootProject.targetSdkVersion;
 final int minSdkRed = rootProject.minSdkVersion;
 final String semanticVersion = "${versionMajor}.${versionMinor}.${versionPatch}"
 
+
+def project_name = "Easycursor (Android)"
+def project_description = "Convenience wrappers around Android Cursors"
+def github_owner_and_repo = "alt236/EasyCursor---Android"
+def group_id = 'dev.alt236'
+def artifact_id = 'easycursor-android'
+def artifact_version = semanticVersion
+
 dependencies {
     testImplementation libs.junit4
     testImplementation libs.mockito
 }
 
-ext {
-    PUBLISH_GROUP_ID = 'uk.co.alt236'
-    PUBLISH_ARTIFACT_ID = 'easycursor-android'
-    PUBLISH_VERSION = "${semanticVersion}"
-}
 
 android {
-    namespace "${PUBLISH_GROUP_ID}.easycursor"
+    namespace "${group_id}.easycursor"
 
     compileSdk rootProject.compileSdkVersion
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility rootProject.javaSourceCompatibility
+        targetCompatibility rootProject.javaTargetCompatibility
     }
 
     defaultConfig {
@@ -59,3 +64,47 @@ android {
 dependencies {
     testImplementation libs.robolectric
 }
+
+mavenPublishing { // This is for the 'vanniktech-maven-publish' plugin
+    var automaticRelease = false
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease)
+    signAllPublications()
+
+    coordinates(group_id, artifact_id, artifact_version)
+    pom {
+        name = project_name
+        description = project_description
+        url = "https://github.com/$github_owner_and_repo"
+        licenses {
+            license {
+                name = 'The Apache License, Version 2.0'
+                url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                distribution = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+            }
+        }
+        developers {
+            developer {
+                id = 'alt236'
+                name = 'Alexandros Schillings'
+                url = "https://github.com/alt236/"
+            }
+        }
+        scm {
+            url = "https://github.com/$github_owner_and_repo"
+        }
+    }
+}
+
+// Fix for dependency order issue: https://github.com/vanniktech/gradle-maven-publish-plugin/issues/814
+//afterEvaluate {
+//    var sigDependentTasks = [
+//            "publishMavenPublicationToMavenCentralRepository",
+//    ]
+//
+//    for (taskName in sigDependentTasks) {
+//        tasks.named(taskName) {
+//            println("Found: " + it.name)
+//            dependsOn("signMavenPublication")
+//        }
+//    }
+//}

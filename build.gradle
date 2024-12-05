@@ -4,6 +4,9 @@ ext.minSdkVersion = 14
 ext.compileSdkVersion = 34
 ext.targetSdkVersion = 34
 
+ext.javaSourceCompatibility = JavaVersion.VERSION_11
+ext.javaTargetCompatibility = JavaVersion.VERSION_11
+
 buildscript {
     repositories {
         google()

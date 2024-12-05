@@ -16,22 +16,24 @@ repositories {
 }
 
 dependencies {
+    implementation project(':library')
+
     implementation libs.gson
     implementation libs.android.appcompat.v7
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation project(':library')
+
 }
 
 android {
     compileSdk rootProject.compileSdkVersion
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility rootProject.javaSourceCompatibility
+        targetCompatibility rootProject.javaTargetCompatibility
     }
 
     defaultConfig {
-        namespace = "uk.co.alt236.easycursor.sampleapp"
+        namespace = "dev.alt236.easycursor.sampleapp"
         minSdkVersion minSdkRed
         targetSdkVersion targetSdk
         versionCode androidVersionCode
