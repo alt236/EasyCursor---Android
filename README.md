@@ -29,18 +29,17 @@ in the constructor.
 
 ## Getting Started Guide
 
+**BREAKING CHANGES** 
+
+As of version 2.0.0, the library package name have been changed from `uk.co.alt236.easycursor.*` to `dev.alt236.easycursor.*`. 
+The maven coordinates have also changed (see below).
+
 ### Including the Library in Your Project
 
 This project is available as an artifact for use with Gradle. To use that, add the following blocks to your build.gradle file:
 ```
-	repositories {
-		maven {
-			url "https://dl.bintray.com/alt236/maven"
-		}
-	}
-
 	dependencies {
-		compile 'uk.co.alt236:easycursor-android:1.0.0'
+		compile 'dev.alt236:easycursor-android:2.0.0'
 	}
 ```
 If you *really* need a Jar file, fork the project and execute `./gradlew clean build generateRelease` at the root of the project.
